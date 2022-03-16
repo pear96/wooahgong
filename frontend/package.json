@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ramonak/react-progress-bar": "^4.4.0",
+    "@loadable/component": "^5.15.2",
     "@reduxjs/toolkit": "^1.8.0",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.4",
@@ -48,6 +49,7 @@
     ]
   },
   "devDependencies": {
+    "@types/loadable__component": "^5.13.4",
     "@typescript-eslint/eslint-plugin": "^5.14.0",
     "@typescript-eslint/parser": "^5.14.0",
     "eslint": "^8.11.0",

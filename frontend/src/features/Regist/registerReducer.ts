@@ -24,6 +24,7 @@ export const register = createSlice({
     reducers:{
         setId(state, action : PayloadAction<string>){
             state.id = action.payload
+            return state
         },
         setPwd(state, action : PayloadAction<string>){
             state.pwd = action.payload

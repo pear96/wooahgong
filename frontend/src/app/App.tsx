@@ -1,15 +1,16 @@
 import React from 'react';
+import "./App.css";
 import loadable from '@loadable/component';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
-
-const Login = loadable(() => import('../features/Login'));
+import Regist from '../features/Regist/Regist';
+// const Login = loadable(() => import('../features/Login'));
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Regist />} />
+        {/* <Route path="/login" element={<Login />} /> */}
       </Routes>
     </BrowserRouter>
   );

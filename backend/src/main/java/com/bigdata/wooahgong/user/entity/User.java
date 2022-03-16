@@ -1,12 +1,16 @@
 package com.bigdata.wooahgong.user.entity;
 
 import com.bigdata.wooahgong.common.util.BaseTimeEntity;
+import com.bigdata.wooahgong.feed.entity.Feed;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -36,6 +40,10 @@ public class User extends BaseTimeEntity {
     private boolean gender;
     @Column(nullable = false)
     private String mbti;
+
+    @JsonManagedReference // 순환 참조 방어
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Feed> feeds = new ArrayList<>();
 
     //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 //    @JsonManagedReference

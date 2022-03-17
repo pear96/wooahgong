@@ -1,6 +1,7 @@
 package com.bigdata.wooahgong.feed.entity;
 
 import com.bigdata.wooahgong.comment.entity.Comment;
+import com.bigdata.wooahgong.common.util.BaseTimeEntity;
 import com.bigdata.wooahgong.user.entity.FeedLike;
 import com.bigdata.wooahgong.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -17,7 +18,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Feed {
+public class Feed extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long feedSeq;

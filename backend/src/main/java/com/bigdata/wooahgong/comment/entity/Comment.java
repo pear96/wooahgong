@@ -1,5 +1,6 @@
 package com.bigdata.wooahgong.comment.entity;
 
+import com.bigdata.wooahgong.common.util.BaseTimeEntity;
 import com.bigdata.wooahgong.feed.entity.Feed;
 import com.bigdata.wooahgong.user.entity.CommentLike;
 import com.bigdata.wooahgong.user.entity.User;
@@ -17,7 +18,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Comment {
+public class Comment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentSeq;

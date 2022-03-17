@@ -98,13 +98,13 @@ function ConfirmTOS({progress} : MyProps){
     const [accountOpen, setAccountOpen] = useState<boolean>(false);
     const navigate = useNavigate();
 
-    const openRoomConfigModal = () => {
+    const openModal = () => {
       setModalOpen(true);
     };
     const openAccountModal = () => {
       setAccountOpen(true);
     };
-    const closeRoomConfigModal = (e : any) => {
+    const closeModal = (e : any) => {
       e.stopPropagation();
       setModalOpen(false);
     };
@@ -151,7 +151,7 @@ function ConfirmTOS({progress} : MyProps){
     }
     const handleClick = (e : React.MouseEvent | React.KeyboardEvent) => {
       e.preventDefault();
-      navigate("/user/signup/checkId");
+      navigate("/checkmail");
     };
   
     useEffect(() => {
@@ -277,19 +277,19 @@ function ConfirmTOS({progress} : MyProps){
                 }}
               />
               )}
-            <CheckBox onClick={openRoomConfigModal}>
+            <CheckBox onClick={openModal}>
               [필수] 개인정보 수집 및 이용동의
             </CheckBox>
             <div style={{
               textAlign : "center",
               marginTop : "65px"
             }}>
-              {confirm ? <ActiveButton>다 음</ActiveButton> :(
+              {confirm ? <ActiveButton onClick={handleClick}>다 음</ActiveButton> :(
               <DisableButton>다 음</DisableButton>)}
             </div>
             
             <AccountPolicy open={accountOpen} onClose={closeAccountModal}/>
-            <Agree open={modalOpen} onClose={closeRoomConfigModal}/>
+            <Agree open={modalOpen} onClose={closeModal}/>
           </div>
           {/* {confirm ? null :(
             <DisableButton>다음</DisableButton>

@@ -3,16 +3,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import ConfirmTOS from './ConfirmTOS';
-import confirmId from './confirmId';
-import confirmPwd from './confirmPwd';
-import confirmNickname from './confirmNickname';
-import confirmEtc from './confirmEtc';
+import Checkmail from './Checkmail';
+import ConfirmId from './ConfirmId';
+import ConfirmPwd from './ConfirmPwd';
+import ConfirmNickname from './ConfirmNickname';
+import ConfirmEtc from './ConfirmEtc';
 import addAtmosInter from './addAtmosInter';
-import checkmail from './checkmail';
 import {register, setId, setPwd, setEmail, setGender, setAtmos, setBirth, setNick, Register} from "./registerReducer";
 import { ReducerType } from '../../app/rootReducer';
 
 const Container = styled.div`
+    position : relative;
     width : 360px;
     height : 800px;
     background : none;
@@ -36,6 +37,11 @@ function Regist(){
         <Container>
             <Routes>
                 <Route path="/" element={<ConfirmTOS progress={20}/>}/>
+                <Route path="/checkmail" element={<Checkmail progress={14.5}/>}/>
+                <Route path="/confirmid" element={<ConfirmId progress={29}/>}/>
+                <Route path="/confirmpwd" element={<ConfirmPwd progress={43}/>}/>
+                <Route path="/confirmetc" element={<ConfirmEtc progress={57}/>}/>
+                <Route path="/confirmnick" element={<ConfirmNickname progress={71}/>}/>
             </Routes>
         </Container>
         

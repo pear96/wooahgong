@@ -4,9 +4,9 @@ export interface Register {
     id : string,
     pwd : string,
     email : string,
-    gender : any,
+    gender : boolean,
     atmos : string[],
-    birth : string,
+    birth : {year : "", month : "", day : ""},
     nick : string,
 }
 
@@ -16,9 +16,9 @@ export const register = createSlice({
         id : "",
         pwd : "",
         email : "",
-        gender : "",
+        gender : true,
         atmos : [],
-        birth : "",
+        birth : {year : "", month : "", day : ""},
         nick : ""
     } as Register,
     reducers:{
@@ -38,8 +38,10 @@ export const register = createSlice({
         setAtmos(state, action : PayloadAction<string[]>){
             state.atmos = action.payload
         },
-        setBirth(state, action : PayloadAction<string>){
-            state.birth = action.payload
+        setBirth(state, action : PayloadAction<any>){
+            state.birth.year = action.payload.year
+            state.birth.month = action.payload.month
+            state.birth.day = action.payload.day
         },
         setNick(state, action : PayloadAction<string>){
             state.nick = action.payload

@@ -85,7 +85,7 @@ type MyProps = {
 }
 // 분위기: 모던, 내추럴, 러블리, 럭셔리, 유니크, 
 // 빈티지, 액티브, 클럽, 기타
-function AddAtmosInter({progress} : MyProps){
+function AddMbti({progress} : MyProps){
     const [isOk, setIsOk] = useState<boolean>(false);
     const [selectedAtmos, setSelectedAtmos] = useState<string[]>([]);
     const [atmos, setStateAtmos] = useState([
@@ -132,7 +132,7 @@ function AddAtmosInter({progress} : MyProps){
     const handleOnClickNextStep = (e : React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         dispatch(setAtmos(selectedAtmos));
-        navigate("/addmbti");
+        navigate("/addatmos");
     }
 
     return(
@@ -152,32 +152,8 @@ function AddAtmosInter({progress} : MyProps){
                             />
                         </Progress>
                     </div>
-                    <Title>관심 분위기 설정</Title>
-                    <div
-                        style={{
-                            marginLeft : "40px",
-                            width : "280px",
-                            textAlign : "center"
-                        }}
-                    >
-                        {atmos.map((v : {type : string, check : boolean}, i : number)=>{
-                        // console.log(v);
-                            const index = i;
-                            if(v.check){
-                                return (
-                                <Button key={`key${index+1}`} value={i} onClick={handleAtmos}
-                                    style={{
-                                    background : "linear-gradient(90deg, #B3A1E0 0%, #5DACF5 100%)",
-                                    color : "white"
-                                    }}
-                                >{v.type}</Button>
-                                )
-                            }
-                            return (
-                                <Button key={`key${index+1}`} value={i} onClick={handleAtmos}>{v.type}</Button>
-                            )
-                        })}
-                    </div>
+                    <Title>MBTI</Title>
+                    
                     <div style={{
                         position : "absolute",
                         marginLeft : "80px",
@@ -196,4 +172,4 @@ function AddAtmosInter({progress} : MyProps){
 }
 
 
-export default AddAtmosInter;
+export default AddMbti;

@@ -11,12 +11,15 @@
   
   .modalForm {
     padding: 20px 10px;
+    height: 200px;
   }
   
   .modalForm .title {
-    margin : 0 auto;
+    /* margin : 0 auto; */
+    margin-bottom: 25px;
     font-size: 16px;
     text-align: center;
+    
   }
   .modal button {
     outline: none;
@@ -24,8 +27,8 @@
     border: 0;
   }
   .modal > section {
-    width: 250px;
-    height: 400px;
+    width: 280px;
+    height: 200px;
     /* margin: 0 auto; */
     border-radius: 10px;
     background-color: #ffff;
@@ -33,25 +36,22 @@
     animation: modal-show 0.3s;
     overflow: hidden;
   }
-  
-
   .configForm {
-    width: 250px;
-    height: 300px;
+    /* display: block; */
+    width: 280px;
+    height: 100px;
     margin-top : 10px;
-    margin-bottom: 35px;
+    text-align: center;
+    /* margin-bottom: 35px; */
     font-size: 11px;
     position: relative;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
   }
   
   label {
     font-weight: 700;
     margin-bottom: 8px;
   }
-  
- 
-  
   .modal > section > footer {
     text-align: right;
   }
@@ -62,10 +62,6 @@
     font-size: 13px;
   }
   
-  .modal > section > footer .createBtn {
-    background-color: #08d9d6;
-    margin-right: 20px;
-  }
   
   .modal > section > footer .closeBtn {
     background-color: #ff5722;
@@ -97,29 +93,5 @@
       opacity: 1;
     }
   }
-  
-  .configForm {
-    display: flex;
-  }
-  
-  .descriptionForm,
-  .configData {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .descriptionForm .description {
-    height: 100px;
-    border: none;
-    border-radius: 20px;
-    background-color: #eee;
-    resize: none;
-    padding: 15px;
-    margin-bottom: 20px;
-  }
-  
-  input:focus,
-  textarea:focus {
-    outline: none;
-  }
+
   

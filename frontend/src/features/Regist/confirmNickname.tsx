@@ -132,7 +132,7 @@ function ConfirmNickname({progress} : MyProps){
     const handleOnClickNextStep = (e : React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         dispatch(setNick(nickName));
-        // navigate("/confirmpwd");
+        navigate("/addatmos");
     }
 
     return(

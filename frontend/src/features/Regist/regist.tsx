@@ -8,7 +8,8 @@ import ConfirmId from './ConfirmId';
 import ConfirmPwd from './ConfirmPwd';
 import ConfirmNickname from './ConfirmNickname';
 import ConfirmEtc from './ConfirmEtc';
-import addAtmosInter from './addAtmosInter';
+import AddAtmosInter from './AddAtmosInter';
+import AddMbti from './AddMbti';
 import {register, setId, setPwd, setEmail, setGender, setAtmos, setBirth, setNick, Register} from "./registerReducer";
 import { ReducerType } from '../../app/rootReducer';
 
@@ -42,6 +43,8 @@ function Regist(){
                 <Route path="/confirmpwd" element={<ConfirmPwd progress={43}/>}/>
                 <Route path="/confirmetc" element={<ConfirmEtc progress={57}/>}/>
                 <Route path="/confirmnick" element={<ConfirmNickname progress={71}/>}/>
+                <Route path="/addatmos" element={<AddAtmosInter progress={85}/>}/>
+                <Route path="/addmbti" element={<AddMbti progress={100}/>}/>
             </Routes>
         </Container>
         

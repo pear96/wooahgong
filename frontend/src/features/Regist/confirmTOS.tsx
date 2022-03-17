@@ -27,12 +27,15 @@ const AllCheckBox = styled.div`
   font-size : 18px;
   font-weight : bold;
   margin-left : 60px;
+  cursor : default;
 `
 const CheckBox = styled.div`
   margin-top : 30px;
   font-size : 16px;
   font-weight : bold;
   margin-left : 60px;
+  cursor : pointer;
+  width : 250px;
 `
 const TextBox = styled.div`
   width : 254px;
@@ -45,16 +48,43 @@ const TextBox = styled.div`
   line-height : 16px;
   display : flex;
   align-items : center;
+  cursor : default;
 `
 const Line = styled.div`
   width : 310px;
   height : 0px;
   margin-top : 30px;
-
   margin-left : 25px;
   border : 1px solid #D7D7D7;
 `
-
+const DisableButton = styled.button`
+  border-style : none;
+  border-radius : 10px;
+  width : 200px;
+  height : 40px;
+  font-size : 16px;
+  font-style : normal;
+  font-weight : 500;
+  cursor : default;
+  color : rgba(0,0,0, 0.5);
+`
+const ActiveButton = styled.button`
+  background: linear-gradient(90deg, #B3A1E0 0%, #5DACF5 100%);
+  border-style : none;
+  border-radius : 10px;
+  width : 200px;
+  height : 40px;
+  font-size : 16px;
+  font-style : normal;
+  font-weight : 500;
+  cursor : pointer;
+  color : rgba(255,255,255, 1);
+  transition: all 0.3s ease 0s;
+  &:hover{
+    box-shadow: 0rem 0.5rem 2rem rgba(179, 161, 224, 0.4);
+    transform: translateY(-7px);
+  }
+`
 type MyProps = {
     progress : number
 }
@@ -75,40 +105,41 @@ function ConfirmTOS({progress} : MyProps){
       setAccountOpen(true);
     };
     const closeRoomConfigModal = (e : any) => {
+      e.stopPropagation();
       setModalOpen(false);
     };
     const closeAccountModal = (e : any) => {
+      e.stopPropagation();
       setAccountOpen(false);
     };
     const handleTosClick = (e : any) => {
       e.stopPropagation();
+      if(total) setTotal(!total);
       setTOS(!TOS);
     };
     const handlePrivacyClick = (e : any) => {
       e.stopPropagation();
+      if(total) setTotal(!total);
       setPrivacy(!privacy);
     };
     const handleTosPrivacyClick = () => {
-
-        // setTOS(!TOS);
-        // setPrivacy(!privacy);
-        // setTotal(!total);
-    
-        // setTOS(!TOS);
-        // setPrivacy(!privacy);
-        // setTotal(!total);
-      
-      if(total && TOS && !privacy){
-        setPrivacy(!privacy);
-      }
-      else if(total && !TOS && !privacy){
-        setTOS(!TOS);
+      if(!total && TOS && !privacy){
         setPrivacy(!privacy);
         setTotal(!total);
       }
-      else if(total && !TOS && privacy){
+      else if(!total && !TOS && privacy){
         setTOS(!TOS);
+        setTotal(!total);
+      }
+      else if(total && TOS && !privacy){
+        setTOS(!TOS);
+        setTotal(!total);
+      }
+      else if(total && !TOS && privacy){
         setPrivacy(!privacy);
+        setTotal(!total);
+      }
+      else if(!total && TOS && privacy){
         setTotal(!total);
       }
       else{
@@ -121,14 +152,6 @@ function ConfirmTOS({progress} : MyProps){
     const handleClick = (e : React.MouseEvent | React.KeyboardEvent) => {
       e.preventDefault();
       navigate("/user/signup/checkId");
-    };
-    const handleCheck = (e : any) => {
-      e.stopPropagation();
-    };
-    const onCheckEnter = (e : React.KeyboardEvent) => {
-      if (e.key === "Enter") {
-        handleClick(e);
-      }
     };
   
     useEffect(() => {
@@ -144,14 +167,6 @@ function ConfirmTOS({progress} : MyProps){
           <div>
             <div>
               <Img src={Logo} alt="Logo"/>
-              {/* <ProgressBar
-                completed={progress}
-                customLabel=" "
-                width="20%"
-                height="5px"
-                bgColor="#ff2e63"
-              baseBgColor="#0000"
-              /> */}
             </div>
             <Title>우리만 아는 공간</Title>
             <Title>서비스 약관에 동의 해주세요.</Title>
@@ -191,13 +206,12 @@ function ConfirmTOS({progress} : MyProps){
               모두 동의합니다.
             </AllCheckBox>
             <TextBox>
-              전체동의는 필수 및 선택정보에 대한 동의도 포함되어 있으며, 개별적으로도 동의를 선택하실 수 있습니다. 선택항목에 대한 동의를 거부하시는 경우에도 서비스는 이용이 가능합니다.
+              전체동의는 필수 및 선택정보에 대한 동의도 포함되어 있으며, 
+              개별적으로도 동의를 선택하실 수 있습니다. 
+              선택항목에 대한 동의를 거부하시는 경우에도 서비스는 이용이 가능합니다.
             </TextBox>
             <Line/>
-            <CheckBox
-              onClick={openAccountModal}
-            >
-              {TOS === false ? (
+            {TOS === false ? (
                 <UnCheck
                 onClick = {handleTosClick} 
                 filter = "invert(53%) sepia(7%) saturate(13%) hue-rotate(56deg) brightness(93%) contrast(88%)"
@@ -207,7 +221,7 @@ function ConfirmTOS({progress} : MyProps){
                   // marginLeft : "29px",
                   // marginTop : "30px",
                   left : "29px",
-                  top : "477px",
+                  top : "479px",
                   display : "inline",
                   position : "absolute",
                   cursor : "pointer"
@@ -222,16 +236,18 @@ function ConfirmTOS({progress} : MyProps){
                   // marginLeft : "29px",
                   // marginTop : "30px",
                   left : "29px",
-                  top : "477px",
+                  top : "479px",
                   display : "inline",
                   position : "absolute",
                   cursor : "pointer"
                 }}/>
               )}
+            <CheckBox
+              onClick={openAccountModal}
+            >
               [필수] 우리만아는공간 계정약관
             </CheckBox>
-            <CheckBox onClick={openRoomConfigModal}>
-              {privacy === false ? (
+            {privacy === false ? (
                 <UnCheck
                 onClick = {handlePrivacyClick}
                 filter = "invert(53%) sepia(7%) saturate(13%) hue-rotate(56deg) brightness(93%) contrast(88%)"
@@ -241,7 +257,7 @@ function ConfirmTOS({progress} : MyProps){
                   // marginLeft : "29px",
                   // marginTop : "30px",
                   left : "29px",
-                  top : "528px",
+                  top : "530px",
                   display : "inline",
                   position : "absolute"
                 }}
@@ -255,18 +271,29 @@ function ConfirmTOS({progress} : MyProps){
                   // marginLeft : "29px",
                   // marginTop : "30px",
                   left : "29px",
-                  top : "528px",
+                  top : "530px",
                   display : "inline",
                   position : "absolute"
                 }}
               />
               )}
-              
+            <CheckBox onClick={openRoomConfigModal}>
               [필수] 개인정보 수집 및 이용동의
             </CheckBox>
+            <div style={{
+              textAlign : "center",
+              marginTop : "65px"
+            }}>
+              {confirm ? <ActiveButton>다 음</ActiveButton> :(
+              <DisableButton>다 음</DisableButton>)}
+            </div>
+            
             <AccountPolicy open={accountOpen} onClose={closeAccountModal}/>
             <Agree open={modalOpen} onClose={closeRoomConfigModal}/>
           </div>
+          {/* {confirm ? null :(
+            <DisableButton>다음</DisableButton>
+          )} */}
         </article>
       </main>
     )

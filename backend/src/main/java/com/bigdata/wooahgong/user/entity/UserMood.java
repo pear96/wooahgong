@@ -1,5 +1,6 @@
 package com.bigdata.wooahgong.user.entity;
 
+import com.bigdata.wooahgong.common.util.BaseTimeEntity;
 import com.bigdata.wooahgong.mood.entity.Mood;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserMood {
+public class UserMood extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userMoodSeq;

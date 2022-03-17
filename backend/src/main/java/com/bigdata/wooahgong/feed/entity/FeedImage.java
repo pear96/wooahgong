@@ -1,5 +1,6 @@
 package com.bigdata.wooahgong.feed.entity;
 
+import com.bigdata.wooahgong.common.util.BaseTimeEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeedImage {
+public class FeedImage extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long feedImageSeq;

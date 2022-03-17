@@ -7,6 +7,9 @@ import { Button } from 'antd';
 // asseets main logo image
 import { ReactComponent as Logo } from '../../../assets/Logo/Logo.svg';
 import * as kakalogin from '../../../assets/kakaoLogo/kakao_login_large_wide.png';
+
+// kakao socail login
+import { KAKAO_AUTH_URL } from '../OAuth';
 // styled-componets
 import { LogoContainer } from './styles';
 
@@ -32,7 +35,12 @@ function socialLogin() {
       >
         로그인
       </Button>
-      <Button style={{ color: '#C09FDC', width: 221, marginLeft: 60, marginTop: 20 }} shape="round" size="large">
+      <Button
+        href={KAKAO_AUTH_URL}
+        style={{ color: '#C09FDC', width: 221, marginLeft: 60, marginTop: 20 }}
+        shape="round"
+        size="large"
+      >
         카카오 로그인
       </Button>
       <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: 20 }}>

@@ -8,6 +8,7 @@ export interface Register {
     atmos : string[],
     birth : {year : "", month : "", day : ""},
     nick : string,
+    mbti : string
 }
 
 export const register = createSlice({
@@ -19,7 +20,8 @@ export const register = createSlice({
         gender : true,
         atmos : [],
         birth : {year : "", month : "", day : ""},
-        nick : ""
+        nick : "",
+        mbti : ""
     } as Register,
     reducers:{
         setId(state, action : PayloadAction<string>){
@@ -45,9 +47,12 @@ export const register = createSlice({
         },
         setNick(state, action : PayloadAction<string>){
             state.nick = action.payload
+        },
+        setMbti(state, action : PayloadAction<string>){
+            state.mbti = action.payload
         }
     }
 })
 
-export const {setId, setPwd, setEmail, setGender, setAtmos, setBirth, setNick} = register.actions;
+export const {setId, setPwd, setEmail, setGender, setAtmos, setBirth, setNick, setMbti} = register.actions;
 export default register.reducer;

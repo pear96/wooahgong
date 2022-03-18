@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import ProgressBar from "@ramonak/react-progress-bar";
 import {useNavigate} from "react-router-dom";
 import Logo from "../../assets/Logo.png";
+import MbtiModal from './modal/MbtiModal';
 import {register, setId, setPwd, setEmail, setGender, setAtmos, setBirth, setNick, Register} from "./registerReducer";
 import { ReducerType } from '../../app/rootReducer';
 
@@ -32,7 +33,7 @@ const Input = styled.input`
     width : 238px;
     height : 31px;
     margin-left : 58px;
-    margin-bottom : 20px;
+    margin-top : 20px;
     padding-left : 3px;
     padding-bottom : 0px;
     border-left : none;
@@ -87,52 +88,73 @@ type MyProps = {
 // 빈티지, 액티브, 클럽, 기타
 function AddMbti({progress} : MyProps){
     const [isOk, setIsOk] = useState<boolean>(false);
-    const [selectedAtmos, setSelectedAtmos] = useState<string[]>([]);
-    const [atmos, setStateAtmos] = useState([
-        {type : "모던", check : false},
-        {type : "내추럴", check : false},
-        {type : "러블리", check : false},
-        {type : "럭셔리", check : false},
-        {type : "유니크", check : false},
-        {type : "빈티지", check : false},
-        {type : "액티브", check : false},
-        {type : "클럽", check : false},
-        {type : "기타", check : false}
+    const [modal, setModal] = useState<boolean>(false);
+    const [selectedmbti, setSelectedmbti] = useState<string[]>([]);
+    const [mbti, setStatembti] = useState([
+        {type : "ISTJ", check : false},
+        {type : "ISTP", check : false},
+        {type : "ISFJ", check : false},
+        {type : "ISFP", check : false},
+        {type : "INTJ", check : false},
+        {type : "INTP", check : false},
+        {type : "INFJ", check : false},
+        {type : "INFP", check : false},
+        {type : "ESTJ", check : false},
+        {type : "ESTP", check : false},
+        {type : "ESFJ", check : false},
+        {type : "ESFP", check : false},
+        {type : "ENTJ", check : false},
+        {type : "ENTP", check : false},
+        {type : "ENFJ", check : false},
+        {type : "ENFP", check : false}
     ])
     const navigate = useNavigate();
 
     const regist = useSelector<ReducerType, Register>(state => state.registerReducer);
     const dispatch = useDispatch();
 
-    const handleAtmos = (e : React.MouseEvent<HTMLButtonElement>) =>{
-        e.stopPropagation();
-        const index : number = +e.currentTarget.value;
-        setStateAtmos(
-            atmos.map((v : {type : string, check : boolean}, i : number) => i === index ? {...v, check : !v.check} : v)
+    const handleMbti = (e : React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        const index = +e.currentTarget.value;
+        setStatembti(
+            mbti.map((v : {type : string , check : boolean}, i : number) => i === index ? {...v, check : !v.check } : v)
         )
     }
+
+    const handleOpenModal = (e : React.MouseEvent<HTMLInputElement>) =>{
+        e.stopPropagation();
+        setModal(true);
+        // const index : number = +e.currentTarget.value;
+        // setStatembti(
+        //     mbti.map((v : {type : string, check : boolean}, i : number) => i === index ? {...v, check : !v.check} : v)
+        // )
+    }
+    const handleCloseModal = (e : React.MouseEvent) => { 
+        e.stopPropagation();
+        setModal(false);
+    }
     useEffect(()=>{
-        if(selectedAtmos.length > 0){
-            console.log(selectedAtmos)
+        if(selectedmbti.length > 0){
+            console.log(selectedmbti)
             setIsOk(true);
         }
         else{
             setIsOk(false);
         }
-    },[selectedAtmos])
+    },[selectedmbti])
     useEffect(()=>{
         const select = [];
-        for(let i = 0; i < atmos.length; i += 1){
-            if(atmos[i].check){
-                select.push(atmos[i].type);
+        for(let i = 0; i < mbti.length; i += 1){
+            if(mbti[i].check){
+                select.push(mbti[i].type);
             }
         }
-        setSelectedAtmos(select);
-    },[atmos])
+        setSelectedmbti(select);
+    },[mbti])
     const handleOnClickNextStep = (e : React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        dispatch(setAtmos(selectedAtmos));
-        navigate("/addatmos");
+        // dispatch(setmbti(selectedmbti));
+        navigate("/addmbti");
     }
 
     return(
@@ -152,8 +174,8 @@ function AddMbti({progress} : MyProps){
                             />
                         </Progress>
                     </div>
-                    <Title>MBTI</Title>
-                    
+                    <Title>MBTI 설정</Title>
+                    <Input onClick={handleOpenModal} placeholder="클릭하여 MBTI를 설정해주세요."/>
                     <div style={{
                         position : "absolute",
                         marginLeft : "80px",
@@ -165,6 +187,7 @@ function AddMbti({progress} : MyProps){
                             <DisableButton>다 음</DisableButton>
                         )}
                     </div>
+                    <MbtiModal open = {modal} onClose = {handleCloseModal} handleMbti = {handleMbti} mbti = {mbti}/>
                 </div>
             </article>
         </main>

@@ -2,10 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../../app/store';
 // extrareducers
-import { postKakacode, getToken } from '../authSlice';
-
-// reducers
-import { saveCode } from '../authSlice';
+import { postKakaocode } from '../authSlice';
 
 function OAuth2RedirectHandler() {
   const dispatch = useAppDispatch();
@@ -16,8 +13,10 @@ function OAuth2RedirectHandler() {
 
   // code를 저장
   useEffect(() => {
-    dispatch(saveCode(code as string));
-    dispatch(postKakacode(code as string)).unwrap();
+    dispatch(postKakaocode(code as string)).unwrap();
+    // 여기서 토큰 저장해서 메인으로 가거나
+
+    // 남은 회원가입 페이지로 가거나
   }, []);
 
   // 분기 처리가 있어야 함. 서버로 코드 보내고 토큰까지 받는데, 이미 회원가입한 사람이면 바로 main으로 넘어가고,

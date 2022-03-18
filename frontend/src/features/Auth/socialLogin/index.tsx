@@ -11,7 +11,7 @@ import * as kakalogin from '../../../assets/kakaoLogo/kakao_login_large_wide.png
 // kakao socail login
 import { KAKAO_AUTH_URL } from '../OAuth';
 // styled-componets
-import { LogoContainer } from './styles';
+import { LogoContainer, ActiveButton } from './styles';
 
 function socialLogin() {
   const navigate = useNavigate();
@@ -27,17 +27,15 @@ function socialLogin() {
       </LogoContainer>
       <div style={{ marginLeft: 110, marginTop: 20 }}>A place only we know</div>
       <div style={{ marginLeft: 120, marginTop: 10 }}>우리만 아는 공간</div>
-      <Button
-        onClick={onClickGotoLoginPage}
-        style={{ color: '#C09FDC', width: 221, marginLeft: 60, marginTop: 150 }}
-        shape="round"
-        size="large"
-      >
-        로그인
-      </Button>
+      <ActiveButton onClick={onClickGotoLoginPage}>로그인</ActiveButton>
       <Button
         href={KAKAO_AUTH_URL}
-        style={{ color: '#C09FDC', width: 221, marginLeft: 60, marginTop: 20 }}
+        style={{
+          backgroundColor: '#B3A1E0',
+          width: 221,
+          marginLeft: 60,
+          marginTop: 20,
+        }}
         shape="round"
         size="large"
       >

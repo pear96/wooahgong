@@ -172,7 +172,7 @@ function Checkmail({progress} : MyProps){
     const handleOnClickNextStep = (e : React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         dispatch(setEmail(email));
-        navigate("/confirmId");
+        navigate("/regist/confirmId");
     }
 
     return(

@@ -148,7 +148,7 @@ function ConfirmId({progress} : MyProps){
     const handleOnClickNextStep = (e : React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         dispatch(setId(id));
-        navigate("/confirmpwd");
+        navigate("/regist/confirmpwd");
     }
 
     return(

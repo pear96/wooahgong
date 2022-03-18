@@ -157,7 +157,7 @@ function ConfirmTOS({progress} : MyProps){
     }
     const handleClick = (e : React.MouseEvent | React.KeyboardEvent) => {
       e.preventDefault();
-      navigate("/checkmail");
+      navigate("/regist/checkmail");
     };
   
     useEffect(() => {

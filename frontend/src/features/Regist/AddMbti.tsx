@@ -147,7 +147,7 @@ function AddMbti({progress} : MyProps){
     const handleOnClickNextStep = (e : React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         dispatch(setMbti(selectedmbti));
-        navigate("/complete");
+        navigate("/regist/complete");
     }
 
     return(

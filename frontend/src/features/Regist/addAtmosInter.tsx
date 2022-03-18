@@ -95,7 +95,7 @@ function AddAtmosInter({progress} : MyProps){
         {type : "럭셔리", check : false, color : "#B6B026"},
         {type : "유니크", check : false, color : "#896CFE"},
         {type : "빈티지", check : false, color : "#BF8A00"},
-        {type : "액티브", check : false, color : "#FF9292"},
+        {type : "액티브", check : false, color : "#FF9292"}, 
         {type : "클럽", check : false, color : "#FFC092"},
         {type : "기타", check : false, color : "#BBBBBB"}
     ])
@@ -152,7 +152,7 @@ function AddAtmosInter({progress} : MyProps){
     const handleOnClickNextStep = (e : React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         dispatch(setAtmos(selectedAtmos));
-        navigate("/addmbti");
+        navigate("/regist/addmbti");
     }
 
     return(

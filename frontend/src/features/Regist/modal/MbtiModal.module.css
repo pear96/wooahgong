@@ -37,21 +37,16 @@
     overflow: hidden;
   }
   .configForm {
-    /* display: block; */
-    width: 280px;
+
     height: 115px;
     margin-top : 10px;
     text-align: center;
-    /* margin-bottom: 35px; */
+
     font-size: 11px;
     position: relative;
     overflow-y: scroll;
-    /* -ms-overflow-style: none;  */
-    /* scrollbar-width: none; */
+
   }
-  /* .configForm::-webkit-scrollbar {
-    display: none;
-  } */
   label {
     font-weight: 700;
     margin-bottom: 8px;

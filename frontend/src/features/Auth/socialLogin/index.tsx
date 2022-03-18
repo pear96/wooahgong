@@ -1,5 +1,5 @@
 import React, { FC, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 // antd
 
 import { Button } from 'antd';
@@ -36,7 +36,7 @@ function socialLogin() {
         카카오 로그인
       </Button>
       <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: 20 }}>
-        <div>회원가입</div>
+        <Link to="/regist">회원가입</Link>
         <div>아이디 찾기</div>
         <div>비밀번호 찾기</div>
       </div>

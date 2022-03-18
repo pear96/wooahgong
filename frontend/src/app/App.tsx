@@ -1,11 +1,11 @@
 import React from 'react';
 import "./App.css";
 import 'react-toastify/dist/ReactToastify.css';
-import Regist from '../features/Regist/Regist';
 import { ToastContainer } from 'react-toastify';
-import Navbar from '../common/Navbar';
 import loadable from '@loadable/component';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
+import Navbar from '../common/Navbar';
+import Regist from '../features/Regist/Regist';
 import 'antd/dist/antd.css';
 
 const SocialLogin = loadable(() => import('../features/Auth/socialLogin'));
@@ -21,6 +21,7 @@ function App() {
       <Routes>
         <Route path="/" element={<SocialLogin />} />
         <Route path="/login" element={<MainLogin />} />
+        <Route path="/regist/*" element={<Regist />}/>
       </Routes>
     </BrowserRouter>
       <ToastContainer autoClose={1500} style={{width : "100%", display : "inline"}} theme="colored"/>  

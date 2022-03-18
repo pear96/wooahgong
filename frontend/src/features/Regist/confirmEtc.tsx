@@ -143,7 +143,7 @@ function ConfirmEtc({progress} : MyProps){
         }
         dispatch(setBirth(objBirth));
         dispatch(setGender(gender));
-        navigate("/confirmnick");
+        navigate("/regist/confirmnick");
     }
 
     return(

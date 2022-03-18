@@ -1,9 +1,11 @@
-import { combineReducers } from '@reduxjs/toolkit';
+import { combineReducers, createSlice } from '@reduxjs/toolkit';
+import registerReducer from '../features/Regist/registerReducer';
 
 import loginSlice from '../features/Auth/authSlice';
 
 // 만들어 놓은 리듀서들을 합친다.
 const rootReducer = combineReducers({
+  registerReducer,
   login: loginSlice.reducer,
 });
 

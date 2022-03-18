@@ -10,6 +10,7 @@ import ConfirmNickname from './ConfirmNickname';
 import ConfirmEtc from './ConfirmEtc';
 import AddAtmosInter from './AddAtmosInter';
 import AddMbti from './AddMbti';
+import CompleteRegist from './CompleteRegist';
 import {register, setId, setPwd, setEmail, setGender, setAtmos, setBirth, setNick, Register} from "./registerReducer";
 import { ReducerType } from '../../app/rootReducer';
 
@@ -45,6 +46,7 @@ function Regist(){
                 <Route path="/confirmnick" element={<ConfirmNickname progress={71}/>}/>
                 <Route path="/addatmos" element={<AddAtmosInter progress={85}/>}/>
                 <Route path="/addmbti" element={<AddMbti progress={100}/>}/>
+                <Route path="/complete" element={<CompleteRegist />}/>
             </Routes>
         </Container>
         

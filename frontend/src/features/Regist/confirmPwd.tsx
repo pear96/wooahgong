@@ -25,9 +25,11 @@ const Title = styled.h3`
     margin-left : 58px;
     margin-top : 35px;
     margin-bottom : 20px;
+    font-family : "NotoSansKR";
     font-size : 22px;
 `
 const Input = styled.input`
+    font-family : "NotoSansKR";
     font-size : 11px;
     width : 238px;
     height : 31px;
@@ -44,6 +46,7 @@ const ConfirmBtn = styled.button`
     width : 80px;
     height : 23px;
     margin-left : 10px;
+    font-family : "NotoSansKR";
     font-size : 10px;
     font-style : normal;
     font-weight : 400;
@@ -57,6 +60,7 @@ const DisableButton = styled.button`
     border-radius : 10px;
     width : 200px;
     height : 40px;
+    font-family : "NotoSansKR";
     font-size : 16px;
     font-style : normal;
     font-weight : 500;
@@ -64,11 +68,12 @@ const DisableButton = styled.button`
     color : rgba(0,0,0, 0.5);
 `
 const ActiveButton = styled.button`
-    background: linear-gradient(90deg, #B3A1E0 0%, #5DACF5 100%);
+    background: #80B2FE;
     border-style : none;
     border-radius : 10px;
     width : 200px;
     height : 40px;
+    font-family : "NotoSansKR";
     font-size : 16px;
     font-style : normal;
     font-weight : 500;
@@ -83,6 +88,7 @@ const ActiveButton = styled.button`
 const PwdErrorMsg = styled.span`
     position : absolute;
     color : red;
+    font-family : "NotoSansKR";
     font-size : 3px;
     top : 428px;
     left : 0px;
@@ -91,6 +97,7 @@ const PwdErrorMsg = styled.span`
 const PwdCheckErrorMsg = styled.span`
     position : absolute;
     color : red;
+    font-family : "NotoSansKR";
     font-size : 3px;
     top : 481px;
     left : 0px;
@@ -177,7 +184,7 @@ function ConfirmPwd({progress} : MyProps){
                     <div style={{
                         position : "absolute",
                         marginLeft : "80px",
-                        top : "520px"
+                        top : "523px"
                     }}>
                         {isOk ? (
                             <ActiveButton onClick={handleOnClickNextStep}>다 음</ActiveButton>

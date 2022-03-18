@@ -5,7 +5,7 @@ import ProgressBar from "@ramonak/react-progress-bar";
 import {useNavigate} from "react-router-dom";
 import Logo from "../../assets/Logo.png";
 import MbtiModal from './modal/MbtiModal';
-import {register, setId, setPwd, setEmail, setGender, setAtmos, setBirth, setNick, Register} from "./registerReducer";
+import {register, setMbti, Register} from "./registerReducer";
 import { ReducerType } from '../../app/rootReducer';
 
 
@@ -26,10 +26,13 @@ const Title = styled.h3`
     margin-left : 58px;
     margin-top : 35px;
     margin-bottom : 20px;
+    font-family : "NotoSansKR";
     font-size : 22px;
 `
 const Input = styled.input`
-    font-size : 5px;
+    font-family : "NotoSansKR";
+    font-size : 16px;
+    font-weight : 700;
     width : 238px;
     height : 31px;
     margin-left : 58px;
@@ -40,26 +43,27 @@ const Input = styled.input`
     border-top : none;
     border-right : none;
     border-bottom : #D7D7D7 1px solid;
+    cursor : pointer;
 `
 const DisableButton = styled.button`
     border-style : none;
     border-radius : 10px;
     width : 200px;
     height : 40px;
+    font-family : "NotoSansKR";
     font-size : 16px;
-    font-style : normal;
     font-weight : 500;
     cursor : default;
     color : rgba(0,0,0, 0.5);
 `
 const ActiveButton = styled.button`
-    background: linear-gradient(90deg, #B3A1E0 0%, #5DACF5 100%);
+    background: #80B2FE;
     border-style : none;
     border-radius : 10px;
     width : 200px;
     height : 40px;
+    font-family : "NotoSansKR";
     font-size : 16px;
-    font-style : normal;
     font-weight : 500;
     cursor : pointer;
     color : rgba(255,255,255, 1);
@@ -68,17 +72,6 @@ const ActiveButton = styled.button`
         box-shadow: 0rem 0.5rem 2rem rgba(179, 161, 224, 0.4);
         transform: translateY(-7px);
     }
-`
-const Button = styled.button`
-    display : inline-block;
-    font-size : 11px;
-    width : 45px;
-    height : 30px;
-    margin : 0 2.5px;
-    margin-bottom : 25px;
-    border : none;
-    border-radius : 5px;
-    cursor : pointer;
 `
 
 type MyProps = {
@@ -89,45 +82,46 @@ type MyProps = {
 function AddMbti({progress} : MyProps){
     const [isOk, setIsOk] = useState<boolean>(false);
     const [modal, setModal] = useState<boolean>(false);
-    const [selectedmbti, setSelectedmbti] = useState<string[]>([]);
+    const [selectedmbti, setSelectedmbti] = useState<string>("");
     const [mbti, setStatembti] = useState([
-        {type : "ISTJ", check : false},
-        {type : "ISTP", check : false},
-        {type : "ISFJ", check : false},
-        {type : "ISFP", check : false},
-        {type : "INTJ", check : false},
-        {type : "INTP", check : false},
-        {type : "INFJ", check : false},
-        {type : "INFP", check : false},
-        {type : "ESTJ", check : false},
-        {type : "ESTP", check : false},
-        {type : "ESFJ", check : false},
-        {type : "ESFP", check : false},
-        {type : "ENTJ", check : false},
-        {type : "ENTP", check : false},
-        {type : "ENFJ", check : false},
-        {type : "ENFP", check : false}
+        {type : "ISTJ", check : false, color : "#F16464"},
+        {type : "ISTP", check : false, color : "#65FF74"},
+        {type : "ISFJ", check : false, color : "#2FBEFC"},
+        {type : "ISFP", check : false, color : "#FDABE1"},
+        {type : "INTJ", check : false, color : "#F18F64"},
+        {type : "INTP", check : false, color : "#4BE589"},
+        {type : "INFJ", check : false, color : "#2F81FC"},
+        {type : "INFP", check : false, color : "#8458FF"},
+        {type : "ESTJ", check : false, color : "#FFB951"},
+        {type : "ESTP", check : false, color : "#1AF2B1"},
+        {type : "ESFJ", check : false, color : "#18E2D6"},
+        {type : "ESFP", check : false, color : "#B386FD"},
+        {type : "ENTJ", check : false, color : "#FFCF25"},
+        {type : "ENTP", check : false, color : "#9AF562"},
+        {type : "ENFJ", check : false, color : "#33DAFF"},
+        {type : "ENFP", check : false, color : "#FD86F8"}
     ])
+
     const navigate = useNavigate();
 
     const regist = useSelector<ReducerType, Register>(state => state.registerReducer);
     const dispatch = useDispatch();
 
-    const handleMbti = (e : React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        const index = +e.currentTarget.value;
-        setStatembti(
-            mbti.map((v : {type : string , check : boolean}, i : number) => i === index ? {...v, check : !v.check } : v)
-        )
+    const handleChangeValue = (e : any) =>{
+        e.stopPropagation();
     }
-
+    const handleMbti = (e : React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        const index = e.currentTarget.innerText;
+        setStatembti(
+            mbti.map((v : {type : string , check : boolean , color : string}, i : number) => v.type === index ? {...v, check : true } : {...v, check : false})
+        )
+        // handleChangeValue(e);
+        handleCloseModal(e);
+    }
     const handleOpenModal = (e : React.MouseEvent<HTMLInputElement>) =>{
         e.stopPropagation();
         setModal(true);
-        // const index : number = +e.currentTarget.value;
-        // setStatembti(
-        //     mbti.map((v : {type : string, check : boolean}, i : number) => i === index ? {...v, check : !v.check} : v)
-        // )
     }
     const handleCloseModal = (e : React.MouseEvent) => { 
         e.stopPropagation();
@@ -143,18 +137,17 @@ function AddMbti({progress} : MyProps){
         }
     },[selectedmbti])
     useEffect(()=>{
-        const select = [];
         for(let i = 0; i < mbti.length; i += 1){
             if(mbti[i].check){
-                select.push(mbti[i].type);
+                setSelectedmbti(mbti[i].type);        
+                break;
             }
         }
-        setSelectedmbti(select);
     },[mbti])
     const handleOnClickNextStep = (e : React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        // dispatch(setmbti(selectedmbti));
-        navigate("/addmbti");
+        dispatch(setMbti(selectedmbti));
+        navigate("/complete");
     }
 
     return(
@@ -175,11 +168,11 @@ function AddMbti({progress} : MyProps){
                         </Progress>
                     </div>
                     <Title>MBTI 설정</Title>
-                    <Input onClick={handleOpenModal} placeholder="클릭하여 MBTI를 설정해주세요."/>
+                    <Input value={selectedmbti} onChange = {handleChangeValue} onClick={handleOpenModal} placeholder="클릭하여 MBTI를 설정해주세요."/>
                     <div style={{
                         position : "absolute",
                         marginLeft : "80px",
-                        top : "520px"
+                        top : "523px"
                     }}>
                         {isOk ? (
                             <ActiveButton onClick={handleOnClickNextStep}>다 음</ActiveButton>

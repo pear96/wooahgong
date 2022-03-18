@@ -29,6 +29,7 @@ const Title = styled.h3`
     margin-left : 58px;
     margin-top : 20px;
     margin-bottom : 10px;
+    font-family : "NotoSansKR";
     font-size : 22px;
 `
 const CheckBox = styled.button`
@@ -37,44 +38,33 @@ const CheckBox = styled.button`
     margin-left: 57px;
     font-style: normal;
     font-weight: 400;
+    font-family : "NotoSansKR";
     font-size: 18px;
     border-radius : 10px;
     box-sizing: border-box;
     border: none;
     cursor : pointer;
 `
-const Input = styled.input`
-    font-size : 11px;
-    width : 150px;
-    height : 31px;
-    margin-left : 58px;
-    margin-bottom : 20px;
-    padding-left : 3px;
-    padding-bottom : 0px;
-    border-left : none;
-    border-top : none;
-    border-right : none;
-    border-bottom : #D7D7D7 1px solid;
-`
+
 const DisableButton = styled.button`
     border-style : none;
     border-radius : 10px;
     width : 200px;
     height : 40px;
+    font-family : "NotoSansKR";
     font-size : 16px;
-    font-style : normal;
     font-weight : 500;
     cursor : default;
     color : rgba(0,0,0, 0.5);
 `
 const ActiveButton = styled.button`
-    background: linear-gradient(90deg, #B3A1E0 0%, #5DACF5 100%);
+    background: #80B2FE;
     border-style : none;
     border-radius : 10px;
     width : 200px;
     height : 40px;
+    font-family : "NotoSansKR";
     font-size : 16px;
-    font-style : normal;
     font-weight : 500;
     cursor : pointer;
     color : rgba(255,255,255, 1);
@@ -83,14 +73,6 @@ const ActiveButton = styled.button`
         box-shadow: 0rem 0.5rem 2rem rgba(179, 161, 224, 0.4);
         transform: translateY(-7px);
     }
-`
-const ErrorMsg = styled.span`
-    position : absolute;
-    color : red;
-    font-size : 3px;
-    top : 450px;
-    left : 0px;
-    margin-left : 61px;
 `
 const Birth = styled.div`
     width : 208px;
@@ -103,8 +85,10 @@ const Birth = styled.div`
         margin-left : 58px;
         padding-left : 35px;
         padding-right : 0px;
-        line-height: 28px;
+        font-family : "NotoSansKR";
+        line-height: 30px;
         background : rgba(0,0,0,0);
+        cursor : pointer;
     }
     .react-datepicker-popper {
         margin-left : 58px;
@@ -183,7 +167,7 @@ function ConfirmEtc({progress} : MyProps){
                     {gender ? (
                         <>
                             <CheckBox style={{
-                                background : "linear-gradient(96.42deg, #C09FDC 20.46%, #34B1FF 80.57%)",
+                                background : "#80B2FE",
                                 color : "white"
                             }} onClick={handleClickMale}
                             >남</CheckBox>
@@ -196,7 +180,7 @@ function ConfirmEtc({progress} : MyProps){
                         <>
                             <CheckBox onClick={handleClickMale}>남</CheckBox>
                             <CheckBox style={{
-                                background : "linear-gradient(96.42deg, #C09FDC 20.46%, #34B1FF 80.57%)",
+                                background : "#B8B2F8",
                                 color : "white",
                                 marginLeft : "25px"
                             }} onClick={handleClickFeMale}
@@ -212,7 +196,7 @@ function ConfirmEtc({progress} : MyProps){
                                 width : "23px",
                                 height : "23px",
                                 left : "60px",
-                                top : "472px"
+                                top : "480px"
                                 // marginBottom : "5px"
                                 // color : "#D7D7D7",
 
@@ -223,7 +207,7 @@ function ConfirmEtc({progress} : MyProps){
                     <div style={{
                         position : "absolute",
                         marginLeft : "80px",
-                        top : "520px"
+                        top : "523px"
                     }}>
                         {isOk ? (
                             <ActiveButton onClick={handleOnClickNextStep}>다 음</ActiveButton>

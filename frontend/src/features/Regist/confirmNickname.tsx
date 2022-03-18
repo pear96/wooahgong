@@ -25,9 +25,11 @@ const Title = styled.h3`
     margin-left : 58px;
     margin-top : 35px;
     margin-bottom : 40px;
+    font-family : "NotoSansKR";
     font-size : 22px;
 `
 const Input = styled.input`
+    font-family : "NotoSansKR";
     font-size : 11px;
     width : 150px;
     height : 31px;
@@ -44,8 +46,8 @@ const ConfirmBtn = styled.button`
     width : 80px;
     height : 23px;
     margin-left : 10px;
+    font-family : "NotoSansKR";
     font-size : 10px;
-    font-style : normal;
     font-weight : 400;
     background: #FFFFFF;
     border : 0.7px solid #B0B0B0;
@@ -57,20 +59,20 @@ const DisableButton = styled.button`
     border-radius : 10px;
     width : 200px;
     height : 40px;
+    font-family : "NotoSansKR";
     font-size : 16px;
-    font-style : normal;
     font-weight : 500;
     cursor : default;
     color : rgba(0,0,0, 0.5);
 `
 const ActiveButton = styled.button`
-    background: linear-gradient(90deg, #B3A1E0 0%, #5DACF5 100%);
+    background: #80B2FE;
     border-style : none;
     border-radius : 10px;
     width : 200px;
     height : 40px;
+    font-family : "NotoSansKR";
     font-size : 16px;
-    font-style : normal;
     font-weight : 500;
     cursor : pointer;
     color : rgba(255,255,255, 1);
@@ -83,6 +85,7 @@ const ActiveButton = styled.button`
 const ErrorMsg = styled.span`
     position : absolute;
     color : red;
+    font-family : "NotoSansKR";
     font-size : 3px;
     top : 450px;
     left : 0px;
@@ -163,7 +166,7 @@ function ConfirmNickname({progress} : MyProps){
                     <div style={{
                         position : "absolute",
                         marginLeft : "80px",
-                        top : "520px"
+                        top : "523px"
                     }}>
                         {isOk ? (
                             <ActiveButton onClick={handleOnClickNextStep}>다 음</ActiveButton>

@@ -17,6 +17,7 @@ const Img = styled.img`
   filter : drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
 `
 const Title = styled.h3`
+  font-family : "NotoSansKR";
   text-align : left;
   margin-left : 25px;
   margin-top : 0px;
@@ -24,6 +25,7 @@ const Title = styled.h3`
 `
 const AllCheckBox = styled.div`
   margin-top : 42px;
+  font-family : "NotoSansKR";
   font-size : 18px;
   font-weight : bold;
   margin-left : 60px;
@@ -31,6 +33,7 @@ const AllCheckBox = styled.div`
 `
 const CheckBox = styled.div`
   margin-top : 30px;
+  font-family : "NotoSansKR";
   font-size : 16px;
   font-weight : bold;
   margin-left : 60px;
@@ -42,6 +45,7 @@ const TextBox = styled.div`
   height : 55px;
   margin-top : 10px;
   margin-left : 61px;
+  font-family : "NotoSansKR";
   font-style : normal;
   font-size : 11px;
   font-weight : 400;
@@ -62,6 +66,7 @@ const DisableButton = styled.button`
   border-radius : 10px;
   width : 200px;
   height : 40px;
+  font-family : "NotoSansKR";
   font-size : 16px;
   font-style : normal;
   font-weight : 500;
@@ -69,11 +74,12 @@ const DisableButton = styled.button`
   color : rgba(0,0,0, 0.5);
 `
 const ActiveButton = styled.button`
-  background: linear-gradient(90deg, #B3A1E0 0%, #5DACF5 100%);
+  background: #80B2FE;
   border-style : none;
   border-radius : 10px;
   width : 200px;
   height : 40px;
+  font-family : "NotoSansKR";
   font-size : 16px;
   font-style : normal;
   font-weight : 500;
@@ -178,10 +184,8 @@ function ConfirmTOS({progress} : MyProps){
                 style={{
                   width : "20px",
                   height : "20px",
-                  // marginLeft : "29px",
-                  // marginTop : "30px",
                   left : "29px",
-                  top : "327px",
+                  top : "334px",
                   display : "inline",
                   position : "absolute",
                   cursor : "pointer"
@@ -193,10 +197,8 @@ function ConfirmTOS({progress} : MyProps){
                 style={{
                   width : "20px",
                   height : "20px",
-                  // marginLeft : "29px",
-                  // marginTop : "30px",
                   left : "29px",
-                  top : "327px",
+                  top : "334px",
                   display : "inline",
                   position : "absolute",
                   cursor : "pointer"
@@ -218,10 +220,8 @@ function ConfirmTOS({progress} : MyProps){
                 style={{
                   width : "20px",
                   height : "20px",
-                  // marginLeft : "29px",
-                  // marginTop : "30px",
                   left : "29px",
-                  top : "479px",
+                  top : "486px",
                   display : "inline",
                   position : "absolute",
                   cursor : "pointer"
@@ -233,10 +233,8 @@ function ConfirmTOS({progress} : MyProps){
                 style={{
                   width : "20px",
                   height : "20px",
-                  // marginLeft : "29px",
-                  // marginTop : "30px",
                   left : "29px",
-                  top : "479px",
+                  top : "486px",
                   display : "inline",
                   position : "absolute",
                   cursor : "pointer"
@@ -257,7 +255,7 @@ function ConfirmTOS({progress} : MyProps){
                   // marginLeft : "29px",
                   // marginTop : "30px",
                   left : "29px",
-                  top : "530px",
+                  top : "540px",
                   display : "inline",
                   position : "absolute"
                 }}
@@ -271,7 +269,7 @@ function ConfirmTOS({progress} : MyProps){
                   // marginLeft : "29px",
                   // marginTop : "30px",
                   left : "29px",
-                  top : "530px",
+                  top : "540px",
                   display : "inline",
                   position : "absolute"
                 }}

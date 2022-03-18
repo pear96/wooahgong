@@ -2,23 +2,26 @@ import React from "react";
 import styled from 'styled-components';
 import style from "./MbtiModal.module.css";
 
-
-const Button = styled.button`
+const MbtiContainer = styled.div`
     display : inline-block;
-    font-size : 11px;
-    width : 45px;
+    background : #D7D7D7;
+    font-family : "NotoSansKR";
+    font-size : 14px;
+    font-weight : 700;
+    width : 100px;
     height : 30px;
-    // margin-top : 20px;
-    margin-left : 10px;
-    margin-bottom : 25px;
+    margin : 2px 10px;
+    margin-bottom : 10px;
+    line-height: 28px;
     border : none;
     border-radius : 5px;
+    cursor : pointer;
 `
 
 type MyProps = {
     open : boolean,
     onClose : (e : any) => void,
-    handleMbti : (e : React.MouseEvent<HTMLButtonElement>) => void,
+    handleMbti : (e : React.MouseEvent<HTMLDivElement>) => void,
     mbti : any
 }
 
@@ -26,6 +29,23 @@ function MbtiModal({open, onClose, handleMbti, mbti} : MyProps){
     const handleStopEvent = (e : React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
     }
+
+    const handleOnMouse = (e : React.MouseEvent<HTMLDivElement>) => {
+        e.stopPropagation();
+        const index = e.currentTarget.innerText;
+        for(let i = 0; i < mbti.length; i += 1){
+            if(mbti[i].type === index){
+                e.currentTarget.style.background = mbti[i].color;
+                e.currentTarget.style.color = "white";
+            }
+        }
+    }
+    const handleOutMouse = (e : React.MouseEvent<HTMLDivElement>) =>{
+        e.stopPropagation();
+        e.currentTarget.style.background = "";
+        e.currentTarget.style.color = "";
+    }
+
     return (
     <div
         className={open ? `${style.openModal} ${style.modal}` : style.modal}
@@ -34,35 +54,29 @@ function MbtiModal({open, onClose, handleMbti, mbti} : MyProps){
         {open ? (
         <section className={style.modalForm} onClick={handleStopEvent} onKeyDown={onClose} role="button" tabIndex={0}>
             <header>
-            <h3 className={style.title}>관심 분위기 선택</h3>
+            <h3 className={style.title}>MBTI 🩺</h3>
             </header>
             <main>
             <div className={style.configForm}>
-                {mbti.map((v : {type : string, check : boolean}, i : number)=>{
+                {mbti.map((v : {type : string, check : boolean, color : string}, i : number)=>{
                     // console.log(v);
                     const index = i;
                     if(v.check){
                     return (
-                        <Button key={`key${index+1}`} value={i} onClick={handleMbti}
+                        <MbtiContainer key={`key${index+1}`} onClick={handleMbti}
                         style={{
-                            background : "linear-gradient(90deg, #B3A1E0 0%, #5DACF5 100%)",
+                            background : `${v.color}`,
                             color : "white"
                         }}
-                        >{v.type}</Button>
+                        >{v.type}</MbtiContainer>
                     )
                     }
                     return (
-                        <Button key={`key${index+1}`} value={i} onClick={handleMbti}>{v.type}</Button>
+                        <MbtiContainer key={`key${index+1}`} onClick={handleMbti} onMouseOver={handleOnMouse} onMouseOut={handleOutMouse}>{v.type}</MbtiContainer>
                     )
                 })}
             </div>
             </main>
-            <footer>
-            <button type="button" className={style.closeBtn} onClick={onClose}>
-                {" "}
-                확인{" "}
-            </button>
-            </footer>
         </section>
         ) : null}
     </div>

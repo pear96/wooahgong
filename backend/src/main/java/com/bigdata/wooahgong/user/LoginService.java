@@ -1,8 +1,14 @@
 package com.bigdata.wooahgong.user;
 
+import com.bigdata.wooahgong.user.dtos.KakaoProfile;
+import com.bigdata.wooahgong.user.dtos.KakaoToken;
 import com.bigdata.wooahgong.user.dtos.response.CommonLoginRes;
 import com.bigdata.wooahgong.user.entity.User;
 import com.bigdata.wooahgong.user.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -64,9 +70,47 @@ public class LoginService {
                 HttpMethod.POST,
                 kakaoTokenRequest,
                 String.class);
-        System.out.println(response);
-        // response에서 액세스토큰 빼내기
+        // Gson, Json Simple, ObjectMapper
+        ObjectMapper objectMapper = new ObjectMapper();
+        KakaoToken kakaoToken = null;
+        try {
+            kakaoToken = objectMapper.readValue(response.getBody(), KakaoToken.class);
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        System.out.println("getAccessToken 메소드 Access Token : "+kakaoToken.getAccess_token());
+        return kakaoToken.getAccess_token();
+    }
 
-        return null;
+    public KakaoProfile getProfileByToken(String accessToken) {
+        String reqURL = "https://kapi.kakao.com/v2/user/me";
+        RestTemplate restTemplate = new RestTemplate();
+        // HttpHeader 오브젝트 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + accessToken);
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        // HttpHeader와 HttpBody를 하나의 오브젝트에 담기
+        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(headers);
+        ResponseEntity<String> response = restTemplate.exchange(
+                reqURL,
+                HttpMethod.POST,
+                kakaoTokenRequest,
+                String.class);
+        // Gson, Json Simple, ObjectMapper
+        ObjectMapper objectMapper = new ObjectMapper();
+        // 내가 필드로 선언한 데이터들만 파싱.
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
+        KakaoProfile kakaoProfile = null;
+        try {
+            kakaoProfile = objectMapper.readValue(response.getBody(), KakaoProfile.class);
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return kakaoProfile;
     }
 }

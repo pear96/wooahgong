@@ -19,7 +19,7 @@ public class FeedLike extends BaseTimeEntity {
     private Long feedLikeSeq;
     // 외래키 설정
     @ManyToOne
-    @JoinColumn(name = "user_seq") // 외래키 매핑
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_feed_like_user_user_seq"), name = "user_seq") // 외래키 매핑
     @JsonBackReference // 순환 참조 방어
     private User user;
     @ManyToOne

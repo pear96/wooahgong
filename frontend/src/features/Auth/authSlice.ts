@@ -3,12 +3,23 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { saveToken } from '../../common/api/JTW-Token';
 
-// 서버로 code 전송 => socical login
+// 서버로 code 전송
 export const postKakaocode = createAsyncThunk('auth/postKakaocode', async (data: string, { rejectWithValue }) => {
   try {
     console.dir(data);
-    const response = await axios.post('백코드');
-    // 여기서 소셜 로그인의 분기가 이루어진다
+    const response = await axios.post('url');
+    return response;
+  } catch (error: any) {
+    console.dir(error);
+    return rejectWithValue(error.response.data);
+  }
+});
+
+// 서버로 부터 token 받기
+export const getKakaoToken = createAsyncThunk('auth/getKakaoToken', async (data, { rejectWithValue }) => {
+  try {
+    console.dir(data);
+    const response = await axios.get('url');
     return response;
   } catch (error: any) {
     console.dir(error);
@@ -21,10 +32,10 @@ export interface Data {
   id: string;
   password: string;
 }
-export const commonLogin = createAsyncThunk('auth/getToken', async (data: Data, { rejectWithValue }) => {
+export const commonLogin = createAsyncThunk('auth/commonLogin', async (data: Data, { rejectWithValue }) => {
   try {
     console.dir(data);
-    const response = await axios.get('백코드');
+    const response = await axios.post('백코드');
     saveToken(response.data.accessToken); // 토큰 저장
     return response;
   } catch (error: any) {
@@ -34,6 +45,7 @@ export const commonLogin = createAsyncThunk('auth/getToken', async (data: Data, 
 });
 
 export interface InitialState {
+  test: number;
   nickname: string;
   profileImg: string;
   postkakaoCodeLoading: boolean;
@@ -45,6 +57,7 @@ export interface InitialState {
 }
 
 const initialState: InitialState = {
+  test: 0,
   nickname: '',
   profileImg: '',
   postkakaoCodeLoading: false,
@@ -61,6 +74,9 @@ const authSlice = createSlice({
     setUser: (state, action: PayloadAction<{ nickname: string; profileImg: string }>) => {
       state.nickname = action.payload.nickname;
       state.profileImg = action.payload.profileImg;
+    },
+    testNum: (state, action: PayloadAction<number>) => {
+      state.test = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -94,6 +110,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUser } = authSlice.actions;
+export const { setUser, testNum } = authSlice.actions;
 
 export default authSlice.reducer;

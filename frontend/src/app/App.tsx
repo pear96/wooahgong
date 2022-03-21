@@ -5,9 +5,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import 'antd/dist/antd.min.css';
 
-const SocialLogin = loadable(() => import('../features/Auth/socialLogin'));
+const SocialLogin = loadable(() => import('../features/Auth/kakaosocialLogin/socialLogin'));
 const MainLogin = loadable(() => import('../features/Auth/mainLogin'));
-const RediretHandler = loadable(() => import('../features/Auth/OAuth2RedirectHandler'));
+const RediretHandler = loadable(() => import('../features/Auth/kakaosocialLogin/OAuth2RedirectHandler'));
 function App() {
   // 리프레시 토큰 사용하면
   /*

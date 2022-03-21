@@ -1,13 +1,18 @@
 import React from 'react';
+import './App.css';
+import 'react-toastify/dist/ReactToastify.css';
 import loadable from '@loadable/component';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import 'antd/dist/antd.min.css';
+import Navbar from '../common/Navbar';
+import Regist from '../features/Regist/regist';
 
 const SocialLogin = loadable(() => import('../features/Auth/kakaosocialLogin/socialLogin'));
 const MainLogin = loadable(() => import('../features/Auth/mainLogin'));
 const RediretHandler = loadable(() => import('../features/Auth/kakaosocialLogin/OAuth2RedirectHandler'));
+
 function App() {
   // 리프레시 토큰 사용하면
   /*
@@ -51,6 +56,7 @@ function App() {
           <Route path="/" element={<SocialLogin />} />
           <Route path="/login" element={<MainLogin />} />
           <Route path="/oauth/callback/kakao" element={<RediretHandler />} />
+          <Route path="/regist/*" element={<Regist />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer autoClose={1500} style={{ width: '100%', display: 'inline' }} theme="colored" />

@@ -7,7 +7,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
     "moduleResolution": "node",
@@ -18,5 +18,5 @@
     "baseUrl": "src",
     "typeRoots": ["./src/@types", "./node_modules/@types"]
   },
-  "include": ["src"]
+  "include": ["src", "images.d.ts"]
 }

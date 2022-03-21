@@ -2,19 +2,24 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import { useAppDispatch } from '../../../app/store';
-import useInput from '../../../common/hooks/useInput';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { ReducerType } from 'app/rootReducer';
+import { useAppDispatch } from '../../app/store';
+import useInput from '../../common/hooks/useInput';
 
 // extra reducers
-import { commonLogin } from '../authSlice';
+import { commonLogin } from './authSlice';
 
 // reducers
-import { setUser } from '../authSlice';
+import { setUser } from './authSlice';
 // styled component
-import { LogoContainer } from '../socialLogin/styles';
+import { LogoContainer } from './kakaosocialLogin/socialLogin';
 
 // logo
-import { ReactComponent as Logo } from '../../../assets/Logo/Logo.svg';
+import { ReactComponent as Logo } from '../../assets/main/Logo.svg';
+import { ReactComponent as Title } from '../../assets/main/Title.svg';
+import { TitleContainer } from './kakaosocialLogin/socialLogin';
 
 const Input = styled.input`
   font-size: 11px;
@@ -99,6 +104,9 @@ export const Form = styled.form`
 
 const mainLogin = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { test } = useSelector((state: ReducerType) => state.login);
+  console.log(test);
   const [id, onChangeId] = useInput('');
   const [password, onChangePassword] = useInput('');
 
@@ -137,12 +145,16 @@ const mainLogin = () => {
         .unwrap()
         .then((res: any) => {
           console.log(res);
-          dispatch(res);
+          dispatch(setUser({ nickname: res.data.nickname, profileImg: res.data.profileImg }));
         });
       // 추후에 메인으로 움직이는 코드 작성
     },
     [id, password],
   );
+
+  const onClickGotoSignupPage = useCallback(() => {
+    navigate('/signup');
+  }, []);
 
   useEffect(() => {
     idRef.current.focus();
@@ -153,9 +165,9 @@ const mainLogin = () => {
       <LogoContainer>
         <Logo />
       </LogoContainer>
-      <div style={{ marginLeft: 110, marginTop: 20 }}>A place only we know</div>
-      <div style={{ marginLeft: 120, marginTop: 10 }}>우리만 아는 공간</div>
-
+      <TitleContainer>
+        <Title />
+      </TitleContainer>
       <Form onSubmit={onSubmit}>
         <div style={{ marginTop: 40 }}>
           <Input ref={idRef} placeholder="아이디 입력" type="text" name="id" value={id} onChange={onChangeId} />
@@ -171,7 +183,9 @@ const mainLogin = () => {
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-evenly', marginTop: 20 }}>
           <ActiveButton>로그인</ActiveButton>
-          <ActiveButton>회원가입</ActiveButton>
+          <ActiveButton type="button" onClick={onClickGotoSignupPage}>
+            회원가입
+          </ActiveButton>
         </div>
       </Form>
     </>

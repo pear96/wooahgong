@@ -11,12 +11,11 @@ pipeline {
                     }
                   }
                   options { skipDefaultCheckout(false) }
-                  dir("/frontend") {
-                      sh "pwd"
-                  }
                   steps {
-                      sh 'npm install'
-                      sh 'npm run build'
+                    dir("/frontend") {
+                        sh 'npm install'
+                        sh 'npm run build'
+                    }
                   }
               }
               stage('Back Build') {

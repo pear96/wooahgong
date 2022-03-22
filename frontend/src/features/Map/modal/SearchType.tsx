@@ -1,32 +1,16 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useEffect, useState } from 'react';
 import style from './SearchType.module.css';
 import { ReactComponent as Car } from '../../../assets/map/Car.svg';
 import { ReactComponent as Walk } from '../../../assets/map/Walk.svg';
 
 
-const MbtiContainer = styled.div`
-  display: inline-block;
-  background: #d7d7d7;
-  font-family: 'NotoSansKR';
-  font-size: 14px;
-  font-weight: 700;
-  width: 100px;
-  height: 30px;
-  margin: 2px 10px;
-  margin-bottom: 10px;
-  line-height: 28px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-`;
-
 type MyProps = {
   open: boolean;
   onClose: (e: any) => void;
+  searchWay: (type : boolean) => void;
 };
-
-function SearchType({ open, onClose}: MyProps) {
+// 차량(false), 도보(true) 인지 결정해서 상위 컴포넌트에 type을 전달해주는 모달
+function SearchType({ open, onClose, searchWay}: MyProps) {
   const [type, setType] = useState<boolean>(false);
   const handleStopEvent = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -39,7 +23,13 @@ function SearchType({ open, onClose}: MyProps) {
     e.stopPropagation();
     setType(true);
   }
-
+  const sendType = (e : any) =>{
+    searchWay(type);
+    onClose(e);
+  }
+  useEffect(()=>{
+    return setType(false);
+  }, [onClose]);
   return (
     <div
       className={open ? `${style.openModal} ${style.modal}` : style.modal}
@@ -97,7 +87,8 @@ function SearchType({ open, onClose}: MyProps) {
                 height : 46,
                 borderRadius : 6,
                 fontWeight : 700
-              }} type='button'>확인</button>
+              }} type='button'
+              onClick={sendType}>확인</button>
               <button style={{
                 backgroundColor : "white",
                 width : 100,

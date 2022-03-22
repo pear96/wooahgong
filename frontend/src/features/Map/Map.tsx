@@ -1,42 +1,190 @@
 import React, {useEffect, useState} from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
-import Marker from '../../assets/maker.png';
+import axios from "axios";
+import My from '../../assets/MyPosition.png';
+import Marker from '../../assets/Marker.png';
 import Eximage from '../../assets/eximage.jpg';
 import Myhome from '../../assets/myhome.jpg';
 import SummarySpot from './SummarySpot';
-// import {register, setId, setPwd, setEmail, setGender, setAtmos, setBirth, setNick, Register} from "./registerReducer";
-import { ReducerType } from '../../app/rootReducer';
-
-const maker = require("../../assets/maker.png");
-
-const Container = styled.div`
-    position : relative;
-    width : 360px;
-    height : 800px;
-    background : none;
-    margin : 0 auto;
-`;
 
 function Map(){
+    const [myPosition, setMyPosition] = useState<{lat : number, lng : number}>({lat : 0, lng : 0});
     const [map, setMap] = useState<any>(null);
-    const [spot, setSpot] = useState<{img : string, name : string, like : number, comment : number, lat : number, lng : number}>(
-        {img : "", name : "", like : 0, comment : 0, lat : 0, lng : 0}
+    const [spot, setSpot] = useState<{img : string, name : string, like : number, comment : number, lat : number, lng : number, isSearch : boolean}>(
+        {img : "", name : "", like : 0, comment : 0, lat : 0, lng : 0, isSearch : false}
     );
+    const [isSearch, setIsSearch] = useState<boolean>(false);
+    const [total, setTotal] = useState<{tDistance : number, tTime : number}>({
+        tDistance : 0,
+        tTime : 0
+    });
+    const [resultdrawArr, setResultDrawArr] = useState<any>(null);
     const [open, setisOpen] = useState<boolean>(false);
     const [markerlist, setMarkerList] = useState<any[]>([]);
+    const [routelist, setRouteList] = useState<any[]>([]);
     const [point, setPoint] = useState<any[]>([
         {img : Eximage, name : "선릉", like : 2000, comment : 300,lat : 37.507640, lng : 127.052186},
         {img : Myhome, name : "우리집", like : 500, comment : 250, lat : 37.503350, lng : 127.051982}
     ])
+
+
+
+    // 경로탐색후 초기화 하는 함수
+    const handleClearRoute = () => {
+
+        // 경로가 존재하면
+        if(resultdrawArr !== null){
+            // 경로 시작, 도착 마커를 지도에서 내려줌
+            routelist.map(v => v.setMap(null));
+
+            // 기존 마커들을 다시 지도에 올림
+            markerlist.map(v => v.setMap(map));
+
+            // 경로선을 지도에서 내림
+            resultdrawArr.setMap(null);
+
+            // 경로 state를 null로 초기화
+            setResultDrawArr(null);
+
+            // search flag 값을 false로 초기화
+            setIsSearch(false);
+
+            // 경로 마커 배열을 아예 다 지워버림
+            setRouteList(routelist.splice(0, routelist.length));
+        }
+    }
+    // 경로찾기 api 요청 함수
+    const SearchWay = (type : boolean, end : {name : string, lat : number, lng : number}) =>{
+        console.log(type, end);
+
+        // 일단 있는 마커들을 지도에서 때어줌, 마커리스트 초기화x, 지도에서 내리는거임
+        markerlist.map(v => v.setMap(null));
+        
+        // 전달 받는 type에 따라서 도보(true) 인지 차량(false)인지 판단
+        const body = type ? {
+            "startX" : `${myPosition.lng}`,
+            "startY" : `${myPosition.lat}`,
+            "endX" : `${end.lng}`,
+            "endY" : `${end.lat}`,
+            "reqCoordType" : "WGS84GEO",
+            "resCoordType" : "EPSG3857",
+            "startName" : "출발지",
+            "endName" : "도착지"
+        } : {
+            "startX" : `${myPosition.lng}`,
+            "startY" : `${myPosition.lat}`,
+            "endX" : `${end.lng}`,
+            "endY" : `${end.lat}`,
+            "reqCoordType" : "WGS84GEO",
+            "resCoordType" : "EPSG3857",
+            "searchOption" : 0,
+            "trafficInfo" : "Y"
+        }
+
+        // axios 요청, type 값을 보고 요청 주소 바꿔줌
+        axios.post(`https://apis.openapi.sk.com/tmap/routes${type ? "/pedestrian" : ""}?version=1&format=json&callback=result`,
+            body, 
+            { 
+                headers : {
+                    "appKey" : "l7xx76446024905c421fa3c63af0f5bb9175"
+                }
+            }
+        ).then(({data})=>{
+            const resultData = data.features;
+
+            // 총 이동 거리
+            const totalDistance = +((resultData[0].properties.totalDistance)/1000).toFixed(1);
+            
+            // 총 걸리는 시간
+            const totalTime = +((resultData[0].properties.totalTime)/60).toFixed(0);
+            
+            // 생성되는 경로를 모두 보여지게 지도 범위를 조절하기 위해 bounds 경계를 담는 tmap bounds 객체 생성
+            const bounds = new window.Tmapv2.LatLngBounds();
+
+            // 이미 지도 상에 경로가 있으면 지워 버림
+            if(resultdrawArr !== null){
+                console.log("여기니?", resultdrawArr);
+                resultdrawArr.setMap(null);
+                setResultDrawArr(null);
+            }
+            const drawInfoArr = [];
+            console.log("여긴 아닌거같아");
+            for(let i = 0; i < resultData.length; i += 1){
+                const {geometry} = resultData[i];
+                // const properties = resultData[i].properties;
+                // let ployline;
+
+                if(geometry.type === "LineString"){
+                    for(let j = 0; j < geometry.coordinates.length; j += 1){
+                        // 좌표 변환 함
+                        const latlng = new window.Tmapv2.Point(geometry.coordinates[j][0], geometry.coordinates[j][1]);
+                        const convertPoint = new window.Tmapv2.Projection.convertEPSG3857ToWGS84GEO(latlng);
+                        const convertChnage = new window.Tmapv2.LatLng(convertPoint.lat(), convertPoint.lng());
+                        
+                        // 변환 된 좌표를 bounds 객체에 extend 시켜서 담아준다
+                        bounds.extend(convertChnage);
+                        drawInfoArr.push(convertChnage);
+                    }
+                }
+            }
+
+            // 존재하던 마커를 다 내렸기 때문에 새로운 마커 생성해줌
+            // 먼저 내 위치 시작지점 마커 생성
+            const markerS = new window.Tmapv2.Marker({
+                position :  new window.Tmapv2.LatLng(myPosition.lat, myPosition.lng),
+                icon : My,
+                iconSize : new window.Tmapv2.Size(35, 35), 
+                map
+            });
+
+            // 도착지점 마커 생성
+            const markerE = new window.Tmapv2.Marker({
+                position :  new window.Tmapv2.LatLng(end.lat, end.lng),
+                icon : Marker,
+                iconSize : new window.Tmapv2.Size(35, 35), 
+                map
+            })
+
+            // 기존 마커리스트랑 겹치면 안되니까 새로운 state 배열에 담아둔다
+            setRouteList([markerS, markerE]);
+
+            // 모든 경로에 대한 좌표값이 bounds 객체에 extend 되어 있는 상태
+            // map 의 bounds 를 bounds 객체로 맞춰준다 => 지도 범위 재조정 되면서 경로가 모두 보이도록 조정됨
+            map.fitBounds(bounds);
+            
+            // 경로 그리는 함수 호출
+            drawRoute(drawInfoArr);
+
+            // 거리, 시간 값 담아줌
+            setTotal({tDistance : totalDistance, tTime : totalTime});
+            
+            // 경로탐색 중인지 확인하는 flag 값임, true 이면 summary 컴포넌트가 지도를 클릭해도 안내려가고, 안에 내용이 바뀜 (SummarySpot.tsx 확인)
+            setIsSearch(true);
+        })
+    }
+    // 경로 그리기
+    const drawRoute = (arrPoint : any[]) => {
+        const polyline = new window.Tmapv2.Polyline({
+            path : arrPoint,
+            strokeColor : "#DD0000",
+            strokeWeight : 6,
+            map
+        });
+        // map.fitBounds(bounds);
+        setResultDrawArr(polyline);
+    }
+    // map 생성
     const CreateMap = () =>{
         let lat;
         let lng;
+        if(resultdrawArr !== null) {
+            resultdrawArr.setMap(null);
+            setResultDrawArr(null);
+        }
         if('geolocation' in navigator){
             navigator.geolocation.getCurrentPosition((position) => {
                 lat = position.coords.latitude;
                 lng = position.coords.longitude;
+                
                 setMap(new window.Tmapv2.Map("TMapContainer", {
                     center : new window.Tmapv2.LatLng(lat, lng),
                     width : "100%",
@@ -45,58 +193,77 @@ function Map(){
                     draggable : true,
                     https : true
                 }));
+                
+                console.log("???실행");
+                setMyPosition({lat, lng});
             })
-            const marker = new window.Tmapv2.Marker({
-                position :  new window.Tmapv2.LatLng(lat, lng),
-                icon : "http://tmapapi.sktelecom.com/resources/images/common/pin_car.png", 
-                map
-            })
-        }
-        else{
-            // const tdata = new window.Tmapv2.extension.TData();
-            setMap(new window.Tmapv2.Map("TMapContainer", {
-                center : new window.Tmapv2.LatLng(37.50112682268097, 127.03943283958382),
-                width : "100%",
-                height : "800px",
-                zoom : 15,
-                https : true
-            }));
         }
     }
+    // 상세 모달 닫기
+    const closeModal = () =>{
+        setisOpen(false);
+    }
+    // 처음 실행시 map이 null이면 map 생성, 반대 경우 return
     useEffect(()=>{
+        if(map !== null) return;
         CreateMap();
-    }, []);
+    },[]);
+    // 나의 위치가 설정 되었을 때
     useEffect(()=>{
-        console.log(markerlist);
-    }, [markerlist])
-    useEffect(()=>{
+        // map이 null인 경우 일단 return
         if(map === null) return;
-        // console.log(map.getCenter().lat(), map.getCenter().lng);
-        map.addListener("click", ()=>{
-            setisOpen(false);
-            // console.log("?????????");
-        })
-        point.map((v) => {
+        map.addListener("click", closeModal); // map 아무 공간이나 클릭 시 상세정보 모달 닫기
+        
+        // 마커가 존재하는 경우 다 지워 버림 
+        if(markerlist.length > 0){
+            console.log("???????")
+            markerlist.map(v => v.setMap(null));
+            setMarkerList(markerlist.splice(0, markerlist.length));    
+
+        }
+
+        // point state 가 가지고 있는 값을 가지고 마커 생성
+        const markertemp = [];
+        for(let i = 0; i < point.length; i+=1){
             const marker = new window.Tmapv2.Marker({
-                position :  new window.Tmapv2.LatLng(v.lat, v.lng),
-                icon : Marker, 
+                position :  new window.Tmapv2.LatLng(point[i].lat, point[i].lng),
+                icon : Marker,
+                iconSize : new window.Tmapv2.Size(35, 35),
                 map
             })
+
+            // 마커에 클릭 이벤트 달아줌
             marker.addListener("click", ()=>{
-                setSpot(v);
+                setSpot(point[i]);
                 setisOpen(true);
                 console.log("안녕");
             })
             marker.addListener("touchstart", ()=>{
                 console.log("???")
             })
-            return setMarkerList([...markerlist, marker]);
-        })
+            markertemp.push(marker);
+        }
+
+        // 내 위치에 마커 생성
+        const marker = new window.Tmapv2.Marker({
+            position :  new window.Tmapv2.LatLng(myPosition.lat, myPosition.lng),
+            icon : My,
+            iconSize : new window.Tmapv2.Size(35, 35),
+            map
+        });
+        markertemp.push(marker);
         
-    }, [map]);
+        // 마커들을 state에 저장해줌
+        setMarkerList([...markerlist, ...markertemp]);
+    }, [myPosition])
+
+    useEffect(()=>{
+        console.log(markerlist);
+    }, [markerlist])
+
     return (
         <div id="TMapContainer">
-            {open ? (<SummarySpot spot={spot}/>) : null}
+            {open || isSearch ? (<SummarySpot spot={spot} isSearch = {isSearch} total = {total} searchWay={SearchWay} clearRoute={handleClearRoute}/>) : null}
         </div>
 
     )

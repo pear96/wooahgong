@@ -37,7 +37,6 @@ public class LoginService {
 
     @Transactional(readOnly = true)
     public CommonLoginRes login(String userId, String password){
-        password = passwordEncoder.encode(password);
         // 아이디 없음
         User user = userRepository.findByUserId(userId).orElseThrow(()->
                 new CustomException(ErrorCode.NOT_OUR_USER));

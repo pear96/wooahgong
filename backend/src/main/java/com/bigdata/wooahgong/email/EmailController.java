@@ -15,7 +15,7 @@ import java.util.HashMap;
 public class EmailController {
     private final EmailService emailService;
 
-    @PostMapping("/signup")
+    @PostMapping("/signup/email")
     public ResponseEntity checkEmail(@RequestBody HashMap<String, String> inputEmail) throws Exception {
         /* 이메일 중복확인
          * 권한 : 모두사용

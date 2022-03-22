@@ -5,6 +5,7 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 // import Marker from '../../assets/maker.png';
 import Comment from '../../assets/imageComment.png';
 import Heart from '../../assets/heart.png';
+import SearchType from './modal/SearchType';
 // import {register, setId, setPwd, setEmail, setGender, setAtmos, setBirth, setNick, Register} from "./registerReducer";
 import { ReducerType } from '../../app/rootReducer';
 
@@ -71,8 +72,17 @@ type MyProps = {
 
 
 function SummarySpot({spot} : MyProps){
+    const [open, setIsOpen] = useState<boolean>(false);
+    // console.log(spot);
 
-    console.log(spot);
+    const handleOpenModal = (e : React.MouseEvent<HTMLButtonElement>) =>{
+        e.stopPropagation();
+        setIsOpen(true);
+    }
+    const handleCloseModal = (e : MouseEvent) =>{
+        e.stopPropagation();
+        setIsOpen(false);
+    }
     return (
         <Summary>
             <img style={{
@@ -82,7 +92,8 @@ function SummarySpot({spot} : MyProps){
             }} src={spot.img} alt="img"/>
             <Title>{spot.name}</Title>
             <SearchPath
-                type='button'>
+                type='button'
+                onClick={handleOpenModal}>
                     길 찾기
             </SearchPath>
             <Sub>
@@ -99,7 +110,7 @@ function SummarySpot({spot} : MyProps){
                 src={Comment} alt="img"/>
                 <SubText>{spot.comment}</SubText>
             </Sub>
-            
+            <SearchType open={open} onClose={handleCloseModal}/>
         </Summary>
     )
 }

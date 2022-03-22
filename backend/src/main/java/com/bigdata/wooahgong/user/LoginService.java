@@ -1,5 +1,8 @@
 package com.bigdata.wooahgong.user;
 
+import com.bigdata.wooahgong.common.exception.CustomException;
+import com.bigdata.wooahgong.common.exception.ErrorCode;
+import com.bigdata.wooahgong.common.util.JwtTokenUtil;
 import com.bigdata.wooahgong.user.dtos.KakaoProfile;
 import com.bigdata.wooahgong.user.dtos.KakaoToken;
 import com.bigdata.wooahgong.user.dtos.response.CommonLoginRes;
@@ -22,8 +25,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class LoginService {
@@ -35,13 +36,19 @@ public class LoginService {
     private String kakaoRedirectUri;
 
     @Transactional(readOnly = true)
-    public CommonLoginRes login(String userId, String password) {
+    public CommonLoginRes login(String userId, String password){
         password = passwordEncoder.encode(password);
-        Optional<User> user = userRepository.findByUserId(userId);
+        // 아이디 없음
+        User user = userRepository.findByUserId(userId).orElseThrow(()->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+        // 패스워드 불일치
+        if(!passwordEncoder.matches(password, user.getPassword())){
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
+        }
         CommonLoginRes commonLoginRes = CommonLoginRes.builder()
-                .nickname("누누")
-                .accessToken("token")
-                .profileImg("사진")
+                .nickname(user.getNickname())
+                .token(JwtTokenUtil.getToken(user.getUserId()))
+                .profileImg(user.getImageUrl())
                 .build();
         return commonLoginRes;
     }
@@ -80,7 +87,6 @@ public class LoginService {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        System.out.println("getAccessToken 메소드 Access Token : "+kakaoToken.getAccess_token());
         return kakaoToken.getAccess_token();
     }
 

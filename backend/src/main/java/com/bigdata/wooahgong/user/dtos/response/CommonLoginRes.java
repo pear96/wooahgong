@@ -7,11 +7,11 @@ import lombok.Getter;
 public class CommonLoginRes {
     private String nickname;
     private String profileImg;
-    private String accessToken;
+    private String token;
 
     @Builder
-    public CommonLoginRes(String accessToken, String nickname, String profileImg){
-        this.accessToken = accessToken;
+    public CommonLoginRes(String token, String nickname, String profileImg){
+        this.token = token;
         this.nickname = nickname;
         this.profileImg = profileImg;
     }

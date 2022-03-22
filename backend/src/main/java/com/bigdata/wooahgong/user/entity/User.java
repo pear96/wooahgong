@@ -5,6 +5,7 @@ import com.bigdata.wooahgong.feed.entity.Feed;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Entity
 @Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseTimeEntity {
@@ -44,6 +46,9 @@ public class User extends BaseTimeEntity {
     @JsonManagedReference // 순환 참조 방어
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Feed> feeds = new ArrayList<>();
+    @JsonManagedReference // 순환 참조 방어
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserMood> userMoods = new ArrayList<>();
 
     //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 //    @JsonManagedReference

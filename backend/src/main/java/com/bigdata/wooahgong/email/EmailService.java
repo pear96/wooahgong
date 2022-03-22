@@ -1,25 +1,22 @@
 package com.bigdata.wooahgong.email;
 
 import com.bigdata.wooahgong.common.exception.CustomException;
+import com.bigdata.wooahgong.common.exception.ErrorCode;
 import com.bigdata.wooahgong.email.entity.Email;
 import com.bigdata.wooahgong.email.repository.EmailRepository;
 import com.bigdata.wooahgong.user.entity.User;
 import com.bigdata.wooahgong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.Random;
 
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import org.springframework.mail.MailException;
-import org.springframework.mail.javamail.JavaMailSender;
-
-import com.bigdata.wooahgong.common.exception.ErrorCode;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -27,20 +24,15 @@ public class EmailService {
 
     private final JavaMailSender emailSender;
 
-
     private final UserRepository userRepository;
     private final EmailRepository emailRepository;
 
     // 이메일 인증 발송
-    private MimeMessage createMessageWithoutName(String to)throws Exception{
-        System.out.println("보내는 대상 : "+ to);
-        String ePw = createKey();
-        allePw = ePw;
-        System.out.println("인증 번호 : "+ePw);
+    private MimeMessage sendAuthCodeEmail(String to, String authCode)throws Exception{
         MimeMessage  message = emailSender.createMimeMessage();
 
         message.addRecipients(RecipientType.TO, to); //보내는 대상
-        message.setSubject("짠해 이메일 인증"); //제목
+        message.setSubject("우아공 이메일 인증"); //제목
 
         String msgg="";
         msgg += "<!DOCTYPE html>";
@@ -50,10 +42,10 @@ public class EmailService {
         msgg += "<body>";
         msgg +=
                 " <div" 																																																	+
-                        "	style=\"font-family: 'Apple SD Gothic Neo', 'sans-serif' !important; width: 550px; height: 600px; border-top: 4px solid #02b875; margin: 100px auto; padding: 30px 0; box-sizing: border-box;\">"		+
+                        "	style=\"font-family: 'Apple SD Gothic Neo', 'sans-serif' !important; width: 550px; height: 600px; border-top: 4px solid #9088F3; margin: 100px auto; padding: 30px 0; box-sizing: border-box;\">"		+
                         "	<h1 style=\"margin: 0; padding: 0 5px; font-size: 28px; font-weight: 550;\">"																															+
-                        "		<span style=\"font-size: 15px; margin: 0 0 10px 3px;\">랜선 술파티 서비스 짠해</span><br />"																													+
-                        "		<span style=\"color: #02b875\">메일인증</span> 안내입니다."																																				+
+                        "		<span style=\"font-size: 15px; margin: 0 0 10px 3px;\">우리만 아는 공간</span><br />"																													+
+                        "		<span style=\"color: #9088F3\">메일인증</span> 안내입니다."																																				+
                         "	</h1>\n"																																																+
                         "	<p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;\">"																													+
                         "		안녕하세요.<br />"																																													+
@@ -62,22 +54,22 @@ public class EmailService {
                         "	</p>"																																																	+
                         "	<a style=\"color: #222; text-decoration: none; text-align: center;\""																																	+
                         "		<p"																																																	+
-                        "			style=\"display: inline-block; width: 210px; height: 45px; margin: 30px 5px 40px; background: #02b875; line-height: 45px; vertical-align: middle; font-size: 16px;\">"							+
-                        ePw + "			</p>"																																														+
+                        "			style=\"display: inline-block; width: 210px; height: 45px; margin: 30px 5px 40px; background: #9088F3; line-height: 45px; vertical-align: middle; font-size: 16px;\">"							+
+                        authCode + "			</p>"																																														+
                         "	</a>"																																																	+
                         "	<div style=\"border-top: 1px solid #DDD; padding: 5px;\"></div>"																																		+
                         " </div>";
         msgg += "</body>";
         msgg += "</html>";
         message.setText(msgg, "utf-8", "html");//내용
-        message.setFrom(new InternetAddress("jjanhae@naver.com","짠해"));//보내는 사람
+        message.setFrom(new InternetAddress("wooahgong@gmail.com","우리만 아는 공간"));//보내는 사람
 
         return message;
     }
 
     // 인증코드 생성
     public String createAuthCode() {
-        StringBuffer key = new StringBuffer();
+        StringBuffer code = new StringBuffer();
         Random rnd = new Random();
 
         for (int i = 0; i < 8; i++) { // 인증코드 8자리
@@ -85,32 +77,32 @@ public class EmailService {
 
             switch (index) {
                 case 0:
-                    key.append((char) ((int) (rnd.nextInt(26)) + 97));
+                    code.append((char) ((int) (rnd.nextInt(26)) + 97));
                     //  a~z  (ex. 1+97=98 => (char)98 = 'b')
                     break;
                 case 1:
-                    key.append((char) ((int) (rnd.nextInt(26)) + 65));
+                    code.append((char) ((int) (rnd.nextInt(26)) + 65));
                     //  A~Z
                     break;
                 case 2:
-                    key.append((rnd.nextInt(10)));
+                    code.append((rnd.nextInt(10)));
                     // 0~9
                     break;
             }
         }
 
-        return key.toString();
+        return code.toString();
     }
 
     // 만료시간 생성
     public LocalDateTime createTimeLimit(){
         LocalDateTime now = LocalDateTime.now();
-
         return now.plusMinutes(10);
     };
 
+
     // 이메일 확인후 인증코드, 만료시간 설정
-    public ResponseEntity<Object> checkEmail(String email) {
+    public ResponseEntity<Object> checkEmail(String email) throws Exception {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
             // 해당 이메일을 가진 사용자가 존재한다면 에러를 발생한다.
@@ -136,6 +128,10 @@ public class EmailService {
                     .build();
             emailRepository.save(newEmail);
         }
+        // 보낼 이메일 생성
+        MimeMessage message = sendAuthCodeEmail(email, newAuthCode);
+        emailSender.send(message);
+
         return ResponseEntity.status(200).body("인증 코드 발송");
 
 

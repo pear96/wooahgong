@@ -16,7 +16,7 @@ public class EmailController {
     private final EmailService emailService;
 
     @PostMapping("/signup")
-    public ResponseEntity checkEmail(@RequestBody HashMap<String, String> inputEmail) {
+    public ResponseEntity checkEmail(@RequestBody HashMap<String, String> inputEmail) throws Exception {
         /* 이메일 중복확인
          * 권한 : 모두사용
          */

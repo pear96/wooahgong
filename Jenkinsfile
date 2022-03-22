@@ -38,7 +38,10 @@ pipeline {
     stage('Docker build') {
         agent any
         steps {
-            sh 'docker build -t wooahgong-front:latest .'
+            sh 'pwd'
+            dir("frontend") {
+                sh 'docker build -t wooahgong-front:latest .'
+            }
         }
     }
     stage('Docker run') {

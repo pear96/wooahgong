@@ -4,7 +4,7 @@ import { StyledNavbar, Menubars, NavMenu, NavMenuItems, NavbarToggle, NavText } 
 import { FaBars } from 'react-icons/fa';
 import { AiOutlineClose, AiOutlineSearch } from 'react-icons/ai';
 import { Avatar } from 'antd';
-import mainLogo from 'assets/Logo/mainLogo.png';
+import mainLogo from 'assets/Logo.png';
 import { SidebarList } from './SidebarList';
 
 const nickname = '명동홀릭';

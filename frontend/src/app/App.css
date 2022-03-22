@@ -1,7 +1,7 @@
 @font-face {
-    font-family: "NotoSansKR";
-    src: url("../assets/NotoSansKR-Regular.otf");
+  font-family: 'NotoSansKR';
+  src: url('../assets/NotoSansKR-Regular.otf');
 }
 body {
-    margin : 0 auto;
+  margin: 0 auto;
 }

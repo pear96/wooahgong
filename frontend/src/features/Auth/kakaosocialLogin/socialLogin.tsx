@@ -67,9 +67,8 @@ function socialLogin() {
     navigate('/login');
   }, []);
 
-  // 정확한 url 알아내서 navigate 붙이기
   const onClickGotoSignupPage = useCallback(() => {
-    navigate('/sigup');
+    navigate('/regist');
   }, []);
 
   const onClickGotoSearchId = useCallback(() => {
@@ -95,7 +94,7 @@ function socialLogin() {
           backgroundColor: '#B3A1E0',
           width: 221,
           marginLeft: 70,
-          height : 45,
+          height: 45,
           marginTop: 20,
         }}
         shape="round"
@@ -104,14 +103,14 @@ function socialLogin() {
         카카오 로그인
       </Button>
 
-      <div style={{width : 221, margin : "0 auto"}}>
-        <div style={{display : "flex", justifyContent : "space-evenly" ,marginTop: 20 }}>
+      <div style={{ width: 221, margin: '0 auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-evenly', marginTop: 20 }}>
           <SmallMenu role="button" onClick={onClickGotoSignupPage}>
             회원가입
           </SmallMenu>
           <SmallMenu role="button" onClick={onClickGotoSearchId}>
             아이디 찾기
-          </SmallMenu> 
+          </SmallMenu>
           <SmallMenu role="button" onClick={onClickGotoSearcPassword}>
             비밀번호 찾기
           </SmallMenu>

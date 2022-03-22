@@ -153,7 +153,7 @@ const mainLogin = () => {
   );
 
   const onClickGotoSignupPage = useCallback(() => {
-    navigate('/signup');
+    navigate('/regist');
   }, []);
 
   useEffect(() => {

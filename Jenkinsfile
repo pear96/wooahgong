@@ -12,7 +12,9 @@ pipeline {
                   }
                   options { skipDefaultCheckout(false) }
                   steps {
+                    sh 'pwd'
                     dir("/frontend") {
+                        sh 'pwd'
                         sh 'npm install'
                         sh 'npm run build'
                     }

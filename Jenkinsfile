@@ -18,11 +18,19 @@ pipeline {
                     }
                   }
               }
-              stage('Back Build') {
-                steps {
-                    sh 'echo 백엔드의 시작'
-                }
-            }
+            //   stage('Back Build') {
+            //     agent {
+            //       docker {
+            //           image 'gradle:7.1-jdk11'
+            //       }
+            //     }
+            //     options { skipDefaultCheckout(false) }
+            //     steps {
+            //       dir("/backend") {
+            //           sh 'gradle clean build -x test'
+            //       }
+            //     }
+            // }
         }
     }
     stage('Docker build') {

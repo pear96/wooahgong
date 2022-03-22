@@ -18,7 +18,9 @@ pipeline {
         }
       }
       stage('Back Build') {
-        sh 'echo hi'
+        steps {
+          sh 'echo 백엔드의 시작'
+        }
       }
     }
   }

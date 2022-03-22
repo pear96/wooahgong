@@ -41,6 +41,23 @@ const SubText = styled.div`
     padding-left : 5px;
     margin-right : 5px;
 `
+const SearchPath = styled.button`
+    position : absolute;
+    top : 5px;
+    left : 270px;
+    width : 60px;
+    height : 25px;
+    background-color : rgba(144, 136, 243, 1);
+    color : white;
+    font-family : 'NotoSansKR';
+    font-size : 13px;
+    border : none;
+    border-radius : 5px;
+    cursor : pointer;
+    &:hover {
+        background-color : rgba(144, 136, 243, 0.7);
+    }
+`
 type MyProps = {
     spot : {
         img : string,
@@ -64,6 +81,10 @@ function SummarySpot({spot} : MyProps){
                 borderRadius : "10px 0px 0px 10px",
             }} src={spot.img} alt="img"/>
             <Title>{spot.name}</Title>
+            <SearchPath
+                type='button'>
+                    길 찾기
+            </SearchPath>
             <Sub>
                 <img style={{
                     width : 14,

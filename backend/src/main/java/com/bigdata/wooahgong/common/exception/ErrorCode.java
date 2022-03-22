@@ -24,10 +24,12 @@ public enum ErrorCode {
 
     // 403 Forbidden : 유효하지 않은 데이터
     INVALID_PASSWORD(FORBIDDEN, "비밀번호가 유효하지 않습니다."),
+    FAILED_AUTH_EMAIL(FORBIDDEN, "이메일 인증에 실패했습니다."),
 
     /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
     USER_NOT_FOUND(NOT_FOUND, "해당 유저 정보를 찾을 수 없습니다"),
     REFRESH_TOKEN_NOT_FOUND(NOT_FOUND, "로그아웃 된 사용자입니다"),
+    EMAIL_NOT_FOUND(NOT_FOUND, "해당 이메일을 찾을 수 없습니다"),
 
     /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     DUPLICATE_RESOURCE(CONFLICT, "데이터가 이미 존재합니다"),

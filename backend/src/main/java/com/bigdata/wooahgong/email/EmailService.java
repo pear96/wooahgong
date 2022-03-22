@@ -49,7 +49,7 @@ public class EmailService {
                         "	</h1>\n"																																																+
                         "	<p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;\">"																													+
                         "		안녕하세요.<br />"																																													+
-                        "		아래 <b style=\"color: #02b875\">'인증코드'</b> 를 화면에 올바르게 입력한 후 다음 단계를 진행해주세요.<br />"																													+
+                        "		아래 <b style=\"color: #9088F3\">'인증코드'</b> 를 화면에 올바르게 입력한 후 다음 단계를 진행해주세요.<br />"																													+
                         "		감사합니다."																																															+
                         "	</p>"																																																	+
                         "	<a style=\"color: #222; text-decoration: none; text-align: center;\""																																	+
@@ -133,7 +133,29 @@ public class EmailService {
         emailSender.send(message);
 
         return ResponseEntity.status(200).body("인증 코드 발송");
-
-
     }
+
+    // 이메일과 인증 코드 일치 여부
+    public ResponseEntity checkEmailAuthCode(String email, String authCode) {
+        Optional<Email> checkingEmail = emailRepository.findByEmail(email);
+        // 지금 입력한 이메일이 DB에 없을 수는 없다고 생각하지만
+        // 혹시 모르니까 테스트 해본다.
+        if (checkingEmail.isEmpty()) {
+            throw new CustomException(ErrorCode.EMAIL_NOT_FOUND);
+        }
+        // null이 아니라면 인증을 진행한다.
+        Email authEmail = checkingEmail.get();
+        // 만료 시간보다 현재 시간이 늦다면 오류 발생
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(authEmail.getTimeLimit())) {
+            throw new CustomException(ErrorCode.FAILED_AUTH_EMAIL);
+        }
+        // 입력한 인증 코드와 인증 번호가 다르다면 오류 발생
+        if (!authEmail.getAuthCode().equals(authCode)) {
+            throw new CustomException(ErrorCode.FAILED_AUTH_EMAIL);
+        }
+        // 이메일 존재 + 만료 시간 이내 + 인증코드 일치 = 이메일 인증 완료
+        return ResponseEntity.status(200).body("이메일 인증 성공");
+    }
+
 }

@@ -17,7 +17,6 @@ ADD ./build ./build
 RUN rm /etc/nginx/conf.d/default.conf
 
 # host pc 의 nginx.conf 를 아래 경로에 복사
-COPY etc/nginx/nginx.conf /etc/nginx/conf.d
 COPY /etc/nginx/nginx.conf /etc/nginx/conf.d
 
 # 80 포트 오픈

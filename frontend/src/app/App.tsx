@@ -12,6 +12,9 @@ import Regist from '../features/Regist/regist';
 const SocialLogin = loadable(() => import('../features/Auth/kakaosocialLogin/socialLogin'));
 const MainLogin = loadable(() => import('../features/Auth/mainLogin'));
 const RediretHandler = loadable(() => import('../features/Auth/kakaosocialLogin/OAuth2RedirectHandler'));
+const Search = loadable(() => import('../features/Search/searh'));
+const SearchPlaces = loadable(() => import('../features/Search/searchResultPlaces'));
+const SearchNickname = loadable(() => import('../features/Search/searchResultNicknames'));
 
 function App() {
   // 리프레시 토큰 사용하면
@@ -57,6 +60,9 @@ function App() {
           <Route path="/login" element={<MainLogin />} />
           <Route path="/oauth/callback/kakao" element={<RediretHandler />} />
           <Route path="/regist/*" element={<Regist />} />
+          <Route element={<Navbar />}>
+            <Route path="/search/*" element={<Search />} />
+          </Route>
         </Routes>
       </BrowserRouter>
       <ToastContainer autoClose={1500} style={{ width: '100%', display: 'inline' }} theme="colored" />

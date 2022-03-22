@@ -27,6 +27,7 @@ dependencies {
 //    testCompile "org.projectlombok:lombok"
     annotationProcessor 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+
     // db driver
 //    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client' // MariaDB
 //    implementation("org.mariadb.jdbc:mariadb-java-client")

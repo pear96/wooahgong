@@ -13,14 +13,69 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 
-import static com.bigdata.wooahgong.common.exception.ErrorCode.DUPLICATE_RESOURCE;
+import javax.mail.Message.RecipientType;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSender;
+
+import com.bigdata.wooahgong.common.exception.ErrorCode;
 
 @Service
 @RequiredArgsConstructor
 public class EmailService {
+
+    private final JavaMailSender emailSender;
+
+
     private final UserRepository userRepository;
     private final EmailRepository emailRepository;
 
+    // 이메일 인증 발송
+    private MimeMessage createMessageWithoutName(String to)throws Exception{
+        System.out.println("보내는 대상 : "+ to);
+        String ePw = createKey();
+        allePw = ePw;
+        System.out.println("인증 번호 : "+ePw);
+        MimeMessage  message = emailSender.createMimeMessage();
+
+        message.addRecipients(RecipientType.TO, to); //보내는 대상
+        message.setSubject("짠해 이메일 인증"); //제목
+
+        String msgg="";
+        msgg += "<!DOCTYPE html>";
+        msgg += "<html>";
+        msgg += "<head>";
+        msgg += "</head>";
+        msgg += "<body>";
+        msgg +=
+                " <div" 																																																	+
+                        "	style=\"font-family: 'Apple SD Gothic Neo', 'sans-serif' !important; width: 550px; height: 600px; border-top: 4px solid #02b875; margin: 100px auto; padding: 30px 0; box-sizing: border-box;\">"		+
+                        "	<h1 style=\"margin: 0; padding: 0 5px; font-size: 28px; font-weight: 550;\">"																															+
+                        "		<span style=\"font-size: 15px; margin: 0 0 10px 3px;\">랜선 술파티 서비스 짠해</span><br />"																													+
+                        "		<span style=\"color: #02b875\">메일인증</span> 안내입니다."																																				+
+                        "	</h1>\n"																																																+
+                        "	<p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;\">"																													+
+                        "		안녕하세요.<br />"																																													+
+                        "		아래 <b style=\"color: #02b875\">'인증코드'</b> 를 화면에 올바르게 입력한 후 다음 단계를 진행해주세요.<br />"																													+
+                        "		감사합니다."																																															+
+                        "	</p>"																																																	+
+                        "	<a style=\"color: #222; text-decoration: none; text-align: center;\""																																	+
+                        "		<p"																																																	+
+                        "			style=\"display: inline-block; width: 210px; height: 45px; margin: 30px 5px 40px; background: #02b875; line-height: 45px; vertical-align: middle; font-size: 16px;\">"							+
+                        ePw + "			</p>"																																														+
+                        "	</a>"																																																	+
+                        "	<div style=\"border-top: 1px solid #DDD; padding: 5px;\"></div>"																																		+
+                        " </div>";
+        msgg += "</body>";
+        msgg += "</html>";
+        message.setText(msgg, "utf-8", "html");//내용
+        message.setFrom(new InternetAddress("jjanhae@naver.com","짠해"));//보내는 사람
+
+        return message;
+    }
+
+    // 인증코드 생성
     public String createAuthCode() {
         StringBuffer key = new StringBuffer();
         Random rnd = new Random();
@@ -47,30 +102,37 @@ public class EmailService {
         return key.toString();
     }
 
-    public LocalDateTime makeTimeLimit(){
+    // 만료시간 생성
+    public LocalDateTime createTimeLimit(){
         LocalDateTime now = LocalDateTime.now();
 
         return now.plusMinutes(10);
     };
 
-    public ResponseEntity checkEmail(String email) {
-        // 해당 이메일을 가진 사용자가 존재한다면 에러를 발생한다.
+    // 이메일 확인후 인증코드, 만료시간 설정
+    public ResponseEntity<Object> checkEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
-            throw new CustomException(DUPLICATE_RESOURCE);
+            // 해당 이메일을 가진 사용자가 존재한다면 에러를 발생한다.
+            throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
         }
         // 해당 이메일의 사용자는 없지만 인증을 시도한 경우 인증 코드 갱신
-        String authCode = createAuthCode();
+        String newAuthCode = createAuthCode();
         // 시간 제한 설정. 현재 시간에서 10분 후 까지
-        LocalDateTime timeLimit = makeTimeLimit();
-        Optional<Email> checkedEmail = emailRepository.findByEmail(email);
-        if (checkedEmail.isPresent()) {
-//            emailRepository.save()
+        LocalDateTime newTimeLimit = createTimeLimit();
+        // 이메일 인증을 한 적이 있는지 확인한다.
+        Optional<Email> checkingEmail = emailRepository.findByEmail(email);
+        if (checkingEmail.isPresent()) {
+            // 이메일을 인증한 적이 있다면 코드랑 시간제한만 바꿔서 저장
+            Email checkedEmail = checkingEmail.get();
+            checkedEmail.setAuthCode(newAuthCode);
+            checkedEmail.setTimeLimit(newTimeLimit);
+            emailRepository.save(checkedEmail);
         } else {
             Email newEmail = Email.builder()
                     .email(email)
-                    .authCode(authCode)
-                    .timeLimit(timeLimit)
+                    .authCode(newAuthCode)
+                    .timeLimit(newTimeLimit)
                     .build();
             emailRepository.save(newEmail);
         }

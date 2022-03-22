@@ -1,15 +1,14 @@
 package com.bigdata.wooahgong.email.entity;
 
 import com.bigdata.wooahgong.common.util.BaseTimeEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Builder
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Email  extends BaseTimeEntity {

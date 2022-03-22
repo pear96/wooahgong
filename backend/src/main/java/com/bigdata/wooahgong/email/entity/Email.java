@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Builder
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Email  extends BaseTimeEntity {

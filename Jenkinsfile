@@ -2,39 +2,12 @@ pipeline {
     agent none
     options { skipDefaultCheckout(true) }
     stages {
-        stage('Build') {
-        parallel{
-            stage('Front Build') {
-                agent {
-                    docker {
-                        image 'node:16.14.0-alpine'
-                    }
-                  }
-                  options { skipDefaultCheckout(false) }
-                  steps {
-                    sh 'pwd'
-                    dir("frontend") {
-                        sh 'pwd'
-                        sh 'npm install'
-                        sh 'npm run build'
-                    }
-                  }
-              }
-            //   stage('Back Build') {
-            //     agent {
-            //       docker {
-            //           image 'gradle:7.1-jdk11'
-            //       }
-            //     }
-            //     options { skipDefaultCheckout(false) }
-            //     steps {
-            //       dir("/backend") {
-            //           sh 'gradle clean build -x test'
-            //       }
-            //     }
-            // }
+        stage('git pull') {
+            agent any
+            steps {
+                checkout scm
+            }
         }
-    }
     stage('Docker build') {
         agent any
         steps {

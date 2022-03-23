@@ -63,9 +63,9 @@ function App() {
       <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Map/>}/>
-        {/* <Route path="/" element={<SocialLogin />} /> */}
-        {/* <Route path="/login" element={<MainLogin />} /> */}
+        <Route path="/" element={<SocialLogin />} />
+        <Route path="/login" element={<MainLogin />} />
+        <Route path="/map" element={<Map/>}/>
         <Route path="/regist/*" element={<Regist />}/>
       </Routes>
     </BrowserRouter>

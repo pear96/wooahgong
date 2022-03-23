@@ -8,9 +8,18 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import 'antd/dist/antd.min.css';
 import Navbar from '../common/Navbar';
 import Regist from '../features/Regist/regist';
+import Map from '../features/Map/Map';
+import 'antd/dist/antd.css';
 
 const SocialLogin = loadable(() => import('../features/Auth/kakaosocialLogin/socialLogin'));
 const MainLogin = loadable(() => import('../features/Auth/mainLogin'));
+
+// const Login = loadable(() => import('../features/Login'));
+declare global {
+  interface Window {
+    Tmapv2: any;
+  }
+}
 const RediretHandler = loadable(() => import('../features/Auth/kakaosocialLogin/OAuth2RedirectHandler'));
 
 function App() {
@@ -50,17 +59,18 @@ function App() {
   */
 
   return (
-    <>
+    <div>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<SocialLogin />} />
-          <Route path="/login" element={<MainLogin />} />
-          <Route path="/oauth/callback/kakao" element={<RediretHandler />} />
-          <Route path="/regist/*" element={<Regist />} />
-        </Routes>
-      </BrowserRouter>
-      <ToastContainer autoClose={1500} style={{ width: '100%', display: 'inline' }} theme="colored" />
-    </>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<SocialLogin />} />
+        <Route path="/login" element={<MainLogin />} />
+        <Route path="/map" element={<Map/>}/>
+        <Route path="/regist/*" element={<Regist />}/>
+      </Routes>
+    </BrowserRouter>
+      <ToastContainer autoClose={1500} style={{width : "100%", display : "inline"}} theme="colored"/>  
+    </div>
   );
 }
 export default App;

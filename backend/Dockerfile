@@ -1,10 +1,12 @@
 # 이미지 태그 설정
 FROM openjdk:11 as build-stage
+# /homepage로 이동. 근데 왜 디렉토리 안만들어짐?
 WORKDIR /homepage
 RUN pwd
-# COPY . .
-# RUN 
-# RUN npm run build
+# /homepage에 /var/jenkins_home/workspace/wooahgong/backend에 있는 파일을 컨테이너에 복사
+COPY . .
+RUN ./gradlew build 
+
 
 # FROM nginx:stable-alpine as production-stage
 # RUN rm /etc/nginx/conf.d/default.conf

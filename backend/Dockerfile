@@ -1,5 +1,6 @@
 # 이미지 태그 설정
-FROM node:16.14.0-alpine as build-stage
+FROM openjdk:11-jdk-alpine as build-stage
+RUN echo 'pwd'
 # WORKDIR /homepage
 # COPY . .
 # RUN npm install

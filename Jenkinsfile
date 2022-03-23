@@ -26,10 +26,11 @@ pipeline {
           agent any
           // steps에선 실제로 실행할 쉘이나 syntax를 입력해주면 됩니다.
           steps {
-              sh 'pwd'
               dir("backend") {
                 sh '''
-                echo 'hihi'
+                pwd
+                echo 'backend 빌드를 실행합니다.'
+                docker build -t wooahgong-back:latest /var/jenkins_home/workspace/wooahgong/backend
                 '''
               }
           }

@@ -7,7 +7,7 @@ RUN pwd
 COPY . .
 RUN chmod +x ./gradlew
 RUN ./gradlew build
-RUN pwd
+# RUN pwd
 RUN ls
 # COPY ./build/libs/backend-1.0-SNAPSHOT.jar backend-1.0-SNAPSHOT.jar
 # CMD java -jar backend-1.0-SNAPSHOT.jar

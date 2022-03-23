@@ -1,5 +1,5 @@
 # 이미지 태그 설정
-FROM openjdk:11-jre-slim as build-stage
+FROM openjdk:11 as build-stage
 # /homepage로 이동. 근데 왜 디렉토리 안만들어짐?
 WORKDIR /homepage
 RUN pwd

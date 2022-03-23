@@ -1,9 +1,9 @@
 # 이미지 태그 설정
 FROM openjdk:11 as build-stage
+WORKDIR /homepage
 RUN pwd
-# WORKDIR /homepage
 # COPY . .
-# RUN npm install
+# RUN 
 # RUN npm run build
 
 # FROM nginx:stable-alpine as production-stage

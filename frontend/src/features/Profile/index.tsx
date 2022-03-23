@@ -71,7 +71,6 @@ function UserPage() {
 
   return userExists ? (
     <div>
-      <Navbar />
       <div style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '1024px' }}>
         <UserProfile nickname={nickname} userProps={userProps} />
         <FeedsAndPlaces />

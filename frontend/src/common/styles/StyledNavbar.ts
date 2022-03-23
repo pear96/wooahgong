@@ -16,6 +16,7 @@ export const Menubars = styled(Link)`
 `;
 
 export const NavMenu = styled.nav`
+  z-index: 100;
   background-color: #fafafa;
   width: 300px;
   height: 100vh;

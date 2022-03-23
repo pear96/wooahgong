@@ -77,12 +77,10 @@ function App() {
           <Route element={<Navbar />}>
             <Route path="/map" element={<Map />} />
             <Route path="/search/*" element={<Search />} />
+            <Route path="/profile/:nickname" element={<Profile />} />
+            <Route path="/profile/:nickname/edit" element={<ProfileUpdate />} />
+            <Route path="/not-found" element={<NotFound />} />
           </Route>
-
-          <Route path="/profile/:nickname" element={<Profile />} />
-          <Route path="/profile/:nickname/edit" element={<ProfileUpdate />} />
-
-          <Route path="/not-found" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer autoClose={1500} style={{ width: '100%', display: 'inline' }} theme="colored" />

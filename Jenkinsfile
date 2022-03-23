@@ -57,7 +57,12 @@ pipeline {
           agent any
           steps {
             dir("backend"){
-              sh 'echo hi'
+              sh '''
+              docker ps -f name=wooahgong-back -q | xargs --no-run-if-empty docker container stop
+              docker container ls -a -f name=wooahgong-back -q | xargs -r docker container rm
+              docker image prune -f
+              docker run -d --name wooahgong-back -p 80:80 -p 443:443 wooahgong-back:latest
+              '''
             }
           }
         }

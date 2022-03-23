@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 // component
-import SearchResult from './searchResult';
+import SearchResult from './searchResultPlaces';
 
 const HistoryContainer = styled.div`
   padding: 18px;

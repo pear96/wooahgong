@@ -8,9 +8,18 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import 'antd/dist/antd.min.css';
 import Navbar from '../common/Navbar';
 import Regist from '../features/Regist/regist';
+import Map from '../features/Map/Map';
+import 'antd/dist/antd.css';
 
 const SocialLogin = loadable(() => import('../features/Auth/kakaosocialLogin/socialLogin'));
 const MainLogin = loadable(() => import('../features/Auth/mainLogin'));
+
+// const Login = loadable(() => import('../features/Login'));
+declare global {
+  interface Window {
+    Tmapv2: any;
+  }
+}
 const RediretHandler = loadable(() => import('../features/Auth/kakaosocialLogin/OAuth2RedirectHandler'));
 const Search = loadable(() => import('../features/Search/searh'));
 const SearchPlaces = loadable(() => import('../features/Search/searchResultPlaces'));
@@ -61,6 +70,7 @@ function App() {
           <Route path="/oauth/callback/kakao" element={<RediretHandler />} />
           <Route path="/regist/*" element={<Regist />} />
           <Route element={<Navbar />}>
+            <Route path="/map" element={<Map />} />
             <Route path="/search/*" element={<Search />} />
           </Route>
         </Routes>

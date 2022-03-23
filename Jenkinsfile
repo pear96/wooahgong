@@ -10,21 +10,27 @@ pipeline {
     }
     stage('Docker build') {
       parallel {
+        // stage는 각각의 Job을 의미합니다. Job 내부의 단계를 의미하는 steps를 포함해야합니다.
         stage('Front image') {
           agent any
           steps {
               sh 'pwd'
               dir("frontend") {
+                // 
                   sh 'docker build -t wooahgong-front:latest /var/jenkins_home/workspace/wooahgong/frontend'
               }
           }
         }
         stage('Back image') {
+          // agent = 이 파이프라인 스크립트를 실행할 executor를 지정합니다. any로 두면 어떤 executor도 실행할 수 있다는 의미가 됩니다.
           agent any
+          // steps에선 실제로 실행할 쉘이나 syntax를 입력해주면 됩니다.
           steps {
               sh 'pwd'
               dir("backend") {
-                sh 'echo hi'
+                sh '''
+                echo 'hihi'
+                '''
               }
           }
         }

@@ -7,7 +7,9 @@ RUN pwd
 COPY . .
 RUN chmod +x ./gradlew
 RUN ./gradlew build
-COPY ./build/libs/backend-1.0-SNAPSHOT.jar backend-1.0-SNAPSHOT.jar
+RUN pwd
+RUN ls
+# COPY ./build/libs/backend-1.0-SNAPSHOT.jar backend-1.0-SNAPSHOT.jar
 CMD java -jar backend-1.0-SNAPSHOT.jar
 # FROM nginx:stable-alpine as production-stage
 # RUN rm /etc/nginx/conf.d/default.conf

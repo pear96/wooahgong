@@ -1,5 +1,5 @@
 # 이미지 태그 설정
-FROM openjdk:11 as build-stage
+FROM openjdk:11-jre-slim as build-stage
 # /homepage로 이동. 근데 왜 디렉토리 안만들어짐?
 WORKDIR /homepage
 RUN pwd
@@ -7,11 +7,11 @@ RUN pwd
 COPY . .
 RUN chmod +x ./gradlew
 RUN ./gradlew build
-
+CMD java -jar backend-1.0-SNAPSHOT.jar
 # FROM nginx:stable-alpine as production-stage
 # RUN rm /etc/nginx/conf.d/default.conf
 # COPY ./nginx.conf /etc/nginx/conf.d/nginx.conf
 # COPY --from=build-stage ./homepage/build /usr/share/nginx/html/homepage
 # EXPOSE 80
-# CMD ["nginx", "-g", "daemon off;"]
 
+# CMD ["nginx", "-g", "daemon off;"]

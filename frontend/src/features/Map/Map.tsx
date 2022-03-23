@@ -18,9 +18,11 @@ function Map(){
         tTime : 0
     });
     const [resultdrawArr, setResultDrawArr] = useState<any>(null);
+    const [resultdrawCarArr, setResultDrawCarArr] = useState<any[]>([]);
     const [open, setisOpen] = useState<boolean>(false);
     const [markerlist, setMarkerList] = useState<any[]>([]);
     const [routelist, setRouteList] = useState<any[]>([]);
+    const [chktraffic, setChktraffic] = useState<any[]>([]);
     const [point, setPoint] = useState<any[]>([
         {img : Eximage, name : "선릉", like : 2000, comment : 300,lat : 37.507640, lng : 127.052186},
         {img : Myhome, name : "우리집", like : 500, comment : 250, lat : 37.503350, lng : 127.051982}
@@ -51,6 +53,14 @@ function Map(){
             // 경로 마커 배열을 아예 다 지워버림
             setRouteList(routelist.splice(0, routelist.length));
         }
+        if(resultdrawCarArr.length > 0){
+
+            routelist.map(v => v.setMap(null));
+            resultdrawCarArr.map(v => v.getMap() === null ? v : v.setMap(null));
+            markerlist.map(v => v.setMap(map));
+            setIsSearch(false);
+            setRouteList(routelist.splice(0, routelist.length));
+        }
     }
     // 경로찾기 api 요청 함수
     const SearchWay = (type : boolean, end : {name : string, lat : number, lng : number}) =>{
@@ -79,7 +89,6 @@ function Map(){
             "searchOption" : 0,
             "trafficInfo" : "Y"
         }
-
         // axios 요청, type 값을 보고 요청 주소 바꿔줌
         axios.post(`https://apis.openapi.sk.com/tmap/routes${type ? "/pedestrian" : ""}?version=1&format=json&callback=result`,
             body, 
@@ -89,6 +98,8 @@ function Map(){
                 }
             }
         ).then(({data})=>{
+            const trafficInfochk = type ? null : "Y";
+            const searchOption = type ? null : 0;
             const resultData = data.features;
 
             // 총 이동 거리
@@ -106,25 +117,56 @@ function Map(){
                 resultdrawArr.setMap(null);
                 setResultDrawArr(null);
             }
+            
             const drawInfoArr = [];
+            const traffic = [];
+            const polyline = [];
             console.log("여긴 아닌거같아");
-            for(let i = 0; i < resultData.length; i += 1){
-                const {geometry} = resultData[i];
-                // const properties = resultData[i].properties;
-                // let ployline;
-
-                if(geometry.type === "LineString"){
-                    for(let j = 0; j < geometry.coordinates.length; j += 1){
-                        // 좌표 변환 함
-                        const latlng = new window.Tmapv2.Point(geometry.coordinates[j][0], geometry.coordinates[j][1]);
-                        const convertPoint = new window.Tmapv2.Projection.convertEPSG3857ToWGS84GEO(latlng);
-                        const convertChnage = new window.Tmapv2.LatLng(convertPoint.lat(), convertPoint.lng());
-                        
-                        // 변환 된 좌표를 bounds 객체에 extend 시켜서 담아준다
-                        bounds.extend(convertChnage);
-                        drawInfoArr.push(convertChnage);
+            
+            if(trafficInfochk !== null){
+                console.log("들어오셨나요?");
+                for(let i = 0; i < resultData.length; i += 1){
+                    const {geometry} = resultData[i];
+                    if(geometry.type === "LineString"){
+                        traffic.push(geometry.traffic);
+                        const trafficArr = geometry.traffic;
+                        const sectionInfo = [];
+                        for(let j = 0; j < geometry.coordinates.length; j += 1){
+                            const latlng = new window.Tmapv2.Point(geometry.coordinates[j][0], geometry.coordinates[j][1]);
+                            const convertPoint = new window.Tmapv2.Projection.convertEPSG3857ToWGS84GEO(latlng);
+                            const convertChnage = new window.Tmapv2.LatLng(convertPoint.lat(), convertPoint.lng());
+                            
+                            bounds.extend(convertChnage);
+                            sectionInfo.push(convertChnage);
+                        }
+                        setChktraffic(traffic);
+                        const line = drawCarRoute(sectionInfo, trafficArr, traffic);
+                        polyline.push(...line);
                     }
                 }
+                console.log(polyline);
+                setResultDrawCarArr([...polyline]);
+            }
+            else{
+                for(let i = 0; i < resultData.length; i += 1){
+                    const {geometry} = resultData[i];
+                    // const properties = resultData[i].properties;
+                    // let ployline;
+    
+                    if(geometry.type === "LineString"){
+                        for(let j = 0; j < geometry.coordinates.length; j += 1){
+                            // 좌표 변환 함
+                            const latlng = new window.Tmapv2.Point(geometry.coordinates[j][0], geometry.coordinates[j][1]);
+                            const convertPoint = new window.Tmapv2.Projection.convertEPSG3857ToWGS84GEO(latlng);
+                            const convertChnage = new window.Tmapv2.LatLng(convertPoint.lat(), convertPoint.lng());
+                            
+                            // 변환 된 좌표를 bounds 객체에 extend 시켜서 담아준다
+                            bounds.extend(convertChnage);
+                            drawInfoArr.push(convertChnage);
+                        }
+                    }
+                }
+                drawRoute(drawInfoArr);
             }
 
             // 존재하던 마커를 다 내렸기 때문에 새로운 마커 생성해줌
@@ -152,7 +194,7 @@ function Map(){
             map.fitBounds(bounds);
             
             // 경로 그리는 함수 호출
-            drawRoute(drawInfoArr);
+            
 
             // 거리, 시간 값 담아줌
             setTotal({tDistance : totalDistance, tTime : totalTime});
@@ -161,11 +203,68 @@ function Map(){
             setIsSearch(true);
         })
     }
-    // 경로 그리기
+
+    const drawCarRoute = (arrPoint : any[], traffic : any, chkt : any) => {
+        const line = [];
+        if(chkt.length !== 0){
+            console.log(traffic, resultdrawCarArr);
+            if(traffic !== "0"){
+                if(traffic.length === 0){
+                    const polyline = new window.Tmapv2.Polyline({
+                        path : arrPoint,
+                        strokeColor : "#06050D",
+                        strokeWeight : 6,
+                        map
+                    });
+                    line.push(polyline);
+                }
+                else{ 
+                    let trafficObject : {startIndex : number, endIndex : number, trafficIndex : number};
+                    const tInfo : {startIndex : number, endIndex : number, trafficIndex : number}[] = [];
+
+                    for(let i = 0; i < traffic.length; i+=1){
+                        trafficObject = {
+                            startIndex : traffic[i][0],
+                            endIndex : traffic[i][1],
+                            trafficIndex : traffic[i][2],
+                        }
+                        tInfo.push(trafficObject)
+                    }
+                    // const line = [];
+                    for(let i = 0; i < tInfo.length; i+=1){
+                        const section = [];
+                        let lineColor;
+                        for(let j = tInfo[i].startIndex; j <= tInfo[i].endIndex; j+=1){
+                            section.push(arrPoint[j]);
+                        }
+                        if (tInfo[i].trafficIndex === 0) {
+                            lineColor = "#06050D";
+                        } else if (tInfo[i].trafficIndex === 1) {
+                            lineColor = "#61AB25";
+                        } else if (tInfo[i].trafficIndex === 2) {
+                            lineColor = "#FFFF00";
+                        } else if (tInfo[i].trafficIndex === 3) {
+                            lineColor = "#E87506";
+                        } else if (tInfo[i].trafficIndex === 4) {
+                            lineColor = "#D61125";
+                        }
+                        const polyline = new window.Tmapv2.Polyline({
+                            path : arrPoint,
+                            strokeColor : lineColor,
+                            strokeWeight : 6,
+                            map
+                        });
+                        line.push(polyline);
+                    }
+                }
+            }   
+        }
+        return line;
+    }
     const drawRoute = (arrPoint : any[]) => {
         const polyline = new window.Tmapv2.Polyline({
             path : arrPoint,
-            strokeColor : "#DD0000",
+            strokeColor : "#9088F3",
             strokeWeight : 6,
             map
         });
@@ -256,11 +355,6 @@ function Map(){
         // 마커들을 state에 저장해줌
         setMarkerList([...markerlist, ...markertemp]);
     }, [myPosition])
-
-    useEffect(()=>{
-        console.log(markerlist);
-    }, [markerlist])
-
     return (
         <div id="TMapContainer">
             {open || isSearch ? (<SummarySpot spot={spot} isSearch = {isSearch} total = {total} searchWay={SearchWay} clearRoute={handleClearRoute}/>) : null}

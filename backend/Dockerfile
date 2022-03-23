@@ -1,6 +1,6 @@
 # 이미지 태그 설정
 FROM openjdk:11 as build-stage
-RUN echo 'pwd'
+RUN pwd
 # WORKDIR /homepage
 # COPY . .
 # RUN npm install

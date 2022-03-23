@@ -6,6 +6,7 @@ import { ToastContainer } from 'react-toastify';
 
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import 'antd/dist/antd.min.css';
+import NotFound from 'not-found';
 import Navbar from '../common/Navbar';
 import Regist from '../features/Regist/regist';
 import Map from '../features/Map/Map';
@@ -24,6 +25,9 @@ const RediretHandler = loadable(() => import('../features/Auth/kakaosocialLogin/
 const Search = loadable(() => import('../features/Search/searh'));
 const SearchPlaces = loadable(() => import('../features/Search/searchResultPlaces'));
 const SearchNickname = loadable(() => import('../features/Search/searchResultNicknames'));
+
+const Profile = loadable(() => import('../features/Profile'));
+const ProfileUpdate = loadable(() => import('../features/Profile/profileUpdate'));
 
 function App() {
   // 리프레시 토큰 사용하면
@@ -69,10 +73,16 @@ function App() {
           <Route path="/login" element={<MainLogin />} />
           <Route path="/oauth/callback/kakao" element={<RediretHandler />} />
           <Route path="/regist/*" element={<Regist />} />
+
           <Route element={<Navbar />}>
             <Route path="/map" element={<Map />} />
             <Route path="/search/*" element={<Search />} />
           </Route>
+
+          <Route path="/profile/:nickname" element={<Profile />} />
+          <Route path="/profile/:nickname/edit" element={<ProfileUpdate />} />
+
+          <Route path="/not-found" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer autoClose={1500} style={{ width: '100%', display: 'inline' }} theme="colored" />

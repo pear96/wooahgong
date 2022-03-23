@@ -1,6 +1,8 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
 // reducer
+import profileFeedReducer from 'features/Profile/reducers/profileFeedReducer';
+import profilePlaceReducer from 'features/Profile/reducers/profilePlaceReducer';
 import registerReducer from '../features/Regist/registerReducer';
 import authSlice from '../features/Auth/authSlice';
 
@@ -8,6 +10,8 @@ import authSlice from '../features/Auth/authSlice';
 const rootReducer = combineReducers({
   registerReducer,
   login: authSlice,
+  profileFeed: profileFeedReducer,
+  profilePlace: profilePlaceReducer,
 });
 
 // React에서 사용할 수 있도록 타입을 만들어 export 해준다.

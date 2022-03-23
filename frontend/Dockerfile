@@ -1,6 +1,7 @@
 FROM node:16.14.0-alpine as build-stage
 WORKDIR /homepage
 COPY . .
+RUN pwd
 RUN npm install
 RUN npm run build
 

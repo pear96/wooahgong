@@ -1,5 +1,5 @@
 # 이미지 태그 설정
-FROM openjdk:11-jdk-alpine as build-stage
+FROM openjdk:11 as build-stage
 RUN echo 'pwd'
 # WORKDIR /homepage
 # COPY . .

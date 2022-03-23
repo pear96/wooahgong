@@ -3,10 +3,7 @@ package com.bigdata.wooahgong.user.entity;
 import com.bigdata.wooahgong.common.util.BaseTimeEntity;
 import com.bigdata.wooahgong.feed.entity.Feed;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -50,7 +47,11 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserMood> userMoods = new ArrayList<>();
 
-    //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    public void resetPwd(String password){
+        this.password = password;
+    }
+
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 //    @JsonManagedReference
 //    private List<History> histories = new ArrayList<>();
 }

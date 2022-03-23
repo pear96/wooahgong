@@ -48,7 +48,7 @@ export const NavText = styled.li`
   padding: 8px 0px 8px 16px;
   list-style: none;
   height: 60px;
-
+  // 질문!
   a {
     text-decoration: none;
     color: #000;

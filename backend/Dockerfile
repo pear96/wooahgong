@@ -5,8 +5,8 @@ WORKDIR /homepage
 RUN pwd
 # /homepage에 /var/jenkins_home/workspace/wooahgong/backend에 있는 파일을 컨테이너에 복사
 COPY . .
-RUN ./gradlew build 
-
+RUN sudo chmod +x ./gradlew
+RUN ./gradlew build
 
 # FROM nginx:stable-alpine as production-stage
 # RUN rm /etc/nginx/conf.d/default.conf

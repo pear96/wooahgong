@@ -61,6 +61,9 @@ pipeline {
             }
         }
         }
+    }
+    stage('clear image') {
+        agent any
         steps {
             sh 'docker image prune -f'
         }

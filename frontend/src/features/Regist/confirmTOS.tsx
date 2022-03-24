@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import ProgressBar from '@ramonak/react-progress-bar';
 import Agree from './modal/Agree';
 import AccountPolicy from './modal/AccountPolicy';
 import Logo from '../../assets/Logo.png';
 import { ReactComponent as UnCheck } from '../../assets/comment.svg';
 import { ReactComponent as Check } from '../../assets/checkComment.svg';
+import { register, setProvider, Register } from './registerReducer';
+import { ReducerType } from '../../app/rootReducer';
 
 const Img = styled.img`
   width: 65px;
@@ -103,6 +105,7 @@ function ConfirmTOS({ progress }: MyProps) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [accountOpen, setAccountOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const openModal = () => {
     setModalOpen(true);
@@ -152,6 +155,7 @@ function ConfirmTOS({ progress }: MyProps) {
   };
   const handleClick = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault();
+    dispatch(setProvider(false));
     navigate('/regist/checkmail');
   };
 

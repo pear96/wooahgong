@@ -2,8 +2,6 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 
-import SearchBar from './searchBar';
-
 const ListContainer = styled.ul`
   margin-right: 20px;
   margin-left: -40px;
@@ -34,12 +32,13 @@ const Keyword = styled.span`
 
 const dummyData = [
   { id: 1, img: 'https://picsum.photos/100', name: '명동성당' },
-  { id: 2, img: 'https://picsum.photos/100', name: 'kim_kim99' },
+  { id: 2, img: 'https://picsum.photos/100', name: '명동성당' },
+  { id: 3, img: 'https://picsum.photos/100', name: '명동성당' },
 ];
 
 function SearchResultPlaces() {
   return (
-    <>
+    <div style={{}}>
       <ListContainer>
         {dummyData.map(({ id, img, name }) => {
           return (
@@ -52,7 +51,7 @@ function SearchResultPlaces() {
         })}
       </ListContainer>
       <Outlet />
-    </>
+    </div>
   );
 }
 

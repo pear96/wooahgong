@@ -1,19 +1,26 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export interface InitialState {
+  autoCompete: any[];
+}
 const initialState = {
-  places: '',
-  email: '',
   isFocus: false,
+  autoCompete: [],
 };
 
-const userSlice = createSlice({
+const searchSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUser(state, action) {
-      state.email = action.payload.email;
+    setToggle(state, action) {
+      state.isFocus = action.payload;
+    },
+    setAutoComplete(state, action) {
+      state.autoCompete = action.payload;
     },
   },
 });
 
-export default userSlice;
+export const { setToggle, setAutoComplete } = searchSlice.actions;
+
+export default searchSlice.reducer;

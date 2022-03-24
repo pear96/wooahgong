@@ -27,11 +27,9 @@ pipeline {
           // steps에선 실제로 실행할 쉘이나 syntax를 입력해주면 됩니다.
           steps {
               dir("backend") {
-                sh '''
-                pwd
-                echo 'backend 빌드를 실행합니다.'
-                docker build -t wooahgong-back:latest /var/jenkins_home/workspace/wooahgong/backend
-                '''
+                sh 'pwd'
+                sh 'echo backend 빌드를 실행합니다.'
+                sh 'docker build -t wooahgong-back:latest /var/jenkins_home/workspace/wooahgong/backend'
               }
           }
         }
@@ -57,12 +55,10 @@ pipeline {
           agent any
           steps {
             dir("backend"){
-              sh '''
-              docker ps -f name=wooahgong-back -q | xargs --no-run-if-empty docker container stop
-              docker container ls -a -f name=wooahgong-back -q | xargs -r docker container rm
-              docker image prune -f
-              docker run -d --name wooahgong-back -p 8080:8080 wooahgong-back:latest
-              '''
+              sh 'docker ps -f name=wooahgong-back -q | xargs --no-run-if-empty docker container stop'
+              sh 'docker container ls -a -f name=wooahgong-back -q | xargs -r docker container rm'
+              sh 'docker image prune -f'
+              sh 'docker run -d --name wooahgong-back -p 8080:8080 wooahgong-back:latest'
             }
           }
         }

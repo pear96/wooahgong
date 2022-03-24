@@ -10,7 +10,7 @@ RUN ./gradlew build
 # RUN pwd
 RUN ls
 # COPY ./build/libs/backend-1.0-SNAPSHOT.jar ./backend-1.0-SNAPSHOT.jar
-RUN copy /homepage/build/libs/*.jar /homepage/
+RUN cp /homepage/build/libs/*.jar /homepage/
 CMD java -jar backend-1.0-SNAPSHOT.jar
 # FROM nginx:stable-alpine as production-stage
 # RUN rm /etc/nginx/conf.d/default.conf

@@ -1,11 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
-// component
-import SearchResult from './searchResultPlaces';
-
 const HistoryContainer = styled.div`
   padding: 18px;
+  border: 2px solid;
+  width: 90%;
+  z-index: 2;
+  position: fixed;
+  transform: translateX(5%);
+  background-color: white;
 `;
 const HeaderContainer = styled.div`
   overflow: hidden;
@@ -55,6 +58,8 @@ const Keyword = styled.span`
 const dummyData = [
   { id: 1, img: 'https://picsum.photos/100', name: '명동성당' },
   { id: 2, img: 'https://picsum.photos/100', name: 'kim_kim99' },
+  { id: 3, img: 'https://picsum.photos/100', name: '강동구청역' },
+  { id: 4, img: 'https://picsum.photos/100', name: '천호역' },
 ];
 
 const searchHistory = () => {
@@ -64,11 +69,20 @@ const searchHistory = () => {
         <Title>최근 검색어</Title>
         <RemoveText>전체삭제</RemoveText>
       </HeaderContainer>
-      <SearchResult />
+      <ListContainer>
+        {/* 자동검색결과 */}
+        {dummyData.map(({ id, img, name }) => {
+          return (
+            <KeywordContainer key={id}>
+              <img src={img} alt="img" style={{ width: 30, height: 30, marginRight: 15 }} />
+              <Keyword>{name}</Keyword>
+              <RemoveButton>x</RemoveButton>
+            </KeywordContainer>
+          );
+        })}
+      </ListContainer>
     </HistoryContainer>
   );
 };
 
 export default searchHistory;
-
-// <RemoveButton>x</RemoveButton>

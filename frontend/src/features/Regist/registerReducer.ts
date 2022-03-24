@@ -55,9 +55,19 @@ export const register = createSlice({
     },
     setProvider(state, action: PayloadAction<boolean>){
       state.provider = action.payload;
+    },
+    setInitState(state){
+      state.atmos = [];
+      state.birth = {year : "", month : "", day : ""};
+      state.id = "";
+      state.pwd = "";
+      state.nick = "";
+      state.provider = true;
+      state.gender = true;
+      state.email = "";
     }
   },
 });
 
-export const { setId, setPwd, setEmail, setGender, setAtmos, setBirth, setNick, setMbti, setProvider } = register.actions;
+export const { setId, setPwd, setEmail, setGender, setAtmos, setBirth, setNick, setMbti, setProvider, setInitState } = register.actions;
 export default register.reducer;

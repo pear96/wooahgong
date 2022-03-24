@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import UserApi from 'common/api/UserApi';
 import Logo from '../../assets/Logo.png';
 import MbtiModal from './modal/MbtiModal';
-import { register, setMbti, Register } from './registerReducer';
+import { register, setInitState,Register } from './registerReducer';
 import { ReducerType } from '../../app/rootReducer';
 
 const Img = styled.img`
@@ -183,6 +183,7 @@ function AddMbti({ progress }: MyProps) {
     const result = await getSignupCompleteResult(body);
     console.log(result);
     if(result.status === 200){
+      dispatch(setInitState());
       navigate('/regist/complete');
     }
     else{

@@ -6,8 +6,7 @@ RUN pwd
 # /homepage에 /var/jenkins_home/workspace/wooahgong/backend에 있는 파일을 컨테이너에 복사
 COPY . .
 RUN ls
-COPY /var/jenkins_home/properties/*.properties .
-RUN cp /homepage/*.properties /homepage/src/main/resources/
+RUN cp /homepage/properties/*.properties /homepage/src/main/resources/
 RUN chmod +x ./gradlew
 RUN ./gradlew build
 # RUN pwd

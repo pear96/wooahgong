@@ -30,6 +30,7 @@ public enum ErrorCode {
     USER_NOT_FOUND(NOT_FOUND, "해당 유저 정보를 찾을 수 없습니다"),
     REFRESH_TOKEN_NOT_FOUND(NOT_FOUND, "로그아웃 된 사용자입니다"),
     EMAIL_NOT_FOUND(NOT_FOUND, "해당 이메일을 찾을 수 없습니다"),
+    DATA_NOT_FOUND(NOT_FOUND, "데이터를 찾을 수 없습니다."),
 
     /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     DUPLICATE_RESOURCE(CONFLICT, "데이터가 이미 존재합니다"),

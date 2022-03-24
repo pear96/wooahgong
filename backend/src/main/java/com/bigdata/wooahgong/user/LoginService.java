@@ -46,7 +46,7 @@ public class LoginService {
         }
         CommonLoginRes commonLoginRes = CommonLoginRes.builder()
                 .nickname(user.getNickname())
-                .token(JwtTokenUtil.getToken(user.getUserId()))
+                .token("Bearer "+JwtTokenUtil.getToken(user.getEmail()))
                 .profileImg(user.getImageUrl())
                 .build();
         return commonLoginRes;

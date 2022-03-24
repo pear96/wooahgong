@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import ProgressBar from '@ramonak/react-progress-bar';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import UserApi from 'common/api/UserApi';
 import Logo from '../../assets/Logo.png';
 import MbtiModal from './modal/MbtiModal';
 import { register, setMbti, Register } from './registerReducer';
@@ -102,6 +104,9 @@ function AddMbti({ progress }: MyProps) {
   ]);
 
   const navigate = useNavigate();
+  const {getSignupCompleteResult} = UserApi;
+
+
 
   const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
   const dispatch = useDispatch();
@@ -144,10 +149,53 @@ function AddMbti({ progress }: MyProps) {
       }
     }
   }, [mbti]);
-  const handleOnClickNextStep = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleOnClickNextStep = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    dispatch(setMbti(selectedmbti));
-    navigate('/regist/complete');
+    let month;
+    let day;
+    if(+regist.birth.month < 10){
+      console.log("???");
+      month = `0${regist.birth.month}`;
+    }
+    else{
+      month = regist.birth.month;
+
+    }
+    if(+regist.birth.day < 10){
+      day = `0${regist.birth.day}`;
+    }
+    else{
+      day = regist.birth.day;
+    }
+    // dispatch(setMbti(selectedmbti));
+    const realBirth = `${regist.birth.year}-${month}-${day}`;
+    const body = {
+      userId : regist.id,
+      password : regist.pwd,
+      nickname : regist.nick,
+      email : regist.email,
+      birth : realBirth,
+      gender : regist.gender,
+      provider : regist.provider,
+      moods : regist.atmos,
+      mbti : selectedmbti
+    }
+    const result = await getSignupCompleteResult(body);
+    console.log(result);
+    if(result.status === 200){
+      navigate('/regist/complete');
+    }
+    else{
+      toast.error(
+        <div style={{ width: 'inherit', fontSize: '10px' }}>
+          <div>회원가입에 실패했습니다. 다시 시도해주세요</div>
+        </div>,
+        {
+          position: toast.POSITION.TOP_CENTER,
+          role: 'alert',
+        },
+      );
+    }
   };
 
   return (

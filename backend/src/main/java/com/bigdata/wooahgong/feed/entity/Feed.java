@@ -7,7 +7,6 @@ import com.bigdata.wooahgong.user.entity.FeedLike;
 import com.bigdata.wooahgong.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
@@ -16,9 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class Feed extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,4 +49,12 @@ public class Feed extends BaseTimeEntity {
     @JsonManagedReference
     private List<FeedMood> feedMoods = new ArrayList<>();
 
+    @Builder
+    public Feed(String content, Double ratings, String thumbnail, User user, Place place) {
+        this.content = content;
+        this.ratings = ratings;
+        this.thumbnail = thumbnail;
+        this.user = user;
+        this.place = place;
+    }
 }

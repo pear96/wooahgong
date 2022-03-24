@@ -1,22 +1,25 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-export const StyledNavbar = styled.div`
-  background-color: #fafafa;
-  height: 80px;
+export const StyledProfileUpdateHeader = styled.div`
+  /* background-color: #edbaba; */
+  height: 60px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
-export const Menubars = styled(Link)`
+export const BackWrapper = styled(Link)`
   margin-left: 2rem;
-  font-size: 2rem;
+  font-size: 1.5rem;
   background: none;
 `;
 
+export const ProfileUpdateTitle = styled.span`
+  font-size: 1.2rem;
+`;
+
 export const NavMenu = styled.nav`
-  z-index: 100;
   background-color: #fafafa;
   width: 300px;
   height: 100vh;
@@ -49,7 +52,7 @@ export const NavText = styled.li`
   padding: 8px 0px 8px 16px;
   list-style: none;
   height: 60px;
-  // 질문!
+
   a {
     text-decoration: none;
     color: #000;

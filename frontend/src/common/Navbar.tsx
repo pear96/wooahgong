@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { StyledNavbar, Menubars, NavMenu, NavMenuItems, NavbarToggle, NavText } from 'common/styles/StyledNavbar';
 import { FaBars } from 'react-icons/fa';
 import { AiOutlineClose, AiOutlineSearch } from 'react-icons/ai';
@@ -23,7 +23,6 @@ function Navbar() {
         <img src={mainLogo} alt="mainLogo" width={50} height={50} />
         <AiOutlineSearch style={{ width: '40px', height: '40px', marginRight: '1rem' }} />
       </StyledNavbar>
-
       <NavMenu style={sidebar ? { left: '0', transition: '350ms' } : {}}>
         <NavMenuItems onClick={showSidebar}>
           <NavbarToggle>
@@ -49,6 +48,7 @@ function Navbar() {
           })}
         </NavMenuItems>
       </NavMenu>
+      <Outlet />
     </>
   );
 }

@@ -27,12 +27,12 @@ public class EmailService {
     private final UserRepository userRepository;
     private final EmailRepository emailRepository;
 
-    // 이메일 인증 발송
-    private MimeMessage sendAuthCodeEmail(String to, String authCode)throws Exception{
+    // 인증코드를 담은 메일 생성
+    private MimeMessage createAuthCodeEmail(String to, String authCode)throws Exception{
         MimeMessage  message = emailSender.createMimeMessage();
 
         message.addRecipients(RecipientType.TO, to); //보내는 대상
-        message.setSubject("우아공 이메일 인증"); //제목
+        message.setSubject("우리만 아는 공간 인증번호 메일"); //제목
 
         String msgg="";
         msgg += "<!DOCTYPE html>";
@@ -45,7 +45,7 @@ public class EmailService {
                         "	style=\"font-family: 'Apple SD Gothic Neo', 'sans-serif' !important; width: 550px; height: 600px; border-top: 4px solid #9088F3; margin: 100px auto; padding: 30px 0; box-sizing: border-box;\">"		+
                         "	<h1 style=\"margin: 0; padding: 0 5px; font-size: 28px; font-weight: 550;\">"																															+
                         "		<span style=\"font-size: 15px; margin: 0 0 10px 3px;\">우리만 아는 공간</span><br />"																													+
-                        "		<span style=\"color: #9088F3\">메일인증</span> 안내입니다."																																				+
+                        "		<span style=\"color: #9088F3\">인증코드</span> 메일입니다."																																				+
                         "	</h1>\n"																																																+
                         "	<p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;\">"																													+
                         "		안녕하세요.<br />"																																													+
@@ -100,9 +100,8 @@ public class EmailService {
         return now.plusMinutes(10);
     };
 
-
-    // 이메일 확인후 인증코드, 만료시간 설정
-    public ResponseEntity<Object> checkEmail(String email) throws Exception {
+    // 회원가입시 이메일 발송
+    public ResponseEntity<Object> checkEmailForSignup(String email) throws Exception {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
             // 해당 이메일을 가진 사용자가 존재한다면 에러를 발생한다.
@@ -129,14 +128,32 @@ public class EmailService {
             emailRepository.save(newEmail);
         }
         // 보낼 이메일 생성
-        MimeMessage message = sendAuthCodeEmail(email, newAuthCode);
+        MimeMessage message = createAuthCodeEmail(email, newAuthCode);
         emailSender.send(message);
 
         return ResponseEntity.status(200).body("인증 코드 발송");
     }
 
-    // 이메일과 인증 코드 일치 여부
-    public ResponseEntity checkEmailAuthCode(String email, String authCode) {
+    // 비밀번호 수정시 이메일 발송. 회원 일치 여부는 UserService에서 진행
+    public void sendEmailForPassword(User user, String email) {
+        // 해당 이메일 사용자의 인증 코드 갱신
+        String newAuthCode = createAuthCode();
+        user.setAuthCode(newAuthCode);
+        userRepository.save(user);
+
+        // 보낼 이메일 생성
+        MimeMessage message = null;
+        try {
+            message = createAuthCodeEmail(email, newAuthCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        emailSender.send(message);
+    }
+
+
+    // 회원가입시 email 테이블의 이메일과 인증 코드 일치 여부 확인
+    public ResponseEntity checkEmailAuthCodeForSignup(String email, String authCode) {
         Optional<Email> checkingEmail = emailRepository.findByEmail(email);
         // 지금 입력한 이메일이 DB에 없을 수는 없다고 생각하지만
         // 혹시 모르니까 테스트 해본다.
@@ -158,4 +175,13 @@ public class EmailService {
         return ResponseEntity.status(200).body("이메일 인증 성공");
     }
 
+    // 비밀번호 수정시 user 테이블의 이메일과 인증 코드 일치 여부 확인
+    public ResponseEntity checkEmailAuthCodeForPassword(User user, String authCode) {
+        // 입력한 인증 코드와 인증 번호가 다르다면 오류 발생
+        if (!user.getAuthCode().equals(authCode)) {
+            throw new CustomException(ErrorCode.FAILED_AUTH_EMAIL);
+        }
+        // 이메일 존재 + 인증코드 일치 = 이메일 인증 완료
+        return ResponseEntity.status(200).body("인증번호 일치");
+    }
 }

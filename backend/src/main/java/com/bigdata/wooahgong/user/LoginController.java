@@ -37,7 +37,7 @@ public class LoginController {
         // 2. 액세스 토큰으로 카카오 정보를 가져온다.
         KakaoProfile kakaoProfile = loginService.getProfileByToken(accessToken);
         // 3. 카카오 정보로 회원인지 아닌지 검사한다.
-        User user = userRepository.findByEmail(kakaoProfile.getKakao_account().getEmail()).orElseGet(null);
+        User user = userRepository.findByEmail(kakaoProfile.getKakao_account().getEmail()).orElse(null);
         // 3-1. 회원이 아니라면 회원가입 절차 진행
         Map<String, Object> map = new HashMap<>();
         if (user == null) {

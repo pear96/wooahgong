@@ -50,6 +50,7 @@ public class User extends BaseTimeEntity {
     public void resetPwd(String password){
         this.password = password;
     }
+    public void setAuthCode(String authCode) { this.authCode = authCode;}
 
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 //    @JsonManagedReference

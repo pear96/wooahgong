@@ -41,7 +41,6 @@ public class FeedService {
         List<Feed> feedList = feedRepository.findAll();
         return feedList;
     }
-
     @Transactional
     public String createFeed(String token, List<MultipartFile> images, CreateFeedReq createFeedReq) {
         // 토큰으로 유저 찾기

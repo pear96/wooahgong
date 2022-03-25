@@ -5,21 +5,21 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'app/store';
 // antd
 import { Button } from 'antd';
-
 // asseets main logo image
 import styled from 'styled-components';
 import { testNum } from '../authSlice';
-import { ReactComponent as Logo } from '../../../assets/main/Logo.svg';
+import Logo from '../../../assets/Logo.png';
 import * as kakalogin from '../../../assets/kakaoLogo/kakao_login_large_wide.png';
 import { ReactComponent as Title } from '../../../assets/main/Title.svg';
 
 // kakao socail login
 import { KAKAO_AUTH_URL } from './OAuth';
 
-export const TitleContainer = styled.div`
-  margin-top: 50px;
-  margin-left: 70px;
-  margin-bottom: 50px;
+
+const TitleContainer = styled.div`
+  margin-top: 22px;
+  margin-left: 69px;
+  margin-bottom: 60px;
 `;
 
 const SmallMenu = styled.div`
@@ -27,16 +27,18 @@ const SmallMenu = styled.div`
   font-weight: 500;
   line-height: 1;
   transition: transform 250ms;
-
+  cursor : pointer;
   &:hover {
-    transform: translateY(-10px);
+    transform: translateY(-2px);
   }
 `;
-
-export const LogoContainer = styled.div`
-  margin-top: 213px;
-  margin-left: 120px;
-  color: rgba(179, 161, 224, 0.4);
+const Img = styled.img`
+  width: 112px;
+  height: 112px;
+  margin-top: 209px;
+  margin-left: 124px;
+  margin-bottom: 25px;
+  // filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 `;
 
 export const ActiveButton = styled.button`
@@ -47,8 +49,9 @@ export const ActiveButton = styled.button`
   height: 45px;
   margin-top: 20px;
   margin-left: 70px;
-  font-size: 16px;
-  font-style: normal;
+  font-family: 'NotoSansKR';
+  font-size: 18px;
+  // font-style: normal;
   font-weight: 500;
   cursor: pointer;
   color: rgba(255, 255, 255, 1);
@@ -80,12 +83,16 @@ function socialLogin() {
   }, []);
 
   return (
-    <>
-      <LogoContainer>
-        <Logo />
-      </LogoContainer>
+    <div style={{
+      position : "relative",
+      width : "360px",
+      height : "800px",
+      background : "none",
+      margin : "0 auto"
+    }}>
+      <Img src={Logo} alt="Logo" />
       <TitleContainer>
-        <Title />
+        <Title width="222px"/>
       </TitleContainer>
       <ActiveButton onClick={onClickGotoLoginPage}>로그인</ActiveButton>
       <Button
@@ -116,7 +123,7 @@ function socialLogin() {
           </SmallMenu>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 export default socialLogin;

@@ -9,5 +9,6 @@ export const getToken = () => {
   return window.localStorage.getItem('token');
 };
 export const deleteToken = () => {
+  console.log("????????지워짐?");
   window.localStorage.removeItem('token');
 };

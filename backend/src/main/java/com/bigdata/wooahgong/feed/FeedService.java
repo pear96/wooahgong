@@ -85,6 +85,7 @@ public class FeedService {
         return null;
     }
 
+
     // 피드 상세 보기
     public DetailFeedRes detailFeed(String token, Long feedSeq) {
         // 토큰으로 유저 찾기
@@ -110,7 +111,7 @@ public class FeedService {
         for (FeedMood feedMood : feed.getFeedMoods()) {
             moods.add(feedMood.getMood().getMood());
         }
-        DetailFeedRes.builder()
+        return DetailFeedRes.builder()
                 .feedSeq(feedSeq).userSeq(owner.getUserSeq()).userImageUrl(owner.getImageUrl())
                 .nickname(feed.getUser().getNickname()).placeSeq(place.getPlaceSeq()).placeName(place.getName())
                 .address(place.getAddress()).images(urls)
@@ -119,11 +120,37 @@ public class FeedService {
                 .moods(moods).amILike(amIPressedLike(feed, user))
                 .likesCnt(feed.getFeedLikes().size()).commentsCnt(feed.getComments().size())
                 .build();
-        return null;
     }
 
     public boolean amIPressedLike(Feed feed, User user) {
         FeedLike feedLike = feedLikeRepository.findByFeedAndUser(feed, user).orElse(null);
         return feedLike != null;
+    }
+
+    public String updateFeed(String token, Long feedSeq, String content) {
+        Feed feed = check(token,feedSeq);
+        feed.updateContent(content);
+        feedRepository.save(feed);
+        return "수정 완료.";
+    }
+
+    public String deleteFeed(String token, Long feedSeq) {
+        Feed feed = check(token,feedSeq);
+        feedRepository.delete(feed);
+        return "수정 완료.";
+    }
+
+    public Feed check(String token, Long feedSeq){
+        // 토큰으로 유저 찾기
+        User user = userRepository.findByEmail(userService.getEmailByToken(token)).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+
+        Feed feed = feedRepository.findByFeedSeq(feedSeq).orElseThrow(()->
+                new CustomException(ErrorCode.DATA_NOT_FOUND));
+        // 주인이 아님
+        if(!feed.getUser().getEmail().equals(user.getEmail())){
+            throw new CustomException(ErrorCode.INVALID_AUTHORIZED);
+        }
+        return feed;
     }
 }

@@ -30,18 +30,28 @@ public class FeedController {
     public ResponseEntity<List<Feed>> getFeedsTrend(@RequestHeader("Authorization") String token) {
         return new ResponseEntity<>(feedService.getFeedsTrend(token.split(" ")[1]), HttpStatus.OK);
     }
-
+    // 피드 쓰기
     @PostMapping
     public ResponseEntity<String> createFeed(@RequestHeader("Authorization") String token,
                                              @RequestPart(value = "images", required = false) List<MultipartFile> images,
                                              @RequestPart(value = "data") CreateFeedReq createFeedReq) {
         return new ResponseEntity<>(feedService.createFeed(token, images, createFeedReq), HttpStatus.OK);
     }
-
+    // 피드 상세보기
     @GetMapping("/{feed_seq}")
     public ResponseEntity<DetailFeedRes> detailFeed(@RequestHeader("Authorization") String token, @PathVariable("feed_seq") Long feedSeq) {
         return new ResponseEntity<DetailFeedRes>(feedService.detailFeed(token,feedSeq), HttpStatus.OK);
     }
-
+    // 피드 수정
+    @PatchMapping("/{feed_seq}")
+    public ResponseEntity<String> updateFeed(@RequestHeader("Authorization") String token, @PathVariable("feed_seq") Long feedSeq,
+                                                    @RequestParam String content) {
+        return new ResponseEntity<>(feedService.updateFeed(token, feedSeq,content),HttpStatus.OK);
+    }
+    // 피드 삭제
+    @DeleteMapping("/{feed_seq}")
+    public ResponseEntity<String> deleteFeed(@RequestHeader("Authorization") String token, @PathVariable("feed_seq") Long feedSeq) {
+        return new ResponseEntity<>(feedService.deleteFeed(token, feedSeq),HttpStatus.OK);
+    }
 
 }

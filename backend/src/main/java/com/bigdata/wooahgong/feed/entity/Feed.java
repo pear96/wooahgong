@@ -51,6 +51,10 @@ public class Feed extends BaseTimeEntity {
     @JsonManagedReference
     private List<FeedMood> feedMoods = new ArrayList<>();
 
+    public void updateContent(String content){
+        this.content = content;
+    }
+
     @Builder
     public Feed(String content, Double ratings, String thumbnail, User user, Place place) {
         this.content = content;

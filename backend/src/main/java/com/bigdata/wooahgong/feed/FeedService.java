@@ -76,6 +76,9 @@ public class FeedService {
                     .imageUrl(url).build();
             feedImageRepository.save(feedImage);
         }
+        // 평점 재계산
+        double totalRating = 0;
+//        List<Feed> feedList =
         return null;
     }
 }

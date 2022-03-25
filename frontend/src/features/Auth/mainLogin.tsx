@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 import React, { useCallback, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
+import UserApi from 'common/api/UserApi';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -9,7 +10,7 @@ import { useAppDispatch } from '../../app/store';
 import useInput from '../../common/hooks/useInput';
 
 // extra reducers
-import { commonLogin } from './authSlice';
+// import { commonLogin } from './authSlice';
 
 // reducers
 import { setUser } from './authSlice';
@@ -107,13 +108,18 @@ const mainLogin = () => {
   const navigate = useNavigate();
   const { test } = useSelector((state: ReducerType) => state.login);
   console.log(test);
+  const {getCommonLoginResult} = UserApi
+
   const [id, onChangeId] = useInput('');
   const [password, onChangePassword] = useInput('');
 
   const idRef = useRef<any>();
+  const handleLogin = async () =>{
 
+    // console.log(result);
+  }
   const onSubmit = useCallback(
-    (e) => {
+  async (e) => {
       e.preventDefault();
       console.log(e.target[0].value, e.target[1].value);
       if (!id || !id.trim()) {
@@ -138,16 +144,32 @@ const mainLogin = () => {
           },
         );
       }
-
-      const data = { id, password };
-      // 로그인 완료 후 store에 닉네임과 프로필 이미지 저장
-      dispatch(commonLogin(data))
-        .unwrap()
-        .then((res: any) => {
-          console.log(res);
-          dispatch(setUser({ nickname: res.data.nickname, profileImg: res.data.profileImg }));
-        });
-      // 추후에 메인으로 움직이는 코드 작성
+      const data = { userId : id, password };
+      const result = await getCommonLoginResult(data);
+      if(result.status === 200){
+        toast.success(
+          <div style={{ width: 'inherit', fontSize: '10px' }}>
+            <div>로그인 성공!</div>
+          </div>,
+          {
+            position: toast.POSITION.TOP_CENTER,
+            role: 'alert',
+          },
+        );
+        dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg }));
+        navigate("/");
+      }
+      else{
+        toast.error(
+          <div style={{ width: 'inherit', fontSize: '10px' }}>
+            <div>아이디와 비밀번호를 확인해주세요</div>
+          </div>,
+          {
+            position: toast.POSITION.TOP_CENTER,
+            role: 'alert',
+          },
+        );
+      }
     },
     [id, password],
   );
@@ -182,7 +204,7 @@ const mainLogin = () => {
           />
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-evenly', marginTop: 20 }}>
-          <ActiveButton>로그인</ActiveButton>
+          <ActiveButton onClick={handleLogin}>로그인</ActiveButton>
           <ActiveButton type="button" onClick={onClickGotoSignupPage}>
             회원가입
           </ActiveButton>

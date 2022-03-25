@@ -3,7 +3,6 @@ package com.bigdata.wooahgong.feed.dtos.response;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -19,14 +18,15 @@ public class DetailFeedRes {
     private String content;
     private boolean amIOwner;
     private Double ratings;
-    private LocalDate createDate;
+    private String createDate;
     private List<String> moods;
     private boolean amILike;
     private int likesCnt;
     private int commentsCnt;
 
     @Builder
-    public DetailFeedRes(Long feedSeq, Long userSeq, String userImageUrl, String nickname, Long placeSeq, String placeName, String address, List<String> images, String content, boolean amIOwner, Double ratings, LocalDate createDate, List<String> moods, boolean amILike, int likesCnt, int commentsCnt) {
+
+    public DetailFeedRes(Long feedSeq, Long userSeq, String userImageUrl, String nickname, Long placeSeq, String placeName, String address, List<String> images, String content, boolean amIOwner, Double ratings, String createDate, List<String> moods, boolean amILike, int likesCnt, int commentsCnt) {
         this.feedSeq = feedSeq;
         this.userSeq = userSeq;
         this.userImageUrl = userImageUrl;

@@ -41,8 +41,18 @@ public class UserService {
     @Transactional
     public void signUp(SignUpReq commonSignUpReq) {
         commonSignUpReq.setPassword(passwordEncoder.encode(commonSignUpReq.getPassword()));
+        User user = userRepository.findByEmail(commonSignUpReq.getEmail()).orElse(null);
+        // 에러 핸들링
+        if(user != null){
+            throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
+        }
+        if("".equals(commonSignUpReq.getEmail()) || commonSignUpReq.getEmail() == null){
+            throw new CustomException(ErrorCode.INVALID_DATA);
+        }
+
         // 유저 엔티티화 후 DB에 저장
-        User user = commonSignUpReq.toEntity();
+        user = commonSignUpReq.toEntity();
+
         userRepository.save(user);
         // 선호 분위기 추가
         for (String s : commonSignUpReq.getMoods()) {

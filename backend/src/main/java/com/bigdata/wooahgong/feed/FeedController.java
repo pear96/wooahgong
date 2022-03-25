@@ -1,6 +1,7 @@
 package com.bigdata.wooahgong.feed;
 
 import com.bigdata.wooahgong.feed.dtos.request.CreateFeedReq;
+import com.bigdata.wooahgong.feed.dtos.response.DetailFeedRes;
 import com.bigdata.wooahgong.feed.entity.Feed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,9 +33,14 @@ public class FeedController {
 
     @PostMapping
     public ResponseEntity<String> createFeed(@RequestHeader("Authorization") String token,
-                                                 @RequestPart(value = "images", required = false) List<MultipartFile> images,
-                                                 @RequestPart(value = "data") CreateFeedReq createFeedReq) {
+                                             @RequestPart(value = "images", required = false) List<MultipartFile> images,
+                                             @RequestPart(value = "data") CreateFeedReq createFeedReq) {
         return new ResponseEntity<>(feedService.createFeed(token, images, createFeedReq), HttpStatus.OK);
+    }
+
+    @GetMapping("/{feed_seq}")
+    public ResponseEntity<DetailFeedRes> detailFeed(@RequestHeader("Authorization") String token, @PathVariable("feed_seq") Long feedSeq) {
+        return new ResponseEntity<DetailFeedRes>(feedService.detailFeed(token,feedSeq), HttpStatus.OK);
     }
 
 

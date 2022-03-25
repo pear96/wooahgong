@@ -4,6 +4,7 @@ import com.bigdata.wooahgong.common.exception.CustomException;
 import com.bigdata.wooahgong.common.exception.ErrorCode;
 import com.bigdata.wooahgong.common.s3.S3Uploader;
 import com.bigdata.wooahgong.feed.dtos.request.CreateFeedReq;
+import com.bigdata.wooahgong.feed.dtos.response.DetailFeedRes;
 import com.bigdata.wooahgong.feed.entity.Feed;
 import com.bigdata.wooahgong.feed.entity.FeedImage;
 import com.bigdata.wooahgong.feed.entity.FeedMood;
@@ -76,9 +77,16 @@ public class FeedService {
                     .imageUrl(url).build();
             feedImageRepository.save(feedImage);
         }
-        // 평점 재계산
-        double totalRating = 0;
-//        List<Feed> feedList =
+        return null;
+    }
+
+    public DetailFeedRes detailFeed(String token, Long feedSeq) {
+        // 토큰으로 유저 찾기
+        User user = userRepository.findByEmail(userService.getEmailByToken(token)).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+        // 피드 찾기
+        Feed feed = feedRepository.findByFeedSeq(feedSeq).orElseThrow(()->
+                new CustomException(ErrorCode.DATA_NOT_FOUND));
         return null;
     }
 }

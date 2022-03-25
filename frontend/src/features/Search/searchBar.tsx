@@ -1,7 +1,18 @@
-import React from 'react';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+import React, { useState, useCallback, useEffect } from 'react';
 import styled, { css } from 'styled-components';
+import { useAppDispatch } from 'app/store';
+import Select from 'react-select';
 import { ReactComponent as Back } from '../../assets/search/back.svg';
+import { setToggle, setAutoComplete } from './searchSlice';
+import SearchResultNicknames, { Keyword, KeywordContainer, RemoveButton } from './searchResultNicknames';
 
+const options = [
+  { value: 'chocolate', label: 'Chocolate' },
+  { value: 'strawberry', label: 'Strawberry' },
+  { value: 'vanilla', label: 'Vanilla' },
+];
 const horizontalCenter = css`
   position: absolute;
   top: 50%;
@@ -45,16 +56,69 @@ const Input = styled.input`
   border: none;
   box-sizing: border-box;
 `;
-function SearchBar() {
+function SearchBar({ keyword, results, updateField }: any) {
+  const dispatch = useAppDispatch();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const onClickToggle = useCallback(() => {
+    setIsOpen((prev) => !prev);
+  }, []);
+
+  console.log(results);
+  // 자동완성 구현
+  const updateText = useCallback((text: any) => {
+    // console.log(keyword);
+    // console.log('update text', text);
+    updateField('keyword', text, false);
+    updateField('results', []);
+  }, []);
+
+  let renderResults: any;
+  const arr: any[] = results.results;
+  if (arr) {
+    // arr 에 검색어에 대한 결과가 담기면, SearchView 호출
+    renderResults = arr.map((item: any) => {
+      console.log(item.name);
+      return <SearchView updateText={updateText} name={item.name} key={item.code} img={item.img} />;
+    });
+  }
+
+  const propsTofunction = useCallback((e) => {
+    updateField('keyword', e.target.value);
+  }, []);
+
+  useEffect(() => {
+    dispatch(setToggle(isOpen));
+  }, [isOpen]);
+
+  console.log(arr);
+  useEffect(() => {
+    dispatch(setAutoComplete(arr as any));
+  }, [results]);
+
   return (
     <Container>
       <BackContainer>
         <Back />
       </BackContainer>
       <InputContainer>
-        <Input placeholder="검색어를 입력하세요" />
+        <Input onClick={onClickToggle} placeholder="검색어를 입력하세요" value={keyword} onChange={propsTofunction} />
       </InputContainer>
     </Container>
+  );
+}
+
+function SearchView({ name, updateText, img }: any) {
+  console.log('search view:', name);
+
+  return (
+    <div onClick={() => updateText(name)}>
+      <KeywordContainer>
+        <img src={img} alt="img" style={{ width: 30, height: 30, marginRight: 15 }} />
+        <Keyword>{name}</Keyword>
+        <RemoveButton>x</RemoveButton>
+      </KeywordContainer>
+    </div>
   );
 }
 

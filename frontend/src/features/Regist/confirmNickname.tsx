@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import ProgressBar from '@ramonak/react-progress-bar';
 import { toast } from 'react-toastify';
+import UserApi from 'common/api/UserApi';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../assets/Logo.png';
 import { register, setId, setPwd, setEmail, setGender, setAtmos, setBirth, setNick, Register } from './registerReducer';
@@ -24,7 +25,7 @@ const Title = styled.h3`
   text-align: left;
   margin-left: 58px;
   margin-top: 35px;
-  margin-bottom: 40px;
+  margin-bottom: 2px;
   font-family: 'NotoSansKR';
   font-size: 22px;
 `;
@@ -91,7 +92,14 @@ const ErrorMsg = styled.span`
   left: 0px;
   margin-left: 61px;
 `;
-
+const Desc = styled.span`
+  display: block;
+  text-align: left;
+  margin-left: 60px;
+  margin-bottom: 18px;
+  font-family: 'NotoSansKR';
+  font-size: 11px;
+`;
 type MyProps = {
   progress: number;
 };
@@ -102,29 +110,58 @@ function ConfirmNickname({ progress }: MyProps) {
   const [isnickName, setIsnickName] = useState<boolean>(false);
   const navigate = useNavigate();
 
+
+  const {getNickDuplicateCheck} = UserApi
+
   const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
   const dispatch = useDispatch();
-  // console.log(regist);
+  
   const handleInputNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+
+    const alphaRegex = /[a-zA-Z]/;
+    const hanRegex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+    const specialRegex =  /[!?@#$%^&*():;+=~{}<>\\-]|[|\\"',/`₩]/;
+    const numberRegex = /[0-9]/;
+
     const curWord = e.currentTarget.value;
-    if (curWord.length > 0) {
-      setIsnickName(true);
-    } else {
+
+    if ((curWord.length < 5 || curWord.length > 8) && 
+              (hanRegex.test(curWord) || alphaRegex.test(curWord))) {
+      setErrorMsg("5글자 이상 8글자 이하, 한글 영문 숫자만 사용가능합니다");
       setIsnickName(false);
+
+    } else if(specialRegex.test(curWord)) {
+      console.log("???")
+      setErrorMsg("특수 문자는 . _ 만 사용가능합니다");
+      setIsnickName(false);
+    } else{
+      setErrorMsg("");
+      setIsnickName(true);
     }
     setStatenickName(curWord);
   };
-  const handleCheckDuplicationnickName = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleCheckDuplicationnickName = async (e: React.MouseEvent<HTMLButtonElement>) => {
     // axios 요청
     e.preventDefault();
-    toast.success(<div style={{ width: 'inherit', fontSize: '14px' }}>사용가능한 닉네임 입니다.</div>, {
-      position: toast.POSITION.TOP_CENTER,
-      role: 'alert',
-    });
-    setIsOk(true);
 
+    const result = await getNickDuplicateCheck(nickName);
+
+    if(result.status === 200){
+      toast.success(<div style={{ width: 'inherit', fontSize: '14px' }}>사용가능한 닉네임 입니다.</div>, {
+        position: toast.POSITION.TOP_CENTER,
+        role: 'alert',
+      });
+      setIsOk(true);  
+    }
     // nickName 중복시 toast error 메세지
+    else{
+      toast.error(<div style={{ width: 'inherit', fontSize: '14px' }}>이미 존재하는 닉네임 입니다.</div>, {
+        position: toast.POSITION.TOP_CENTER,
+        role: 'alert',
+      });
+      setIsOk(false);
+    }
   };
 
   const handleOnClickNextStep = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -151,6 +188,7 @@ function ConfirmNickname({ progress }: MyProps) {
             </Progress>
           </div>
           <Title>닉네임 설정</Title>
+          <Desc>한글, 영어, 숫자, ., _ 만 사용 가능합니다.</Desc>
           <Input onChange={handleInputNickname} placeholder="닉네임을 설정해주세요." />
           <ConfirmBtn onClick={handleCheckDuplicationnickName} disabled={!isnickName}>
             중복확인

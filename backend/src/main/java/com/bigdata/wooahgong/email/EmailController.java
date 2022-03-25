@@ -18,7 +18,7 @@ public class EmailController {
          * 이메일 중복확인
          * 권한 : 모두사용
          */
-        return emailService.checkEmail(inputEmail.get("email"));
+        return emailService.checkEmailForSignup(inputEmail.get("email"));
     }
 
     @GetMapping(value="", params = {"email", "authCode"})
@@ -27,7 +27,7 @@ public class EmailController {
          * 이메일 코드 일치 확인
          * 권한 : 모두사용
          */
-        return emailService.checkEmailAuthCode(email, authCode);
+        return emailService.checkEmailAuthCodeForSignup(email, authCode);
     }
 
 

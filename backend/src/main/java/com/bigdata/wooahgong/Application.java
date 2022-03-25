@@ -12,6 +12,7 @@ public class Application {
             + "classpath:application-db.properties,"
             + "classpath:application-social.properties,"
             + "classpath:application-aws.properties,"
+            + "classpath:application-key.properties,"
             + "classpath:application-email.properties";
 
     public static void main(String[] args) {

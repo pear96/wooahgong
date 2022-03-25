@@ -19,9 +19,9 @@ public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userSeq;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String userId;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
     @Column(nullable = false)
     private String nickname;
@@ -50,6 +50,7 @@ public class User extends BaseTimeEntity {
     public void resetPwd(String password){
         this.password = password;
     }
+    public void setAuthCode(String authCode) { this.authCode = authCode;}
 
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 //    @JsonManagedReference

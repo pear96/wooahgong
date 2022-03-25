@@ -41,8 +41,18 @@ public class UserService {
     @Transactional
     public void signUp(SignUpReq commonSignUpReq) {
         commonSignUpReq.setPassword(passwordEncoder.encode(commonSignUpReq.getPassword()));
+        User user = userRepository.findByEmail(commonSignUpReq.getEmail()).orElse(null);
+        // 에러 핸들링
+        if(user != null){
+            throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
+        }
+        if("".equals(commonSignUpReq.getEmail()) || commonSignUpReq.getEmail() == null){
+            throw new CustomException(ErrorCode.INVALID_DATA);
+        }
+
         // 유저 엔티티화 후 DB에 저장
-        User user = commonSignUpReq.toEntity();
+        user = commonSignUpReq.toEntity();
+
         userRepository.save(user);
         // 선호 분위기 추가
         for (String s : commonSignUpReq.getMoods()) {
@@ -90,20 +100,16 @@ public class UserService {
                 new CustomException(ErrorCode.EMAIL_NOT_FOUND));
         userRepository.findByUserId(userId).orElseThrow(()->
                 new CustomException(ErrorCode.USER_NOT_FOUND));
-        // 이메일 전송
-        try {
-            emailService.checkEmail(email);
-        } catch (Exception e) {
-            // 익셉션을 던지기 때문에 여기서 처리.
-            e.printStackTrace();
-            new CustomException(ErrorCode.DUPLICATE_RESOURCE);
-        }
+        // 에러 없이 지나왔다면
+        User user = userRepository.findByEmail(email).get();
+        emailService.sendEmailForPassword(user, email);
     }
+
     // 비밀번호 찾기2 인증코드 확인
     public ResponseEntity findPwInsertCode(String userId, String authCode) {
-        String email = userRepository.findEmailByUserId(userId).orElseThrow(()->
-                new CustomException(ErrorCode.EMAIL_NOT_FOUND));
-        return emailService.checkEmailAuthCode(email,authCode);
+        User user = userRepository.findByUserId(userId).orElseThrow(()->
+                new CustomException(ErrorCode.USER_NOT_FOUND));
+        return emailService.checkEmailAuthCodeForPassword(user, authCode);
     }
 
     public void resetPwd(ResetPwdReq resetPwdReq) {

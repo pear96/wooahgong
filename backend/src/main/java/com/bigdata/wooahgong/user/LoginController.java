@@ -31,7 +31,7 @@ public class LoginController {
     // 카카오 로그인
     // 인가코드를 받아온 후 부터 진행
     @GetMapping("/kakao")
-    public ResponseEntity<Map<String, Object>> kakaoLogin(String code) {
+    public ResponseEntity<Map<String, Object>> kakaoLogin(@RequestParam String code) {
         // 1. 인가 코드로 액세스 토큰을 받아온다.
         String accessToken = loginService.getAccessToken(code);
         // 2. 액세스 토큰으로 카카오 정보를 가져온다.

@@ -1,16 +1,21 @@
 package com.bigdata.wooahgong.place.entity;
 
 import com.bigdata.wooahgong.common.util.BaseTimeEntity;
+import com.bigdata.wooahgong.feed.entity.Feed;
+import com.bigdata.wooahgong.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import javax.persistence.*;
 
-// 같은 프로젝트 다른 entity
-import com.bigdata.wooahgong.user.entity.*;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Place extends BaseTimeEntity {
@@ -34,6 +39,12 @@ public class Place extends BaseTimeEntity {
     @Column(nullable = false)
     private Double longitude;
 
+    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Feed> feeds = new ArrayList<>();
+    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<PlaceWish> placeWishes = new ArrayList<>();
     @Builder
     public Place(User user, String name, String address, Double latitude, Double longitude) {
         this.user = user;

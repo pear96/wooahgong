@@ -2,7 +2,7 @@
 //   const value: any;
 //   export = value;
 // }
-
+declare module '*.jpg';
 declare module '*.png';
 declare module '*.svg' {
   import React = require('react');

@@ -1,16 +1,17 @@
 package com.bigdata.wooahgong.place.entity;
 
 import com.bigdata.wooahgong.common.util.BaseTimeEntity;
+import com.bigdata.wooahgong.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import javax.persistence.*;
 
-// 같은 프로젝트 다른 entity
-import com.bigdata.wooahgong.user.entity.*;
+import javax.persistence.*;
 
 @Entity
 @Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Place extends BaseTimeEntity {

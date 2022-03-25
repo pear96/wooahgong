@@ -45,7 +45,7 @@ public class LoginController {
         }
         // 3-2. 회원이라면 커스텀 토큰 발급
         else {
-            map.put("token", JwtTokenUtil.getToken(user.getEmail()));
+            map.put("token", "Bearer "+JwtTokenUtil.getToken(user.getEmail()));
         }
         return new ResponseEntity<>(map, HttpStatus.OK);
     }

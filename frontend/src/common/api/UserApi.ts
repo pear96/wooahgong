@@ -1,6 +1,8 @@
 import axios from "axios";
+import {saveToken, getToken} from "./JTW-Token";
 
-const BASE_URL = "http://j6a505.p.ssafy.io:8888/api/users"
+const BASE_URL = "http://j6a505.p.ssafy.io:8080/api/users"
+// const BASE_URL = "http://localhost:8080/api/users"
 
 const getEmailCheckResult = (body : {email : string}) => {
     const result =  axios.post(`${BASE_URL}/signup/email`, body)
@@ -67,14 +69,47 @@ const getSignupCompleteResult =
                                 return value;
                             });
     return result;
-}                  
+}
+const getCommonLoginResult = async(body : {userId : string, password : string}) =>{
+    const result = await axios.post(`${BASE_URL}/login`, body)
+                            .then((response)=>{
+                                // console.log(response.data.token);
+                                saveToken(response.data.token);
+                                const value = {
+                                    status : 200,
+                                    data : {
+                                        nickname : response.data.nickname,
+                                        profileImg : response.data.profileImg
+                                    }
+                                }
+                                return value;
+                            })
+                            .catch((e : any)=>{
+                                const value = {
+                                    status : 409,
+                                    data : {
+                                        nickname : "",
+                                        profileImg : ""
+                                    }
+                                }
+                                return value;
+                            })
+    // saveToken(result.data.token);
+    return result;
+}
+const getKakaoLoginResult = async (code : string) =>{
+    const result = await axios.get(`${BASE_URL}/login/kakao?code=${code}`);
+    return result;
+}
 
 const UserApi = {
     getEmailCheckResult,
     getEmailCheckCodeResult,
     getIdDuplicateCheck,
     getNickDuplicateCheck,
-    getSignupCompleteResult
+    getSignupCompleteResult,
+    getCommonLoginResult,
+    getKakaoLoginResult
 }
 
 export default UserApi;

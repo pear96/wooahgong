@@ -60,3 +60,4 @@ public class Feed extends BaseTimeEntity {
         this.place = place;
     }
 }
+

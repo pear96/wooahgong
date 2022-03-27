@@ -9,11 +9,11 @@ import java.util.List;
 
 @Getter
 public class DetailPlaceRes {
-    private String name;
-    private String address;
-    private Double avgRatings;
-    private String placeImageUrl;
-    private List<CustomFeedDto> feeds;
+    private final String name;
+    private final String address;
+    private final Double avgRatings;
+    private final String placeImageUrl;
+    private final List<CustomFeedDto> feeds;
 
     @Builder
     public DetailPlaceRes(String name, String address, Double avgRatings, String placeImageUrl, List<CustomFeedDto> feeds) {

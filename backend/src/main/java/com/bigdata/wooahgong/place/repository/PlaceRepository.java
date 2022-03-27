@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface PlaceRepository extends JpaRepository<Place, Long> {
     Optional<Place> findByPlaceSeq(Long placeSeq);
-    List<Place> findPlacesByAddressOrNameContaining(String searchWord);
+    List<Place> findPlacesByAddressContainingOrNameContaining(String address, String name);
 }

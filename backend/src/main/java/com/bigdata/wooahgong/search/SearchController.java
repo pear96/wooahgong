@@ -34,9 +34,15 @@ public class SearchController {
     }
 
     // 검색 선택 - 장소
-
-    // 검색 선택 - 사용자자
-
+    @PostMapping(value = "/place")
+    public ResponseEntity<String> selectPlaceSearch(@RequestHeader("Authorization") String token, @RequestBody HashMap<String, Long> place) {
+        return searchService.selectPlaceSearch(token, place.get("placeSeq"));
+    }
+    // 검색 선택 - 사용자
+    @PostMapping(value = "/users")
+    public ResponseEntity<String> selectUserSearch(@RequestHeader("Authorization") String token, @RequestBody HashMap<String, String> user) {
+        return searchService.selectUserSearch(token, user.get("nickname"));
+    }
     // 최근 검색어 전체 삭제
 
     // 특정 최근 검색어 삭제

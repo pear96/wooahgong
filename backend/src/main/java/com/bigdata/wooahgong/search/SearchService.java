@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +31,7 @@ public class SearchService {
     private final PlaceRepository placeRepository;
     private final UserRepository userRepository;
 
+    // 검색창 진입 -> 최근 검색어 전달
     public ResponseEntity<SearchHistoriesRes> getRecentSearchHistory(String token) {
         // token이 유효한지 검사한다.
         User user = userService.getUserByToken(token);
@@ -42,10 +44,10 @@ public class SearchService {
         for (int i = recentSearchHistories.size() - 1; i >= 0; i--) {
             SearchHistory searchHistory = recentSearchHistories.get(i);
             SearchHistoryDto customSearchHistory = SearchHistoryDto.builder()
-                    .historySeq(searchHistory.getHistorySeq())
                     .type(searchHistory.getType())
                     .searchWord(searchHistory.getSearchWord())
                     .imageUrl(searchHistory.getImageUrl())
+                    .placeSeq(searchHistory.getPlaceSeq())
                     .build();
             recentSearchHistoriesExceptUser.add(customSearchHistory);
         }
@@ -56,9 +58,10 @@ public class SearchService {
         return ResponseEntity.status(200).body(searchHistoriesRes);
     }
 
+    // 검색 결과 - 장소
     public ResponseEntity<HashMap<String, List<SearchPlaceDto>>> searchPlaces(String token, String searchWord) {
         // token이 유효한지 검사한다.
-        User user = userService.getUserByToken(token);
+        userService.getUserByToken(token);
 
         // 검색어가 유효한지 검사한다.
         if("".equals(searchWord)) {
@@ -66,7 +69,7 @@ public class SearchService {
         }
 
         // 검색어가 이름 또는 주소에 포함된 모든 장소를 찾아낸다.
-        List<Place> searchedPlaces = placeRepository.findPlacesByAddressOrNameContaining(searchWord);
+        List<Place> searchedPlaces = placeRepository.findPlacesByAddressContainingOrNameContaining(searchWord, searchWord);
 
         // 장소의 시퀀스, 이름, 썸네일만 가져오도록 한다.
         List<SearchPlaceDto> results = new ArrayList<>();
@@ -85,6 +88,7 @@ public class SearchService {
         return ResponseEntity.status(200).body(data);
     }
 
+    // 검색 결과 - 사용자
     public ResponseEntity<HashMap<String, List<SearchUserDto>>> searchUsers(String token, String searchWord) {
         // token이 유효한지 검사한다.
         userService.getUserByToken(token);
@@ -112,5 +116,58 @@ public class SearchService {
         data.put("results", results);
 
         return ResponseEntity.status(200).body(data);
+    }
+
+    // 검색 선택 - 장소
+    public ResponseEntity<String> selectPlaceSearch(String token, Long placeSeq) {
+        // token이 유효한지 검사한다.
+        User user = userService.getUserByToken(token);
+        Optional<Place> foundPlace = placeRepository.findByPlaceSeq(placeSeq);
+        if (foundPlace.isEmpty()){
+            throw new CustomException(ErrorCode.PLACE_NOT_FOUND);
+        }
+        Place searchPlace = foundPlace.get();
+
+        // 이미 검색한 적 있다면 pass
+        if (searchHistoryRepository.findSearchHistoriesByPlaceSeq(placeSeq).isPresent()) {
+            return ResponseEntity.status(200).body("이미 검색 했던 장소");
+        }
+
+        SearchHistory searchHistory = SearchHistory.builder()
+                .user(user)
+                .type("place")
+                .searchWord(searchPlace.getName())
+                .imageUrl(searchPlace.getFeeds().get(0).getThumbnail())
+                .placeSeq(placeSeq)
+                .build();
+
+        searchHistoryRepository.save(searchHistory);
+        return ResponseEntity.status(200).body("장소 검색");
+    }
+
+    // 검색 선택 - 사용자
+    public ResponseEntity<String> selectUserSearch(String token, String nickname) {
+        // token이 유효한지 검사한다.
+        User user = userService.getUserByToken(token);
+        Optional<User> foundUser = userRepository.findByNickname(nickname);
+        if (foundUser.isEmpty()){
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+        User searchUser = foundUser.get();
+
+        // 이미 검색한 적 있다면 pass
+        if (searchHistoryRepository.findSearchHistoriesBySearchWord(nickname).isPresent()) {
+            return ResponseEntity.status(200).body("이미 검색 했던 유저");
+        }
+
+        SearchHistory searchHistory = SearchHistory.builder()
+                .user(user)
+                .type("users")
+                .searchWord(searchUser.getNickname())
+                .imageUrl(searchUser.getImageUrl())
+                .build();
+
+        searchHistoryRepository.save(searchHistory);
+        return ResponseEntity.status(200).body("유저 검색");
     }
 }

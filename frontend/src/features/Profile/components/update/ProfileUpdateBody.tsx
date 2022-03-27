@@ -91,18 +91,6 @@ function ProfileUpdateBody({ changePassword, changePasswordCheck, changeNickname
   const [passwordCheck, setPasswordCheck] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
   const [mbti, setMbti] = useState<string>('');
-  // const [moods, setMoods] = useState<any>([
-  //   { type: '모던', selected: false, color: 'gray' },
-  //   { type: '내추럴', selected: false, color: 'gray' },
-  //   { type: '러블리', selected: false, color: 'gray' },
-  //   { type: '럭셔리', selected: false, color: 'gray' },
-  //   { type: '유니크', selected: false, color: 'gray' },
-  //   { type: '빈티지', selected: false, color: 'gray' },
-  //   { type: '액티브', selected: false, color: 'gray' },
-  //   { type: '클럽', selected: false, color: 'gray' },
-  //   { type: '기타', selected: false, color: 'gray' },
-  // ]);
-  // const [selectedMoods, setSelectedMoods] = useState<string[]>([]);
   const [moods, setMoods] = useState<string[]>([]);
 
   const [showLeaveModal, setShowLeaveModal] = useState<boolean>(false);
@@ -259,15 +247,6 @@ function ProfileUpdateBody({ changePassword, changePasswordCheck, changeNickname
             <Warning>관심 분위기는 최소 1개 최대 2개 선택해야 합니다.</Warning>
           )}
         </StyledInfoRow>
-        {/* <StyledInfoRow align="middle">
-          <StyledInfoTitle xs={10}>관심 분위기</StyledInfoTitle>
-          <Col xs={14}>
-            <StyledInfoRow>1 2</StyledInfoRow>
-            <StyledInfoRow>3 4</StyledInfoRow>
-            <StyledInfoRow>5 6</StyledInfoRow>
-            <StyledInfoRow>7 8</StyledInfoRow>
-          </Col>
-        </StyledInfoRow> */}
       </StyledUpdateInfo>
       <LeaveButton onClick={() => setShowLeaveModal(true)}>우아공 떠나기</LeaveButton>
       {showLeaveModal && <LeaveModal setShowModal={setShowLeaveModal} />}

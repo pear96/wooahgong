@@ -2,12 +2,12 @@ package com.bigdata.wooahgong.place.dtos.request;
 
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class CustomFeedDto {
-    private Long feedSeq;
-    private String thumbnail;
+    private final Long feedSeq;
+    private final String thumbnail;
 
     @Builder
     public CustomFeedDto(Long feedSeq, String thumbnail){

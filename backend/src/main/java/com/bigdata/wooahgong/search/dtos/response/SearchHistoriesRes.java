@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 public class SearchHistoriesRes {
-    private List<SearchHistoryDto> recentSearches;
+    private final List<SearchHistoryDto> recentSearches;
 
     @Builder
     public SearchHistoriesRes(List<SearchHistoryDto> recentSearches) {

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 public class PlaceFeedsRes {
-    private List<CustomFeedDto> feeds;
+    private final List<CustomFeedDto> feeds;
 
     @Builder
     public PlaceFeedsRes(List<CustomFeedDto> feeds) {

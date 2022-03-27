@@ -2,6 +2,7 @@ package com.bigdata.wooahgong.feed;
 
 import com.bigdata.wooahgong.feed.dtos.request.CreateFeedReq;
 import com.bigdata.wooahgong.feed.dtos.response.DetailFeedRes;
+import com.bigdata.wooahgong.feed.dtos.response.GetCommentsRes;
 import com.bigdata.wooahgong.feed.entity.Feed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -53,5 +54,9 @@ public class FeedController {
     public ResponseEntity<String> deleteFeed(@RequestHeader("Authorization") String token, @PathVariable("feed_seq") Long feedSeq) {
         return new ResponseEntity<>(feedService.deleteFeed(token, feedSeq),HttpStatus.OK);
     }
-
+    // 댓글 불러오기
+    @GetMapping("/{feed_seq}/comments")
+    public ResponseEntity<List<GetCommentsRes>> getComments(@RequestHeader("Authorization") String token, @PathVariable("feed_seq") Long feedSeq) {
+        return new ResponseEntity<List<GetCommentsRes>>(feedService.getComments(token,feedSeq), HttpStatus.OK);
+    }
 }

@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface SearchHistoryRepository extends JpaRepository<SearchHistory, Long> {
     List<SearchHistory> findSearchHistoriesByUser(User user);
-    Optional<SearchHistory> findSearchHistoriesBySearchWord(String searchWord);
-    Optional<SearchHistory> findSearchHistoriesByPlaceSeq(Long placeSeq);
+    Optional<SearchHistory> findSearchHistoriesByUserAndSearchWord(User user, String searchWord);
+    Optional<SearchHistory> findSearchHistoriesByUserAndPlaceSeq(User user, Long placeSeq);
+    void deleteSearchHistoriesByUser(User user);
+    void deleteByHistorySeq(Long historySeq);
 }

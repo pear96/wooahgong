@@ -16,6 +16,7 @@ import com.bigdata.wooahgong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,11 +33,23 @@ public class SearchService {
     private final UserRepository userRepository;
 
     // 검색창 진입 -> 최근 검색어 전달
+    @Transactional
     public ResponseEntity<SearchHistoriesRes> getRecentSearchHistory(String token) {
         // token이 유효한지 검사한다.
         User user = userService.getUserByToken(token);
 
         // 해당 사용자의 최근 검색 결과를 불러온다.
+        List<SearchHistory> allRecentSearchHistories = searchHistoryRepository.findSearchHistoriesByUser(user);
+
+        // 5개가 넘는다면 이전 검색 기록 지우기
+        int listSize = allRecentSearchHistories.size();
+        if (listSize > 5) {
+            for(int i=0; i < listSize-5; i++) {
+                Long delHistorySeq = allRecentSearchHistories.get(i).getHistorySeq();
+                searchHistoryRepository.deleteByHistorySeq(delHistorySeq);
+            }
+        }
+
         List<SearchHistory> recentSearchHistories = searchHistoryRepository.findSearchHistoriesByUser(user);
         List<SearchHistoryDto> recentSearchHistoriesExceptUser = new ArrayList<>();
 
@@ -44,6 +57,7 @@ public class SearchService {
         for (int i = recentSearchHistories.size() - 1; i >= 0; i--) {
             SearchHistory searchHistory = recentSearchHistories.get(i);
             SearchHistoryDto customSearchHistory = SearchHistoryDto.builder()
+                    .historySeq(searchHistory.getHistorySeq())
                     .type(searchHistory.getType())
                     .searchWord(searchHistory.getSearchWord())
                     .imageUrl(searchHistory.getImageUrl())
@@ -77,6 +91,7 @@ public class SearchService {
         for (Place place : searchedPlaces) {
             SearchPlaceDto searchedPlace = SearchPlaceDto.builder()
                     .placeSeq(place.getPlaceSeq())
+                    .address(place.getAddress())
                     .name(place.getName())
                     .imageUrl(place.getFeeds().get(0).getThumbnail())
                     .build();
@@ -106,7 +121,6 @@ public class SearchService {
 
         for (User user : searchedUsers) {
             SearchUserDto searchedUser = SearchUserDto.builder()
-                    .userSeq(user.getUserSeq())
                     .nickname(user.getNickname())
                     .imageUrl(user.getImageUrl())
                     .build();
@@ -129,7 +143,7 @@ public class SearchService {
         Place searchPlace = foundPlace.get();
 
         // 이미 검색한 적 있다면 pass
-        if (searchHistoryRepository.findSearchHistoriesByPlaceSeq(placeSeq).isPresent()) {
+        if (searchHistoryRepository.findSearchHistoriesByUserAndPlaceSeq(user, placeSeq).isPresent()) {
             return ResponseEntity.status(200).body("이미 검색 했던 장소");
         }
 
@@ -156,7 +170,7 @@ public class SearchService {
         User searchUser = foundUser.get();
 
         // 이미 검색한 적 있다면 pass
-        if (searchHistoryRepository.findSearchHistoriesBySearchWord(nickname).isPresent()) {
+        if (searchHistoryRepository.findSearchHistoriesByUserAndSearchWord(user, nickname).isPresent()) {
             return ResponseEntity.status(200).body("이미 검색 했던 유저");
         }
 
@@ -169,5 +183,42 @@ public class SearchService {
 
         searchHistoryRepository.save(searchHistory);
         return ResponseEntity.status(200).body("유저 검색");
+    }
+
+    // 검색 결과 전부 지우기
+    @Transactional
+    public ResponseEntity<String> deleteAllSearchHistory(String token){
+        // token이 유효한지 검사한다.
+        User user = userService.getUserByToken(token);
+
+        searchHistoryRepository.deleteSearchHistoriesByUser(user);
+
+        return ResponseEntity.status(204).body("검색 기록 전부 제거");
+    }
+
+    // 검색 결과 하나만 지우기
+    @Transactional
+    public ResponseEntity<String> deleteOneSearchHistory(String token, Long historySeq) {
+        // token이 유효한지 검사한다.
+        User user = userService.getUserByToken(token);
+
+        // 자기 검색결과가 아니라면 지울 수 없어요!
+        boolean isMine = false;
+
+        List<SearchHistory> searchHistories = searchHistoryRepository.findSearchHistoriesByUser(user);
+
+        for (SearchHistory searchHistory : searchHistories) {
+            if (searchHistory.getHistorySeq().equals(historySeq)) {
+                isMine = true;
+                break;
+            }
+        }
+        if (!isMine) {
+            throw new CustomException(ErrorCode.INVALID_DATA);
+        }
+
+        searchHistoryRepository.deleteByHistorySeq(historySeq);
+
+        return ResponseEntity.status(204).body("특정 검색 기록 제거");
     }
 }

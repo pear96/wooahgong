@@ -44,7 +44,14 @@ public class SearchController {
         return searchService.selectUserSearch(token, user.get("nickname"));
     }
     // 최근 검색어 전체 삭제
+    @DeleteMapping("")
+    public ResponseEntity<String> deleteAllSearchHistory(@RequestHeader("Authorization") String token) {
+        return searchService.deleteAllSearchHistory(token);
+    }
 
     // 특정 최근 검색어 삭제
-
+    @DeleteMapping("/{history_seq}")
+    public ResponseEntity<String> deleteOneSearchHistory(@RequestHeader("Authorization") String token, @PathVariable Long history_seq) {
+        return searchService.deleteOneSearchHistory(token, history_seq);
+    }
 }

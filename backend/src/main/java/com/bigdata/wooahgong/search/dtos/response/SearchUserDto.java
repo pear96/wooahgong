@@ -5,13 +5,11 @@ import lombok.Getter;
 
 @Getter
 public class SearchUserDto {
-    private final Long userSeq;
     private final String nickname;
     private final String imageUrl;
 
     @Builder
-    public SearchUserDto(Long userSeq, String nickname, String imageUrl) {
-        this.userSeq = userSeq;
+    public SearchUserDto(String nickname, String imageUrl) {
         this.nickname = nickname;
         this.imageUrl = imageUrl;
     }

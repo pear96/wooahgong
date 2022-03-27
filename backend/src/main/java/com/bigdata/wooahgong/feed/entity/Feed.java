@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
 @NoArgsConstructor
 @Getter
 public class Feed extends BaseTimeEntity {
@@ -64,3 +65,4 @@ public class Feed extends BaseTimeEntity {
         this.place = place;
     }
 }
+

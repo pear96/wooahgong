@@ -10,7 +10,10 @@ import NotFound from 'not-found';
 import Navbar from '../common/Navbar';
 import Regist from '../features/Regist/regist';
 import Map from '../features/Map/Map';
+import FeedAdd from '../features/Feed/Feedadd';
 import 'antd/dist/antd.css';
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 
 const SocialLogin = loadable(() => import('../features/Auth/kakaosocialLogin/socialLogin'));
 const MainLogin = loadable(() => import('../features/Auth/mainLogin'));
@@ -80,6 +83,7 @@ function App() {
             <Route path="/profile/:nickname" element={<Profile />} />
             <Route path="/profile/:nickname/edit" element={<ProfileUpdate />} />
             <Route path="/not-found" element={<NotFound />} />
+            <Route path="/report/*" element={<FeedAdd/>}/>
           </Route>
         </Routes>
       </BrowserRouter>

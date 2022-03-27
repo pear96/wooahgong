@@ -1,6 +1,7 @@
 package com.bigdata.wooahgong.feed;
 
 import com.bigdata.wooahgong.comment.entity.Comment;
+import com.bigdata.wooahgong.comment.repository.CommentRepository;
 import com.bigdata.wooahgong.common.exception.CustomException;
 import com.bigdata.wooahgong.common.exception.ErrorCode;
 import com.bigdata.wooahgong.common.s3.S3Uploader;
@@ -41,6 +42,7 @@ public class FeedService {
     private final UserRepository userRepository;
     private final PlaceRepository placeRepository;
     private final CommentLikeRepository commentLikeRepository;
+    private final CommentRepository commentRepository;
     private final FeedImageRepository feedImageRepository;
     private final FeedMoodRepository feedMoodRepository;
     private final FeedLikeRepository feedLikeRepository;
@@ -187,5 +189,31 @@ public class FeedService {
                     .likeCnt(comment.getCommentLikes().size()).build());
         }
         return getCommentsResList;
+    }
+
+    public String createComment(String token, Long feedSeq, String content) {
+        // 토큰으로 유저 찾기
+        User user = userRepository.findByEmail(userService.getEmailByToken(token)).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+        // 피드 찾기
+        Feed feed = feedRepository.findByFeedSeq(feedSeq).orElseThrow(() ->
+                new CustomException(ErrorCode.DATA_NOT_FOUND));
+        commentRepository.save(Comment.builder()
+                .feed(feed).user(user).content(content).build());
+        return "댓글 작성에 성공하였습니다.";
+    }
+
+    public String deleteComment(String token, Long feedSeq, Long commentSeq) {
+        // 토큰으로 유저 찾기
+        User user = userRepository.findByEmail(userService.getEmailByToken(token)).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+        // 피드 찾기
+        Feed feed = feedRepository.findByFeedSeq(feedSeq).orElseThrow(() ->
+                new CustomException(ErrorCode.DATA_NOT_FOUND));
+        // 댓글 찾기
+        Comment comment = commentRepository.findByCommentSeq(commentSeq).orElseThrow(() ->
+                new CustomException(ErrorCode.DATA_NOT_FOUND));
+        commentRepository.delete(comment);
+        return "삭제 완료";
     }
 }

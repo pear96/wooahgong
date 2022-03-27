@@ -18,6 +18,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
+@Getter
 public class Feed extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +51,10 @@ public class Feed extends BaseTimeEntity {
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<FeedMood> feedMoods = new ArrayList<>();
+
+    public void updateContent(String content){
+        this.content = content;
+    }
 
     @Builder
     public Feed(String content, Double ratings, String thumbnail, User user, Place place) {

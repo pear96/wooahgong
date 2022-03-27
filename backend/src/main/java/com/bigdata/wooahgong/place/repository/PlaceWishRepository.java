@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface PlaceWishRepository extends JpaRepository<PlaceWish, Long> {
     Optional<PlaceWish> findByUserAndPlace(User user, Place place);
-    int deleteByUserAndPlace(User user, Place place);
+    void deleteByUserAndPlace(User user, Place place);
 }

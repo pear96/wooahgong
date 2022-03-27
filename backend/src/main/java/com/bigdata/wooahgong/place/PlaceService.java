@@ -16,7 +16,6 @@ import com.bigdata.wooahgong.place.repository.PlaceRepository;
 import com.bigdata.wooahgong.place.repository.PlaceWishRepository;
 import com.bigdata.wooahgong.user.UserService;
 import com.bigdata.wooahgong.user.entity.User;
-import com.bigdata.wooahgong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,15 +30,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PlaceService {
     private final UserService userService;
-    private final UserRepository userRepository;
     private final PlaceRepository placeRepository;
     private final PlaceWishRepository placeWishRepository;
     private final FeedRepository feedRepository;
 
     public ResponseEntity<HashMap<String, Long>> createPlace(String token, CreatePlaceReq createPlaceReq) {
         // token이 유효한지 검사한다.
-        User user = userRepository.findByEmail(userService.getEmailByToken(token)).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_OUR_USER));
+        User user = userService.getUserByToken(token);
 
         // 요청이 정상인지 검사한다.
         String name = createPlaceReq.getName();
@@ -161,12 +158,7 @@ public class PlaceService {
     @Transactional
     public ResponseEntity<HashMap<String, Boolean>> wishPlace(String token, Long placeSeq) {
         // token이 유효한지 검사한다.
-        String email = userService.getEmailByToken(token);
-        if ("".equals(email)) {
-            throw new CustomException(ErrorCode.NOT_OUR_USER);
-        }
-        Optional<User> foundUser = userRepository.findByEmail(email);
-        User user = foundUser.get();
+        User user = userService.getUserByToken(token);
 
         // 장소가 있는지 확인
         Optional<Place> findPlace = placeRepository.findByPlaceSeq(placeSeq);

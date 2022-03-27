@@ -4,6 +4,7 @@ package com.bigdata.wooahgong.user.entity;
 import com.bigdata.wooahgong.common.util.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class SearchHistory extends BaseTimeEntity {
     // 사용자가 검색한 기록 테이블
     @Id

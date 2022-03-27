@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +39,17 @@ public class UserService {
         DecodedJWT decodedJWT = verifier.verify(token.replace(JwtTokenUtil.TOKEN_PREFIX, ""));
         return decodedJWT.getSubject();
     }
+
+    public User getUserByToken(String token) {
+        String email = getEmailByToken(token);
+        Optional<User> foundUser = userRepository.findByEmail(email);
+        if (foundUser.isEmpty()) {
+            throw new CustomException(ErrorCode.NOT_OUR_USER);
+        }
+        return foundUser.get();
+    }
+
+
     @Transactional
     public void signUp(SignUpReq commonSignUpReq) {
         commonSignUpReq.setPassword(passwordEncoder.encode(commonSignUpReq.getPassword()));

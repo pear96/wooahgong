@@ -23,7 +23,7 @@ const Title = styled.span`
 const RemoveText = styled.span`
   float: right;
   margin-top: 60px;
-  font-weight: bold;
+  font-weight: 900;
   color: #000000;
 `;
 
@@ -37,7 +37,9 @@ const ListContainer = styled.ul`
 // 즉, 나 자신(li)들에서 마지막 요소 값을 제외한 값에 margin-bottom 속성 지정
 const KeywordContainer = styled.li`
   overflow: hidden;
-
+  &:hover {
+    background-color: #b8b2f8;
+  }
   &:not(:last-child) {
     margin-bottom: 18px;
   }
@@ -48,6 +50,9 @@ const RemoveButton = styled.div`
   color: #000000;
   padding: 3px 5px;
   font-size: 20px;
+  &:hover {
+    font-weight: bold;
+  }
 `;
 
 const Keyword = styled.span`
@@ -55,6 +60,7 @@ const Keyword = styled.span`
   font-weight: bold;
 `;
 
+// 최근 검색어 읽기, 삭제, 전체 삭제는 api 통신의 영역
 const dummyData = [
   { id: 1, img: 'https://picsum.photos/100', name: '명동성당' },
   { id: 2, img: 'https://picsum.photos/100', name: 'kim_kim99' },
@@ -76,7 +82,7 @@ const searchHistory = () => {
             <KeywordContainer key={id}>
               <img src={img} alt="img" style={{ width: 30, height: 30, marginRight: 15 }} />
               <Keyword>{name}</Keyword>
-              <RemoveButton>x</RemoveButton>
+              <RemoveButton role="button">x</RemoveButton>
             </KeywordContainer>
           );
         })}

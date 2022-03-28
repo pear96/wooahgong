@@ -14,6 +14,7 @@ import Tab from '@material-ui/core/Tab';
 
 // components
 import { margin } from '@mui/system';
+import SearchApi from 'common/api/SearchApi';
 import SearchBar from './searchBar';
 import SearchHistory from './searchHistory';
 import SearchResultPlaces from './searchResultPlaces';
@@ -65,7 +66,7 @@ function LinkTab(props: any) {
   return (
     <CustomTab
       component={Link}
-      style={{ maxWidth: '35%', margin: 'auto' }}
+      style={{ maxWidth: '35%', margin: 'auto', color: '#9088F3' }}
       //   onClick={(event) => {
       //     event.preventDefault();
       //   }}
@@ -79,6 +80,8 @@ const search = () => {
   const [value, setValue] = useState(0);
   const { autoCompete } = useSelector((state: ReducerType) => state.search);
   const { isFocus } = useSelector((state: ReducerType) => state.search);
+
+  const { getPlaceResults } = SearchApi;
 
   const handleChange = (event: any, newValue: any) => {
     setValue(newValue);
@@ -116,7 +119,9 @@ const search = () => {
   }, []);
 
   // 입력된 텍스트로 data 배열에서 찾아 매칭되는 결과들을 저장
-  const onSearch = (text: any) => {
+  const onSearch = async (text: any) => {
+    const result = await getPlaceResults(text);
+
     const results: any = data.filter((item) => matchName(item.name, text) === true);
     setResult({ results });
   };

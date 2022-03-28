@@ -21,6 +21,7 @@ declare global {
     Tmapv2: any;
   }
 }
+
 const RediretHandler = loadable(() => import('../features/Auth/kakaosocialLogin/OAuth2RedirectHandler'));
 const Search = loadable(() => import('../features/Search/searh'));
 

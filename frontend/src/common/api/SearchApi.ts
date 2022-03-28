@@ -1,135 +1,143 @@
 import axios from 'axios';
 import { getToken } from './JTW-Token';
 
-const BASE_URL = 'http://j6a505.p.ssafy.io:8080/api/users';
+const BASE_URL = 'https://j6a505.p.ssafy.io:8080/api/search';
 const token = getToken();
 
-const getProfile = async (nickname: string) => {
+// 최근 검색어 조회
+const getRecentSearchs = async () => {
   await axios({
     method: 'GET',
-    url: `${BASE_URL}/${nickname}`,
+    url: `${BASE_URL}`,
     headers: { Authorization: `Bearer ${token}` },
   })
     .then((res) => {
+      console.log(res);
       return res;
     })
     .then((err) => {
+      console.dir(err);
       return err;
     });
 };
 
-const getProfileForUpdate = async (nickname: string) => {
-  await axios({
-    method: 'GET',
-    url: `${BASE_URL}/${nickname}/update`,
-    headers: { Authorization: `Bearer ${token}` },
-  })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    });
-};
+// 최근 검색어 하나 삭제
 
-const getMyFeeds = async (nickname: string) => {
-  await axios({
-    method: 'GET',
-    url: `${BASE_URL}/${nickname}/feeds`,
-    headers: { Authorization: `Bearer ${token}` },
-  })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    });
-};
-
-const getLikedFeeds = async (nickname: string) => {
-  await axios({
-    method: 'GET',
-    url: `${BASE_URL}/${nickname}/liked`,
-    headers: { Authorization: `Bearer ${token}` },
-  })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    });
-};
-
-const getWishedFeeds = async (nickname: string) => {
-  await axios({
-    method: 'GET',
-    url: `${BASE_URL}/${nickname}/wished`,
-    headers: { Authorization: `Bearer ${token}` },
-  })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    });
-};
-
-const updateProfile = async (
-  nickname: string,
-  data: { password: string; nickname: string; mbti: string; moods: string[] },
-) => {
-  await axios({
-    method: 'PATCH',
-    url: `${BASE_URL}/${nickname}`,
-    headers: { Authorization: `Bearer ${token}` },
-    data,
-  })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    });
-};
-
-const updateProfileImage = async (nickname: string, data: { image: string }) => {
-  await axios({
-    method: 'PATCH',
-    url: `${BASE_URL}/${nickname}/profileimg`,
-    headers: { Authorization: `Bearer ${token}` },
-    data,
-  })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    });
-};
-
-const resign = async (nickname: string) => {
+const deleteSeacrhHistory = async (historyId: string) => {
   await axios({
     method: 'DELETE',
-    url: `${BASE_URL}/${nickname}`,
+    url: `${BASE_URL}/${historyId}`,
     headers: { Authorization: `Bearer ${token}` },
   })
     .then((res) => {
+      console.log(res);
       return res;
     })
     .catch((err) => {
+      console.dir(err);
       return err;
     });
 };
 
-const ProfileApi = {
-  getProfile,
-  getProfileForUpdate,
-  getMyFeeds,
-  getLikedFeeds,
-  getWishedFeeds,
-  updateProfile,
-  updateProfileImage,
-  resign,
+// 최근 검색어 전체 삭제
+
+const deleteAllSeacrhHistory = async (historyId: string) => {
+  await axios({
+    method: 'DELETE',
+    url: `${BASE_URL}`,
+    headers: { Authorization: `Bearer ${token}` },
+  })
+    .then((res) => {
+      console.log(res);
+      return res;
+    })
+    .catch((err) => {
+      console.dir(err);
+      return err;
+    });
 };
 
-export default ProfileApi;
+// 검색 결과 조회 장소 (자동완성)
+
+const getPlaceResults = async (searchWord: string) => {
+  console.log(searchWord);
+  await axios({
+    method: 'GET',
+    url: `${BASE_URL}/place?searchWord=${searchWord}`,
+    headers: { Authorization: `Bearer ${token}` },
+  })
+    .then((res) => {
+      console.log(res);
+      return res;
+    })
+    .catch((err) => {
+      console.dir(err);
+      return err;
+    });
+};
+
+// 검색 결과 조회 유저 (자동완성)
+
+const getNicknameResults = async (searchWord: string) => {
+  await axios({
+    method: 'GET',
+    url: `${BASE_URL}/users?searchWord=${searchWord}`,
+    headers: { Authorization: `Bearer ${token}` },
+  })
+    .then((res) => {
+      console.log(res);
+      return res;
+    })
+    .catch((err) => {
+      console.dir(err);
+      return err;
+    });
+};
+
+// 검색 결과 선택 - 장소(무엇을 선택했는지 서버에 알려준다)
+const postPlaceSearchResult = async (data: { placeId: string }) => {
+  await axios({
+    method: 'POST',
+    url: `${BASE_URL}/place`,
+    headers: { Authorization: `Bearer ${token}` },
+    data,
+  })
+    .then((res) => {
+      console.log(res);
+      return res;
+    })
+    .catch((err) => {
+      console.dir(err);
+      return err;
+    });
+};
+
+// 검색 결과 선택 - 유저(무엇을 선택했는지 서버에 알려준다)
+const postUserSearchResult = async (data: { nickname: string }) => {
+  await axios({
+    method: 'POST',
+    url: `${BASE_URL}/`,
+    headers: { Authorization: `Bearer ${token}` },
+    data,
+  })
+    .then((res) => {
+      console.log(res);
+      return res;
+    })
+    .catch((err) => {
+      console.dir(err);
+      return err;
+    });
+};
+
+const SearchApi = {
+  getRecentSearchs,
+  deleteSeacrhHistory,
+  deleteAllSeacrhHistory,
+  getPlaceResults,
+  getNicknameResults,
+  postPlaceSearchResult,
+  postUserSearchResult,
+};
+
+export default SearchApi;

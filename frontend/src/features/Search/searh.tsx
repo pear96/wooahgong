@@ -26,6 +26,34 @@ const CustomTab = styled(Tab)`
   }
 `;
 
+export const ListContainer = styled.ul`
+  margin-right: 20px;
+  margin-left: -20px;
+  margin-top: 20px;
+`;
+
+// &는 자기 자신을 나타냄
+// 즉, 나 자신(li)들에서 마지막 요소 값을 제외한 값에 margin-bottom 속성 지정
+export const KeywordContainer = styled.li`
+  overflow: hidden;
+
+  &:not(:last-child) {
+    margin-bottom: 18px;
+  }
+`;
+
+export const RemoveButton = styled.div`
+  float: right;
+  color: #000000;
+  padding: 3px 5px;
+  font-size: 20px;
+`;
+
+export const Keyword = styled.span`
+  font-size: 18px;
+  font-weight: bold;
+`;
+
 function a11yProps(index: any) {
   return {
     id: `nav-tab-${index}`,
@@ -48,9 +76,10 @@ function LinkTab(props: any) {
 }
 
 const search = () => {
-  // const [isFocus, setIsFocus] = useState(true);
   const [value, setValue] = useState(0);
+  const { autoCompete } = useSelector((state: ReducerType) => state.search);
   const { isFocus } = useSelector((state: ReducerType) => state.search);
+
   const handleChange = (event: any, newValue: any) => {
     setValue(newValue);
     // navigate(newValue);
@@ -76,6 +105,7 @@ const search = () => {
   // 필드를 업데이트
   const updateField = useCallback((field: any, value: any, update = true) => {
     console.log(value);
+
     if (update) onSearch(value);
     if (field === 'keyword') {
       setKeyword(value);
@@ -99,25 +129,47 @@ const search = () => {
     return name === keyword.toString().toLowerCase();
   };
 
+  console.log(isFocus);
   return (
     <>
       <SearchBar keyword={keyword} results={results} updateField={updateField} />
-      {false && <SearchHistory />}
+      {isFocus && <SearchHistory />}
 
       <Tabs
         variant="fullWidth"
         value={value}
         onChange={handleChange}
-        aria-label="nav tabs example"
+        aria-label="nav tabs"
         TabIndicatorProps={{ style: { backgroundColor: '#9088F3' } }}
       >
         <LinkTab label="사용자" pathname="/search/nicknames" {...a11yProps(0)} />
         <LinkTab label="장소" pathname="/search/places" {...a11yProps(1)} />
       </Tabs>
 
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        {/* 자동검색결과 */}
+        <ListContainer>
+          {(autoCompete as any[])?.map(({ id, img, name }: any) => {
+            return (
+              <KeywordContainer key={id}>
+                <img src={img} alt="img" style={{ width: 30, height: 30, marginRight: 15 }} />
+                <Keyword
+                  onClick={() => {
+                    console.log('이거 눌럿다');
+                  }}
+                >
+                  {name}
+                </Keyword>
+              </KeywordContainer>
+            );
+          })}
+        </ListContainer>
+        {/* <Outlet /> */}
+      </div>
+
       <Routes>
-        <Route path="/places" element={<SearchResultPlaces />} />
-        <Route path="/nicknames" element={<SearchResultNicknames />} />
+        <Route path="/search/places" element={<SearchResultPlaces />} />
+        {/* <Route path="/nicknames" element={<SearchResultNicknames />} /> */}
       </Routes>
     </>
   );

@@ -5,6 +5,7 @@ export interface InitialState {
 }
 const initialState = {
   isFocus: false,
+  inputValue: false,
   autoCompete: [],
 };
 

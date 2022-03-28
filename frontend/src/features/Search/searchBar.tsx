@@ -83,6 +83,10 @@ function SearchBar({ keyword, results, updateField }: any) {
     });
   }
 
+  useEffect(() => {
+    return setIsOpen(false);
+  }, [keyword]);
+
   const propsTofunction = useCallback((e) => {
     updateField('keyword', e.target.value);
   }, []);

@@ -8,6 +8,7 @@ import com.bigdata.wooahgong.user.dtos.response.GetMyFeedsRes;
 import com.bigdata.wooahgong.user.dtos.response.GetMyInfoRes;
 import com.bigdata.wooahgong.user.dtos.response.GetMyPlacesRes;
 import com.bigdata.wooahgong.user.dtos.response.GetUserInfoRes;
+import com.bigdata.wooahgong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -23,6 +24,7 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @PostMapping("/signup")
     public ResponseEntity<String> signUp(@RequestBody SignUpReq signUpReq) {
@@ -109,5 +111,10 @@ public class UserController {
     public ResponseEntity<String> updateProfileImg(@RequestHeader("Authorization") String token, @PathVariable String nickname,
                                                    @RequestPart(value = "image") MultipartFile image) {
         return new ResponseEntity<>(userService.updateProfileImg(token, nickname,image), HttpStatus.OK);
+    }
+    // 회원 탈퇴
+    @DeleteMapping("/{nickname}")
+    public ResponseEntity<String> deleteUser(@RequestHeader("Authorization") String token, @PathVariable String nickname) {
+        return new ResponseEntity<>(userService.deleteUser(token,nickname), HttpStatus.OK);
     }
 }

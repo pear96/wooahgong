@@ -283,4 +283,13 @@ public class UserService {
         user.setImageUrl(url);
         return url;
     }
+
+    @Transactional
+    public String deleteUser(String token, String nickname) {
+        // 토큰으로 유저 찾기
+        User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+        userRepository.delete(user);
+        return "회원 탈퇴 성공";
+    }
 }

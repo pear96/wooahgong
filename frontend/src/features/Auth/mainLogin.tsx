@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 import React, { useCallback, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
+import UserApi from 'common/api/UserApi';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -9,82 +10,70 @@ import { useAppDispatch } from '../../app/store';
 import useInput from '../../common/hooks/useInput';
 
 // extra reducers
-import { commonLogin } from './authSlice';
+// import { commonLogin } from './authSlice';
 
 // reducers
 import { setUser } from './authSlice';
 // styled component
-import { LogoContainer } from './kakaosocialLogin/socialLogin';
+// import { LogoContainer } from './kakaosocialLogin/socialLogin';
 
 // logo
-import { ReactComponent as Logo } from '../../assets/main/Logo.svg';
+import Logo from '../../assets/Logo.png';
 import { ReactComponent as Title } from '../../assets/main/Title.svg';
-import { TitleContainer } from './kakaosocialLogin/socialLogin';
+
+
+const TitleContainer = styled.div`
+  margin-top: 22px;
+  margin-left: 69px;
+  margin-bottom: 14px;
+`;
+
+const Img = styled.img`
+  width: 112px;
+  height: 112px;
+  margin-top: 186px;
+  margin-left: 124px;
+  margin-bottom: 14px;
+  // filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+`;
+
 
 const Input = styled.input`
-  font-size: 11px;
-  width: 238px;
-  height: 31px;
-  margin-left: 58px;
+  font-family: 'NotoSansKR';
+  font-size: 18px;
+  width: 220px;
+  height: 45px;
+  margin-left: 70px;
   margin-bottom: 20px;
   padding-left: 3px;
   padding-bottom: 0px;
+  border : 2px solid;
   border-left: none;
   border-top: none;
   border-right: none;
-  border-bottom: #d7d7d7 1px solid;
-
-  /* background-color: transparent;
-  border: none;
-  border-bottom: 1px solid #ccc;
-  color: #555;
-  box-sizing: border-box;
-  font-family: 'Arvo';
-  font-size: 15px;
-  height: 50px;
-  left: 50%;
-  margin: -25px 0 0 -100px;
-  padding: 10px 0px;
-  position: relative;
-  top: 50%;
-  width: 200px;
-
-  &:focus {
-    outline: none;
+  border-image : linear-gradient(to right, #C09FDC 20.46%, #34B1FF 80.57%);
+  border-image-slice : 1;
+  text-align : center;
+  &::placeholder {
+    color : rgba(0,0,0,0.3);
   }
-
-  &:-webkit-input-placeholder {
-    color: #aaa;
-  }
-
-  &:focus::-webkit-input-placeholder {
-    color: dodgerblue;
+  &:focus::-webkit-input-placeholder, textarea:focus::-webkit-input-placeholder{
+    color: transparent;
   }
 
   &:focus + .underline {
     transform: scale(1);
-  } */
+  } 
 `;
 
-const inputContainer = styled.div`
-  background-color: #fff;
-  border-radius: 2px;
-  box-shadow: 0px 2px 1px 0px #ddd;
-  box-sizing: border-box;
-  height: 300px;
-  left: 50%;
-  margin: -150px 0 0 -150px;
-  position: absolute;
-  top: 50%;
-  width: 300px;
-`;
 
 const ActiveButton = styled.button`
-  background: linear-gradient(90deg, #b3a1e0 0%, #5dacf5 100%);
+  background: linear-gradient(90deg, #C09FDD -3.15%, #86A6EB 100%);
+  font-family: 'NotoSansKR';
   border-style: none;
   border-radius: 10px;
-  width: 100px;
-  height: 40px;
+  width: 102px;
+  height: 46px;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -107,13 +96,18 @@ const mainLogin = () => {
   const navigate = useNavigate();
   const { test } = useSelector((state: ReducerType) => state.login);
   console.log(test);
+  const {getCommonLoginResult} = UserApi
+
   const [id, onChangeId] = useInput('');
   const [password, onChangePassword] = useInput('');
 
   const idRef = useRef<any>();
+  const handleLogin = async () =>{
 
+    // console.log(result);
+  }
   const onSubmit = useCallback(
-    (e) => {
+  async (e) => {
       e.preventDefault();
       console.log(e.target[0].value, e.target[1].value);
       if (!id || !id.trim()) {
@@ -138,16 +132,32 @@ const mainLogin = () => {
           },
         );
       }
-
-      const data = { id, password };
-      // 로그인 완료 후 store에 닉네임과 프로필 이미지 저장
-      dispatch(commonLogin(data))
-        .unwrap()
-        .then((res: any) => {
-          console.log(res);
-          dispatch(setUser({ nickname: res.data.nickname, profileImg: res.data.profileImg }));
-        });
-      // 추후에 메인으로 움직이는 코드 작성
+      const data = { userId : id, password };
+      const result = await getCommonLoginResult(data);
+      if(result.status === 200){
+        toast.success(
+          <div style={{ width: 'inherit', fontSize: '10px' }}>
+            <div>로그인 성공!</div>
+          </div>,
+          {
+            position: toast.POSITION.TOP_CENTER,
+            role: 'alert',
+          },
+        );
+        dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg }));
+        navigate("/map");
+      }
+      else{
+        toast.error(
+          <div style={{ width: 'inherit', fontSize: '10px' }}>
+            <div>아이디와 비밀번호를 확인해주세요</div>
+          </div>,
+          {
+            position: toast.POSITION.TOP_CENTER,
+            role: 'alert',
+          },
+        );
+      }
     },
     [id, password],
   );
@@ -161,18 +171,22 @@ const mainLogin = () => {
   }, []);
 
   return (
-    <>
-      <LogoContainer>
-        <Logo />
-      </LogoContainer>
+    <div style={{
+      position : "relative",
+      width : "360px",
+      height : "800px",
+      background : "none",
+      margin : "0 auto"
+    }}>
+      <Img src={Logo} alt="Logo" />
       <TitleContainer>
-        <Title />
+        <Title width="222px"/>
       </TitleContainer>
       <Form onSubmit={onSubmit}>
         <div style={{ marginTop: 40 }}>
           <Input ref={idRef} placeholder="아이디 입력" type="text" name="id" value={id} onChange={onChangeId} />
         </div>
-        <div style={{ marginTop: 40 }}>
+        <div style={{ marginTop: 25 }}>
           <Input
             placeholder="패스워드 입력"
             type="password"
@@ -181,14 +195,24 @@ const mainLogin = () => {
             onChange={onChangePassword}
           />
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-evenly', marginTop: 20 }}>
-          <ActiveButton>로그인</ActiveButton>
-          <ActiveButton type="button" onClick={onClickGotoSignupPage}>
+        <div style={{
+          width : 360,
+          marginTop : 36
+        }}>
+          <ActiveButton style={{
+            marginLeft : 69
+          }}
+          onClick={handleLogin}>로그인</ActiveButton>
+          <ActiveButton type="button" style={{
+            marginLeft : 18,
+            background : "linear-gradient(270deg, #34B1FF 0%, #67A0E4 100%)"
+          }}
+          onClick={onClickGotoSignupPage}>
             회원가입
           </ActiveButton>
         </div>
       </Form>
-    </>
+    </div>
   );
 };
 

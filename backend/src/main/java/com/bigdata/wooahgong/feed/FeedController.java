@@ -3,7 +3,6 @@ package com.bigdata.wooahgong.feed;
 import com.bigdata.wooahgong.feed.dtos.request.CreateFeedReq;
 import com.bigdata.wooahgong.feed.dtos.response.DetailFeedRes;
 import com.bigdata.wooahgong.feed.dtos.response.GetCommentsRes;
-import com.bigdata.wooahgong.feed.entity.Feed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +26,10 @@ public class FeedController {
 
     // 메인 - trend 피드 가져오기
     // 대문을 거치지 않고 둘러보게 하려면 여기랑 WebConfig 수정 ㄱㄱ
-    @GetMapping("/trend")
-    public ResponseEntity<List<Feed>> getFeedsTrend(@RequestHeader("Authorization") String token) {
-        return new ResponseEntity<>(feedService.getFeedsTrend(token.split(" ")[1]), HttpStatus.OK);
-    }
+//    @GetMapping("/trend")
+//    public ResponseEntity<List<Feed>> getFeedsTrend(@RequestHeader("Authorization") String token) {
+//        return new ResponseEntity<>(feedService.getFeedsTrend(token.split(" ")[1]), HttpStatus.OK);
+//    }
     // 피드 쓰기
     @PostMapping
     public ResponseEntity<String> createFeed(@RequestHeader("Authorization") String token,

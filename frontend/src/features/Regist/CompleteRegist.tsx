@@ -1,9 +1,8 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../assets/Logo.png';
-import { ReducerType } from '../../app/rootReducer';
+
 
 const Img = styled.img`
   width: 108px;
@@ -36,7 +35,7 @@ function CompleteRegist() {
   const handleOnClickNextStep = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     // dispatch(setMbti(selectedmbti));
-    // navigate("/CompleteRegist");
+    navigate("/");
   };
 
   return (

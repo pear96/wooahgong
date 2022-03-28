@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import ProgressBar from '@ramonak/react-progress-bar';
 import { toast } from 'react-toastify';
+import UserApi from 'common/api/UserApi';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../assets/Logo.png';
 import { register, setId, setPwd, setEmail, setGender, setAtmos, setBirth, setNick, Register } from './registerReducer';
@@ -105,6 +106,8 @@ function ConfirmId({ progress }: MyProps) {
   const [isId, setIsId] = useState<boolean>(false);
   const navigate = useNavigate();
 
+
+  const {getIdDuplicateCheck} = UserApi;
   const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
   const dispatch = useDispatch();
   // console.log(regist);
@@ -129,15 +132,25 @@ function ConfirmId({ progress }: MyProps) {
     }
   }, []);
 
-  const handleCheckDuplicationId = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // axios 요청
+  const handleCheckDuplicationId = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    toast.success(<div style={{ width: 'inherit', fontSize: '14px' }}>사용가능한 아이디 입니다.</div>, {
-      position: toast.POSITION.TOP_CENTER,
-      role: 'alert',
-    });
-    setIsOk(true);
-
+    // axios 요청
+    const result = await getIdDuplicateCheck(id);
+    
+    if(result.status === 200){
+      toast.success(<div style={{ width: 'inherit', fontSize: '14px' }}>사용가능한 아이디 입니다.</div>, {
+        position: toast.POSITION.TOP_CENTER,
+        role: 'alert',
+      });
+      setIsOk(true);
+    }
+    else{
+      toast.error(<div style={{ width: 'inherit', fontSize: '14px' }}>사용불가능한 아이디 입니다.</div>, {
+        position: toast.POSITION.TOP_CENTER,
+        role: 'alert',
+      });
+      setIsOk(false);
+    }
     // id 중복시 toast error 메세지
   };
 

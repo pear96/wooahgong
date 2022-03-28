@@ -122,7 +122,7 @@ function ConfirmPwd({ progress }: MyProps) {
 
   const handleCheckPwd = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{5,10}$/;
     const curPwd = e.currentTarget.value;
     setStatePwd(curPwd);
     console.log(pwd);

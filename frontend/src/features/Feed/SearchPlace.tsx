@@ -108,6 +108,7 @@ function SearchPlace() {
         navigate(`/report/final`);
     }
     const handleNextStep = () => {
+        dispatch(setType(false));
         navigate(`/report/final`);
     }
     const handleBack = (e : React.MouseEvent) =>{

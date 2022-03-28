@@ -1,5 +1,5 @@
 """
-WSGI config for wooagong project.
+WSGI config for wooahgong project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'wooagong.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'wooahgong.settings')
 
 application = get_wsgi_application()

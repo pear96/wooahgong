@@ -54,6 +54,11 @@ public class FeedController {
     public ResponseEntity<String> deleteFeed(@RequestHeader("Authorization") String token, @PathVariable("feed_seq") Long feedSeq) {
         return new ResponseEntity<>(feedService.deleteFeed(token, feedSeq),HttpStatus.OK);
     }
+    // 피드 좋아요
+    @PostMapping("/{feed_seq}")
+    public ResponseEntity<Boolean> likedFeed(@RequestHeader("Authorization") String token, @PathVariable("feed_seq") Long feedSeq) {
+        return new ResponseEntity<Boolean>(feedService.likedFeed(token, feedSeq),HttpStatus.OK);
+    }
     // 댓글 불러오기
     @GetMapping("/{feed_seq}/comments")
     public ResponseEntity<List<GetCommentsRes>> getComments(@RequestHeader("Authorization") String token, @PathVariable("feed_seq") Long feedSeq) {
@@ -66,15 +71,16 @@ public class FeedController {
         return new ResponseEntity<String>(feedService.createComment(token,feedSeq,content), HttpStatus.OK);
     }
     // 댓글 삭제
-    @PostMapping("/{feed_seq}/comments/{comment_seq}")
+    @DeleteMapping("/{feed_seq}/comments/{comment_seq}")
     public ResponseEntity<String> deleteComment(@RequestHeader("Authorization") String token,@PathVariable("feed_seq") Long feedSeq,
                                                 @PathVariable("comment_seq") Long commentSeq) {
         return new ResponseEntity<String>(feedService.deleteComment(token,feedSeq,commentSeq), HttpStatus.OK);
     }
-    // 피드 좋아요
-    @PostMapping("/{feed_seq}")
-    public ResponseEntity<Boolean> likedFeed(@RequestHeader("Authorization") String token, @PathVariable("feed_seq") Long feedSeq) {
-        return new ResponseEntity<Boolean>(feedService.likedFeed(token, feedSeq),HttpStatus.OK);
+    // 댓글 좋아요
+    @PostMapping("/{feed_seq}/comments/{comment_seq}")
+    public ResponseEntity<Boolean> likeComment(@RequestHeader("Authorization") String token,@PathVariable("feed_seq") Long feedSeq,
+                                                @PathVariable("comment_seq") Long commentSeq) {
+        return new ResponseEntity<Boolean>(feedService.likeComment(token,feedSeq,commentSeq), HttpStatus.OK);
     }
 
 }

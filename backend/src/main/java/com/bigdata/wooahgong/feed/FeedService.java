@@ -235,4 +235,23 @@ public class FeedService {
         }
         return isLiked;
     }
+    @Transactional
+    public Boolean likeComment(String token, Long feedSeq, Long commentSeq) {
+        // 토큰으로 유저 찾기
+        User user = userRepository.findByEmail(userService.getEmailByToken(token)).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+        Comment comment = commentRepository.findByCommentSeq(commentSeq).orElseThrow(() ->
+                new CustomException(ErrorCode.DATA_NOT_FOUND));
+        boolean isLiked = true;
+        CommentLike commentLike = commentLikeRepository.findByCommentAndUser(comment,user).orElseGet(null);
+        // 좋아요를 누르지 않았음
+        if(commentLike == null){
+            commentLikeRepository.save(CommentLike.builder()
+                    .user(user).comment(comment).build());
+        }else{
+            commentLikeRepository.delete(commentLike);
+            isLiked = false;
+        }
+        return isLiked;
+    }
 }

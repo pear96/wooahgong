@@ -39,26 +39,26 @@ function SearchResultNicknames() {
   console.log(autoCompete);
 
   // return (
-  //   <div style={{ position: 'relative', zIndex: 1 }}>
-  //     {/* 자동검색결과 */}
-  //     <ListContainer>
-  //       {(autoCompete as any[])?.map(({ id, img, name }: any) => {
-  //         return (
-  //           <KeywordContainer key={id}>
-  //             <img src={img} alt="img" style={{ width: 30, height: 30, marginRight: 15 }} />
-  //             <Keyword
-  //               onClick={() => {
-  //                 console.log('이거 눌럿다');
-  //               }}
-  //             >
-  //               {name}
-  //             </Keyword>
-  //           </KeywordContainer>
-  //         );
-  //       })}
-  //     </ListContainer>
-  //     <Outlet />
-  //   </div>
+  //   // <div style={{ position: 'relative', zIndex: 1 }}>
+  //   //   {/* 자동검색결과 */}
+  //   //   <ListContainer>
+  //   //     {(autoCompete as any[])?.map(({ id, img, name }: any) => {
+  //   //       return (
+  //   //         <KeywordContainer key={id}>
+  //   //           <img src={img} alt="img" style={{ width: 30, height: 30, marginRight: 15 }} />
+  //   //           <Keyword
+  //   //             onClick={() => {
+  //   //               console.log('이거 눌럿다');
+  //   //             }}
+  //   //           >
+  //   //             {name}
+  //   //           </Keyword>
+  //   //         </KeywordContainer>
+  //   //       );
+  //   //     })}
+  //   //   </ListContainer>
+  //   //   <Outlet />
+  //   // </div>
   // );
 }
 

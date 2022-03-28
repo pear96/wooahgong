@@ -1,13 +1,14 @@
+/* eslint-disable no-lonely-if */
 /* eslint-disable no-shadow */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/require-default-props */
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { ReducerType } from 'app/rootReducer';
 import { Link, Routes, Route } from 'react-router-dom';
-
+import { useAppDispatch } from 'app/store';
 // mui
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -18,6 +19,10 @@ import SearchBar from './searchBar';
 import SearchHistory from './searchHistory';
 import SearchResultPlaces from './searchResultPlaces';
 import SearchResultNicknames from './searchResultNicknames';
+
+// actions
+
+import { setValues } from '../Search/searchSlice';
 
 const CustomTab = styled(Tab)`
   &.Mui-selected {
@@ -81,9 +86,13 @@ const search = () => {
   const [value, setValue] = useState(0);
   const { autoCompete } = useSelector((state: ReducerType) => state.search);
   const { isFocus } = useSelector((state: ReducerType) => state.search);
+  const dispatch = useAppDispatch();
+  const { getPlaceResults, getNicknameResults, postPlaceSearchResult, postUserSearchResult } = SearchApi;
 
-  const { getPlaceResults } = SearchApi;
-  const { postPlaceSearchResult } = SearchApi;
+  const { values } = useSelector((state: ReducerType) => state.search);
+
+  console.log(values);
+
   const handleChange = (event: any, newValue: any) => {
     setValue(newValue);
     // navigate(newValue);
@@ -93,8 +102,17 @@ const search = () => {
     (placeSeq) => () => {
       // 상세페이지 이동페이지 만들어지면 navigate 추가해서 넣자
       console.log(placeSeq, typeof placeSeq);
-      const result = postPlaceSearchResult(placeSeq);
-      console.log(result);
+      const body = { placeSeq };
+      postPlaceSearchResult(body);
+    },
+    [],
+  );
+  const onClickserchResult2 = useCallback(
+    (nickname) => () => {
+      // 상세페이지 이동페이지 만들어지면 navigate 추가해서 넣자
+      console.log(nickname, typeof nickname);
+      const body = { nickname };
+      postUserSearchResult(body);
     },
     [],
   );
@@ -102,7 +120,7 @@ const search = () => {
   // 자동완성 기능 구현
   const [keyword, setKeyword] = useState<any>();
   const [results, setResult] = useState<any>([]);
-
+  const [test, setTest] = useState<any>([]);
   // 필드를 업데이트
   const updateField = useCallback((field: any, value: any, update = true) => {
     console.log(value);
@@ -120,25 +138,29 @@ const search = () => {
   const onSearch = async (text: any) => {
     if (text !== '') {
       const result = await getPlaceResults(text);
+      const nicknames = await getNicknameResults(text);
+
       setResult(result.data.results);
+      setTest(nicknames.data.results);
       console.log(result.data.results);
+      console.log(nicknames.data.results);
     } else {
       setResult([]);
+      setTest([]);
     }
-
-    // const results: any = data.filter((item) => matchName(item.name, text) === true);
-    // console.log(results);
   };
+  useEffect(() => {
+    dispatch(setValues(value));
+  }, [value]);
 
   // 검색해야할 문자열을 키워드와 비교하여 매칭이 되는지 체크
-  const matchName = (name: any, keyword: any) => {
-    const keyLen = keyword.length;
-    name = name.toLowerCase().substring(0, keyLen);
-    if (keyword === '') return false;
-    return name === keyword.toString().toLowerCase();
-  };
+  // const matchName = (name: any, keyword: any) => {
+  //   const keyLen = keyword.length;
+  //   name = name.toLowerCase().substring(0, keyLen);
+  //   if (keyword === '') return false;
+  //   return name === keyword.toString().toLowerCase();
+  // };
 
-  console.log(autoCompete);
   return (
     <>
       <SearchBar keyword={keyword} results={results} updateField={updateField} />
@@ -151,28 +173,44 @@ const search = () => {
         aria-label="nav tabs"
         TabIndicatorProps={{ style: { backgroundColor: '#9088F3' } }}
       >
-        <LinkTab label="사용자" pathname="/search/nicknames" {...a11yProps(0)} />
-        <LinkTab label="장소" pathname="/search/places" {...a11yProps(1)} />
+        <LinkTab label="장소" pathname="/search/places" {...a11yProps(0)} />
+        <LinkTab label="사용자" pathname="/search/nicknames" {...a11yProps(1)} />
       </Tabs>
 
       <div style={{ position: 'relative', zIndex: 1 }}>
         {/* 자동검색결과 */}
-        <ListContainer>
-          {(autoCompete as any[])?.map((props: any) => {
-            return (
-              <KeywordContainer key={props.placeSeq} onClick={onClickserchResult(props.placeSeq)}>
-                <img src={props.imageUrl} alt="img" style={{ width: 30, height: 30, marginRight: 15 }} />
-                <Keyword>{props.name}</Keyword>
-              </KeywordContainer>
-            );
-          })}
-        </ListContainer>
+        {values === 0 && (
+          <ListContainer>
+            {(autoCompete as any[])?.map((props: any) => {
+              return (
+                <KeywordContainer key={props.placeSeq} onClick={onClickserchResult(props.placeSeq)}>
+                  <img src={props.imageUrl} alt="img" style={{ width: 30, height: 30, marginRight: 15 }} />
+                  <Keyword>{props.name}</Keyword>
+                </KeywordContainer>
+              );
+            })}
+          </ListContainer>
+        )}
+
+        {values === 1 && (
+          <ListContainer>
+            {(test as any[])?.map((props: any) => {
+              return (
+                <KeywordContainer key={props.nickname} onClick={onClickserchResult2(props.nickname)}>
+                  <img src={props.imageUrl} alt="img" style={{ width: 30, height: 30, marginRight: 15 }} />
+                  <Keyword>{props.nickname}</Keyword>
+                </KeywordContainer>
+              );
+            })}
+          </ListContainer>
+        )}
+
         {/* <Outlet /> */}
       </div>
-
+      {/* 
       <Routes>
         <Route path="/places" element={<SearchResultPlaces />} />
-      </Routes>
+      </Routes> */}
     </>
   );
 };

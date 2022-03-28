@@ -1,4 +1,5 @@
-import React from 'react';
+import SearchApi from 'common/api/SearchApi';
+import React, { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
 
 const HistoryContainer = styled.div`
@@ -60,32 +61,53 @@ const Keyword = styled.span`
   font-weight: bold;
 `;
 
-// 최근 검색어 읽기, 삭제, 전체 삭제는 api 통신의 영역
-const dummyData = [
-  { id: 1, img: 'https://picsum.photos/100', name: '명동성당' },
-  { id: 2, img: 'https://picsum.photos/100', name: 'kim_kim99' },
-  { id: 3, img: 'https://picsum.photos/100', name: '강동구청역' },
-  { id: 4, img: 'https://picsum.photos/100', name: '천호역' },
-];
-
 const searchHistory = () => {
+  const { getRecentSearchs, deleteSeacrhHistory, deleteAllSeacrhHistory } = SearchApi;
+  const [recentSearches, setRecentSearches] = useState([]);
+
+  useEffect(() => {
+    async function getAndRecentSearches() {
+      const result = await getRecentSearchs();
+      setRecentSearches(result.data.recentSearches);
+    }
+
+    getAndRecentSearches();
+  }, []);
+
+  const onClickDelete = useCallback(
+    (historySeq) => () => {
+      console.log(historySeq);
+      deleteSeacrhHistory(historySeq);
+    },
+    [recentSearches],
+  );
+
+  const onClickAllDelete = useCallback(() => {
+    deleteAllSeacrhHistory();
+  }, []);
+
+  console.log(recentSearches);
   return (
     <HistoryContainer>
       <HeaderContainer>
         <Title>최근 검색어</Title>
-        <RemoveText>전체삭제</RemoveText>
+        <RemoveText onClick={onClickAllDelete}>전체삭제</RemoveText>
       </HeaderContainer>
       <ListContainer>
         {/* 자동검색결과 */}
-        {dummyData.map(({ id, img, name }) => {
-          return (
-            <KeywordContainer key={id}>
-              <img src={img} alt="img" style={{ width: 30, height: 30, marginRight: 15 }} />
-              <Keyword>{name}</Keyword>
-              <RemoveButton role="button">x</RemoveButton>
-            </KeywordContainer>
-          );
-        })}
+        {recentSearches.length !== 0
+          ? recentSearches.map((props: any) => {
+              return (
+                <KeywordContainer key={props.historySeq}>
+                  <img src={props.imageUrl} alt="img" style={{ width: 30, height: 30, marginRight: 15 }} />
+                  <Keyword>{props.searchWord}</Keyword>
+                  <RemoveButton onClick={onClickDelete(props.historySeq)} role="button">
+                    x
+                  </RemoveButton>
+                </KeywordContainer>
+              );
+            })
+          : '최근 검색어가 없습니다.'}
       </ListContainer>
     </HistoryContainer>
   );

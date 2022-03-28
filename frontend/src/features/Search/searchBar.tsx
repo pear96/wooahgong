@@ -59,6 +59,7 @@ const Input = styled.input`
 function SearchBar({ keyword, results, updateField }: any) {
   const dispatch = useAppDispatch();
   const [isOpen, setIsOpen] = useState(false);
+  const [nickname, setNickname] = useState('');
 
   const onClickToggle = useCallback(() => {
     setIsOpen((prev) => !prev);

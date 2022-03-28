@@ -6,11 +6,8 @@ const token = getToken();
 
 // 최근 검색어 조회
 const getRecentSearchs = async () => {
-  await axios({
-    method: 'GET',
-    url: `${BASE_URL}`,
-    headers: { Authorization: `Bearer ${token}` },
-  })
+  const result = await axios
+    .get(`${BASE_URL}`, { headers: { Authorization: `Bearer ${token}` } })
     .then((res) => {
       console.log(res);
       return res;
@@ -19,6 +16,7 @@ const getRecentSearchs = async () => {
       console.dir(err);
       return err;
     });
+  return result;
 };
 
 // 최근 검색어 하나 삭제
@@ -41,7 +39,7 @@ const deleteSeacrhHistory = async (historyId: string) => {
 
 // 최근 검색어 전체 삭제
 
-const deleteAllSeacrhHistory = async (historyId: string) => {
+const deleteAllSeacrhHistory = async () => {
   await axios({
     method: 'DELETE',
     url: `${BASE_URL}`,
@@ -76,11 +74,8 @@ const getPlaceResults = async (searchWord: string) => {
 // 검색 결과 조회 유저 (자동완성)
 
 const getNicknameResults = async (searchWord: string) => {
-  await axios({
-    method: 'GET',
-    url: `${BASE_URL}/users?searchWord=${searchWord}`,
-    headers: { Authorization: `Bearer ${token}` },
-  })
+  const result = await axios
+    .get(`${BASE_URL}/users?searchWord=${searchWord}`, { headers: { Authorization: `Bearer ${token}` } })
     .then((res) => {
       console.log(res);
       return res;
@@ -89,13 +84,14 @@ const getNicknameResults = async (searchWord: string) => {
       console.dir(err);
       return err;
     });
+  return result;
 };
 
 // 검색 결과 선택 - 장소(무엇을 선택했는지 서버에 알려준다)
-const postPlaceSearchResult = async (data: { placeSeq: string }) => {
-  console.log(data);
+const postPlaceSearchResult = async (body: { placeSeq: string }) => {
+  console.log(body);
   const result = await axios
-    .post(`${BASE_URL}/place`, data, {
+    .post(`${BASE_URL}/place`, body, {
       headers: { Authorization: `Bearer ${token}`, 'Content-type': 'application/json' },
     })
     .then((res) => {
@@ -109,28 +105,12 @@ const postPlaceSearchResult = async (data: { placeSeq: string }) => {
   return result;
 };
 
-// const getPlaceResults = async (searchWord: string) => {
-//   const result = await axios
-//     .get(`${BASE_URL}/place?searchWord=${searchWord}`, { headers: { Authorization: `Bearer ${token}` } })
-//     .then((res) => {
-//       console.log(res);
-//       return res;
-//     })
-//     .catch((err) => {
-//       console.dir(err);
-//       return err;
-//     });
-//   return result;
-// };
-
 // 검색 결과 선택 - 유저(무엇을 선택했는지 서버에 알려준다)
-const postUserSearchResult = async (data: { nickname: string }) => {
-  await axios({
-    method: 'POST',
-    url: `${BASE_URL}/`,
-    headers: { Authorization: `Bearer ${token}` },
-    data,
-  })
+const postUserSearchResult = async (body: { nickname: string }) => {
+  const result = await axios
+    .post(`${BASE_URL}/users`, body, {
+      headers: { Authorization: `Bearer ${token}`, 'Content-type': 'application/json' },
+    })
     .then((res) => {
       console.log(res);
       return res;
@@ -139,6 +119,7 @@ const postUserSearchResult = async (data: { nickname: string }) => {
       console.dir(err);
       return err;
     });
+  return result;
 };
 
 const SearchApi = {

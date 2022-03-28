@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
+import SearchApi from 'common/api/SearchApi';
+import { useSelector } from 'react-redux';
+import { ReducerType } from 'app/rootReducer';
+import { setNickname } from './searchSlice';
 
 const ListContainer = styled.ul`
   margin-right: 20px;
@@ -30,30 +34,38 @@ const Keyword = styled.span`
   font-weight: bold;
 `;
 
-const dummyData = [
-  { id: 1, img: 'https://picsum.photos/100', name: '명동성당' },
-  { id: 2, img: 'https://picsum.photos/100', name: '명동성당' },
-  { id: 3, img: 'https://picsum.photos/100', name: '명동성당' },
-];
+// const dummyData = [
+//   { id: 1, img: 'https://picsum.photos/100', name: '명동성당' },
+//   { id: 2, img: 'https://picsum.photos/100', name: '명동성당' },
+//   { id: 3, img: 'https://picsum.photos/100', name: '명동성당' },
+// ];
 
 function SearchResultPlaces() {
+  // const { getNicknameResults } = SearchApi;
+  // const { nickname } = useSelector((state: ReducerType) => state.search);
+  // console.log(nickname);
+  // useEffect(() => {
+  //   async function getAndgetNicknameResults() {
+  //     const result = await getNicknameResults(nickname);
+  //   }
+  // }, []);
   console.log('hello');
-  return (
-    <div style={{ position: 'relative', zIndex: 1 }}>
-      <ListContainer>
-        {dummyData.map(({ id, img, name }) => {
-          return (
-            <KeywordContainer key={id}>
-              <img src={img} alt="img" style={{ width: 30, height: 30, marginRight: 15 }} />
-              <Keyword>{name}</Keyword>
-              <RemoveButton>x</RemoveButton>
-            </KeywordContainer>
-          );
-        })}
-      </ListContainer>
-      <Outlet />
-    </div>
-  );
+  // return (
+  //   <div style={{ position: 'relative', zIndex: 1 }}>
+  //     <ListContainer>
+  //       {dummyData.map(({ id, img, name }) => {
+  //         return (
+  //           <KeywordContainer key={id}>
+  //             <img src={img} alt="img" style={{ width: 30, height: 30, marginRight: 15 }} />
+  //             <Keyword>{name}</Keyword>
+  //             <RemoveButton>x</RemoveButton>
+  //           </KeywordContainer>
+  //         );
+  //       })}
+  //     </ListContainer>
+  //     <Outlet />
+  //   </div>
+  // );
 }
 
 export default SearchResultPlaces;

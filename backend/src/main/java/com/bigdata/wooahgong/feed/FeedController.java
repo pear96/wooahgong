@@ -3,7 +3,6 @@ package com.bigdata.wooahgong.feed;
 import com.bigdata.wooahgong.feed.dtos.request.CreateFeedReq;
 import com.bigdata.wooahgong.feed.dtos.response.DetailFeedRes;
 import com.bigdata.wooahgong.feed.dtos.response.GetCommentsRes;
-import com.bigdata.wooahgong.feed.entity.Feed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

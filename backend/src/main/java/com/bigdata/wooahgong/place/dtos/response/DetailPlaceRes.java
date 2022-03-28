@@ -14,13 +14,16 @@ public class DetailPlaceRes {
     private final Double avgRatings;
     private final String placeImageUrl;
     private final List<CustomFeedDto> feeds;
+    private final Boolean isWished;
 
     @Builder
-    public DetailPlaceRes(String name, String address, Double avgRatings, String placeImageUrl, List<CustomFeedDto> feeds) {
+    public DetailPlaceRes(String name, String address, Double avgRatings,
+                          String placeImageUrl, List<CustomFeedDto> feeds, Boolean isWished) {
         this.name = name;
         this.address = address;
         this.avgRatings = avgRatings;
         this.placeImageUrl = placeImageUrl;
         this.feeds = feeds;
+        this.isWished = isWished;
     }
 }

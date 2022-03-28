@@ -66,9 +66,7 @@ public class PlaceService {
 
     public ResponseEntity<DetailPlaceRes> getPlace(String token, Long placeSeq) {
         // token이 유효한지 검사한다.
-        if ("".equals(userService.getEmailByToken(token))){
-            throw new CustomException(ErrorCode.NOT_OUR_USER);
-        }
+        User user = userService.getUserByToken(token);
 
         // 해당하는 장소가 있는지 검사한다.
         Optional<Place> findPlace = placeRepository.findByPlaceSeq(placeSeq);
@@ -77,16 +75,24 @@ public class PlaceService {
         }
         Place place = findPlace.get();
 
+        // 찜한 장소인지 확인한다.
+        Boolean isWished = false;
+        Optional<PlaceWish> wished = placeWishRepository.findByUserAndPlace(user, place);
+        if (wished.isPresent()) {
+            isWished = true;
+        }
+
         // 장소를 찾고 해당 피드들을 불러온다.
         List<Feed> foundFeeds = feedRepository.findByPlace(place);
         if (foundFeeds.isEmpty()) {
             throw new CustomException(ErrorCode.FEED_NOT_FOUND);
         }
-        // feed 객체의 모든 내용이 아닌, seq와 이미지만 담아서 보내야 한다.
-        List<CustomFeedDto> customFeeds = new ArrayList<CustomFeedDto>();
 
-        Double sumRating = 0.0;
+        // feed 객체의 모든 내용이 아닌, seq와 이미지만 담아서 보내야 한다.
+        List<CustomFeedDto> customFeeds = new ArrayList<>();
+
         // 해당 피드들의 점수만 취합해 평균 평점을 계산한다.
+        Double sumRating = 0.0;
         // 동시에 피드의 시퀀스 넘버, 썸네일만 가져와서 반환할 리스트를 만든다.
         // 우선 최신순 정렬
         for (int i = foundFeeds.size() - 1; i >= 0; i--) {
@@ -107,15 +113,14 @@ public class PlaceService {
                 .avgRatings(avgRating)
                 .placeImageUrl(placeImageUrl)
                 .feeds(customFeeds)
+                .isWished(isWished)
                 .build();
         return ResponseEntity.status(200).body(detailPlaceRes);
     }
 
     public ResponseEntity<PlaceFeedsRes> getPlaceFeedsBySorting(String token, Long placeSeq, String sort) {
         // token이 유효한지 검사한다.
-        if ("".equals(userService.getEmailByToken(token))){
-            throw new CustomException(ErrorCode.NOT_OUR_USER);
-        }
+        userService.getUserByToken(token);
         // 정렬 방식 점검
         if ("".equals(sort)){
             throw new CustomException(ErrorCode.WRONG_DATA);

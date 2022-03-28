@@ -16,6 +16,7 @@ export const Menubars = styled(Link)`
 `;
 
 export const NavMenu = styled.nav`
+  z-index: 100;
   background-color: #fafafa;
   width: 300px;
   height: 100vh;
@@ -48,7 +49,7 @@ export const NavText = styled.li`
   padding: 8px 0px 8px 16px;
   list-style: none;
   height: 60px;
-
+  // 질문!
   a {
     text-decoration: none;
     color: #000;

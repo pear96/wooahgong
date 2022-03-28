@@ -45,7 +45,8 @@ pipeline {
                     sh 'docker container ls -a -f name=wooahgong-front -q | xargs -r docker container rm'
                     sh 'docker run -d --name wooahgong-front -p 80:80 -p 443:443 \
                     -v /home/ubuntu/sslkey/:/var/jenkins_home/workspace/wooahgong/sslkey/ \
-                    -v /etc/localtime:/etc/localtime:ro \
+                    -v /etc/letsencrypt/:/etc/letsencrypt/ \
+                    -e TZ=Asia/Seoul \
                     wooahgong-front:latest'
                 }
                 }
@@ -56,7 +57,9 @@ pipeline {
                     dir("backend"){
                     sh 'docker ps -f name=wooahgong-back -q | xargs --no-run-if-empty docker container stop'
                     sh 'docker container ls -a -f name=wooahgong-back -q | xargs -r docker container rm'
-                    sh 'docker run -d --name wooahgong-back -p 8080:8080 wooahgong-back:latest'
+                    sh 'docker run -d --name wooahgong-back -p 8080:8080 \
+                    -e TZ=Asia/Seoul \
+                    wooahgong-back:latest'
                 }
                 }
             }

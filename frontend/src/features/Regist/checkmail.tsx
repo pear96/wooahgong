@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import ProgressBar from '@ramonak/react-progress-bar';
 import { toast } from 'react-toastify';
+import UserApi from 'common/api/UserApi';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../assets/Logo.png';
 import { register, setId, setPwd, setEmail, setGender, setAtmos, setBirth, setNick, Register } from './registerReducer';
@@ -108,6 +109,8 @@ function Checkmail({ progress }: MyProps) {
   const [isOk, setIsOk] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  const {getEmailCheckResult, getEmailCheckCodeResult} = UserApi;
+
   const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
   const dispatch = useDispatch();
 
@@ -133,34 +136,69 @@ function Checkmail({ progress }: MyProps) {
     setCode(curCode);
   };
 
-  const handleEmailCheck = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleEmailCheck = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     // axios 요청
     // 중복검사 하는 api
-    toast.info(
-      <div style={{ width: 'inherit', fontSize: '10px' }}>
-        <div>이메일을 발송하였습니다.</div>
-        <span>이메일이 오지 않을 경우 입력한 정보를 다시 확인해주세요.</span>
-      </div>,
-      {
-        position: toast.POSITION.TOP_CENTER,
-        role: 'alert',
-      },
-    );
-    setIsError(true);
+    const body = {
+      "email" : email
+    }
+    console.log(body);
+    const result = await getEmailCheckResult(body);
+    
+    if(result.status === 200){
+      toast.info(
+        <div style={{ width: 'inherit', fontSize: '10px' }}>
+          <div>이메일을 발송하였습니다.</div>
+          <span>이메일이 오지 않을 경우 입력한 정보를 다시 확인해주세요.</span>
+        </div>,
+        {
+          position: toast.POSITION.TOP_CENTER,
+          role: 'alert',
+        },
+      );
+      setIsError(true);
+    }
+    else{
+      toast.error(
+        <div style={{ width: 'inherit', fontSize: '10px' }}>
+          <div>이미 회원가입된 이메일 입니다.</div>
+          <span>다른 이메일을 입력해주세요</span>
+        </div>,
+        {
+          position: toast.POSITION.TOP_CENTER,
+          role: 'alert',
+        },
+      );
+      setIsError(false);
+    }
+    
     // 중복일 경우 error toast 출력
   };
 
-  const handleCodeCheck = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleCodeCheck = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     // axios 요청
-    // code 검사
-    toast.success(<div style={{ width: 'inherit', fontSize: '14px' }}>인증이 완료되었습니다.</div>, {
-      position: toast.POSITION.TOP_CENTER,
-      role: 'alert',
-    });
-    setIsOk(true);
-
+    const data = {
+      "email" : email,
+      "code" : code
+    }
+    const result = await getEmailCheckCodeResult(data);
+    
+    if(result.status === 200){
+      toast.success(<div style={{ width: 'inherit', fontSize: '14px' }}>인증이 완료되었습니다.</div>, {
+        position: toast.POSITION.TOP_CENTER,
+        role: 'alert',
+      });
+      setIsOk(true);
+    }
+    else{
+      toast.warn(<div style={{ width: 'inherit', fontSize: '14px' }}>인증번호가 올바르지 않습니다.</div>, {
+        position: toast.POSITION.TOP_CENTER,
+        role: 'alert',
+      });
+      setIsOk(false);
+    }
     // 코드가 틀렸을 경우 toast 에러 메세지
   };
   const handleOnClickNextStep = (e: React.MouseEvent<HTMLButtonElement>) => {

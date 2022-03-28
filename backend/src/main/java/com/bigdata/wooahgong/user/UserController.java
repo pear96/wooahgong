@@ -1,5 +1,6 @@
 package com.bigdata.wooahgong.user;
 
+import com.bigdata.wooahgong.feed.dtos.response.getUserInfoRes;
 import com.bigdata.wooahgong.user.dtos.request.FindPwSendEmailReq;
 import com.bigdata.wooahgong.user.dtos.request.ResetPwdReq;
 import com.bigdata.wooahgong.user.dtos.request.SignUpReq;
@@ -51,5 +52,10 @@ public class UserController {
     public ResponseEntity<String> resetPwd(@RequestBody ResetPwdReq resetPwdReq) {
         userService.resetPwd(resetPwdReq);
         return new ResponseEntity<>("비밀번호가 변경되었습니다.", HttpStatus.OK);
+    }
+    // 사용자 프로필 정보 조회
+    @GetMapping("/{nickname}")
+    public ResponseEntity<getUserInfoRes> getUserInfo(@RequestHeader("Authorization") String token, @PathVariable String nickname) {
+        return new ResponseEntity<getUserInfoRes>(userService.getUserInfo(token, nickname), HttpStatus.OK);
     }
 }

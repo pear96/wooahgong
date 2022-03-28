@@ -89,13 +89,13 @@ public class UserController {
     }
 
     // 내가 좋아한 피드 조회 - 무한 스크롤
-    @GetMapping("/{nickname}/feeds")
+    @GetMapping("/{nickname}/liked")
     public ResponseEntity<List<GetMyFeedsRes>> getMyLikeFeeds(@RequestHeader("Authorization") String token, @PathVariable String nickname, @PageableDefault(size = 9) Pageable pageable) {
         return new ResponseEntity<>(userService.getMyLikeFeeds(token, nickname, pageable), HttpStatus.OK);
     }
 
     // 내가 찜한 장소 조회 - 무한 스크롤
-    @GetMapping("/{nickname}/feeds")
+    @GetMapping("/{nickname}/wished")
     public ResponseEntity<List<GetMyPlacesRes>> getMyWishedPlaces(@RequestHeader("Authorization") String token, @PathVariable String nickname, @PageableDefault(size = 9) Pageable pageable) {
         return new ResponseEntity<>(userService.getMyWishedPlaces(token, nickname, pageable), HttpStatus.OK);
     }

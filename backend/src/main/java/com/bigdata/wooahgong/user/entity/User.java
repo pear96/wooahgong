@@ -72,6 +72,8 @@ public class User extends BaseTimeEntity {
         this.password = password;
     }
     public void setAuthCode(String authCode) { this.authCode = authCode;}
+    public void setNickname(String nickname) { this.nickname = nickname;}
+    public void setMbti(String mbti){this.mbti = mbti;}
 
 }
 

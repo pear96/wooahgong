@@ -36,6 +36,7 @@ public enum ErrorCode {
     DATA_NOT_FOUND(NOT_FOUND, "데이터를 찾을 수 없습니다."),
     PLACE_NOT_FOUND(NOT_FOUND, "해당 장소를 찾을 수 없습니다"),
     FEED_NOT_FOUND(NOT_FOUND, "해당 피드를 찾을 수 없습니다"),
+    MOOD_NOT_FOUND(NOT_FOUND, "해당 분위기를 찾을 수 없습니다"),
 
     /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     DUPLICATE_RESOURCE(CONFLICT, "데이터가 이미 존재합니다"),

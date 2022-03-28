@@ -16,6 +16,7 @@ import com.bigdata.wooahgong.place.repository.PlaceWishRepository;
 import com.bigdata.wooahgong.user.dtos.request.FindPwSendEmailReq;
 import com.bigdata.wooahgong.user.dtos.request.ResetPwdReq;
 import com.bigdata.wooahgong.user.dtos.request.SignUpReq;
+import com.bigdata.wooahgong.user.dtos.request.UpdateProfileReq;
 import com.bigdata.wooahgong.user.dtos.response.GetMyFeedsRes;
 import com.bigdata.wooahgong.user.dtos.response.GetMyInfoRes;
 import com.bigdata.wooahgong.user.dtos.response.GetMyPlacesRes;
@@ -232,7 +233,7 @@ public class UserService {
             String image = null;
             // 피드가 존재할때만
             if (place.getFeeds().size() != 0) {
-                Feed feed = place.getFeeds().get(place.getFeeds().size()-1);
+                Feed feed = place.getFeeds().get(place.getFeeds().size() - 1);
                 // 피드에 사진이 있을 경우에만
                 if (feed.getFeedImages().size() != 0) {
                     image = feed.getFeedImages().get(feed.getFeedImages().size() - 1).getImageUrl();
@@ -242,5 +243,28 @@ public class UserService {
                     .placeSeq(place.getPlaceSeq()).thumbnail(image).build());
         }
         return getMyPlacesResList;
+    }
+
+    @Transactional
+    public String updateProfile(String token, String nickname, UpdateProfileReq updateProfileReq) {
+        // 토큰으로 유저 찾기
+        User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+        if (!user.getNickname().equals(updateProfileReq.getNickname())) {
+            user.setNickname(updateProfileReq.getNickname());
+        }
+        if(!user.getMbti().equals(updateProfileReq.getMbti())){
+            user.setMbti(updateProfileReq.getMbti());
+        }
+        // UserMood 지우기
+        userMoodRepository.deleteAllByUser(user);
+        // 다시 삽입
+        for(String s : updateProfileReq.getMoods()){
+            Mood mood = moodRepository.findByMoodContaining(s).orElseThrow(()->
+                    new CustomException(ErrorCode.MOOD_NOT_FOUND));
+            userMoodRepository.save(UserMood.builder().mood(mood).user(user).build());
+        }
+        userRepository.save(user);
+        return "프로필 업데이트 완료";
     }
 }

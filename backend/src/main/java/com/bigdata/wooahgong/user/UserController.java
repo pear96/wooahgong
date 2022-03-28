@@ -3,6 +3,7 @@ package com.bigdata.wooahgong.user;
 import com.bigdata.wooahgong.user.dtos.request.FindPwSendEmailReq;
 import com.bigdata.wooahgong.user.dtos.request.ResetPwdReq;
 import com.bigdata.wooahgong.user.dtos.request.SignUpReq;
+import com.bigdata.wooahgong.user.dtos.request.UpdateProfileReq;
 import com.bigdata.wooahgong.user.dtos.response.GetMyFeedsRes;
 import com.bigdata.wooahgong.user.dtos.response.GetMyInfoRes;
 import com.bigdata.wooahgong.user.dtos.response.GetMyPlacesRes;
@@ -83,14 +84,23 @@ public class UserController {
     public ResponseEntity<List<GetMyFeedsRes>> getMyFeeds(@RequestHeader("Authorization") String token, @PathVariable String nickname, @PageableDefault(size = 9) Pageable pageable) {
         return new ResponseEntity<>(userService.getMyFeeds(token, nickname, pageable), HttpStatus.OK);
     }
+
     // 내가 좋아한 피드 조회 - 무한 스크롤
     @GetMapping("/{nickname}/feeds")
     public ResponseEntity<List<GetMyFeedsRes>> getMyLikeFeeds(@RequestHeader("Authorization") String token, @PathVariable String nickname, @PageableDefault(size = 9) Pageable pageable) {
         return new ResponseEntity<>(userService.getMyLikeFeeds(token, nickname, pageable), HttpStatus.OK);
     }
+
     // 내가 찜한 장소 조회 - 무한 스크롤
     @GetMapping("/{nickname}/feeds")
     public ResponseEntity<List<GetMyPlacesRes>> getMyWishedPlaces(@RequestHeader("Authorization") String token, @PathVariable String nickname, @PageableDefault(size = 9) Pageable pageable) {
         return new ResponseEntity<>(userService.getMyWishedPlaces(token, nickname, pageable), HttpStatus.OK);
+    }
+
+    // 프로필 수정하기 버튼 클릭
+    @PatchMapping("/{nickname}")
+    public ResponseEntity<String> updateProfile(@RequestHeader("Authorization") String token, @PathVariable String nickname,
+                                                @RequestBody UpdateProfileReq updateProfileReq) {
+        return new ResponseEntity<>(userService.updateProfile(token, nickname,updateProfileReq), HttpStatus.OK);
     }
 }

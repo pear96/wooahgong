@@ -2,6 +2,7 @@ package com.bigdata.wooahgong.feed;
 
 import com.bigdata.wooahgong.feed.dtos.request.CreateFeedReq;
 import com.bigdata.wooahgong.feed.dtos.response.DetailFeedRes;
+import com.bigdata.wooahgong.feed.dtos.response.GetCommentsRes;
 import com.bigdata.wooahgong.feed.entity.Feed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -53,5 +54,21 @@ public class FeedController {
     public ResponseEntity<String> deleteFeed(@RequestHeader("Authorization") String token, @PathVariable("feed_seq") Long feedSeq) {
         return new ResponseEntity<>(feedService.deleteFeed(token, feedSeq),HttpStatus.OK);
     }
-
+    // 댓글 불러오기
+    @GetMapping("/{feed_seq}/comments")
+    public ResponseEntity<List<GetCommentsRes>> getComments(@RequestHeader("Authorization") String token, @PathVariable("feed_seq") Long feedSeq) {
+        return new ResponseEntity<List<GetCommentsRes>>(feedService.getComments(token,feedSeq), HttpStatus.OK);
+    }
+    // 댓글 작성
+    @PostMapping("/{feed_seq}/comments")
+    public ResponseEntity<String> createComment(@RequestHeader("Authorization") String token,@PathVariable("feed_seq") Long feedSeq,
+                                                @RequestParam String content) {
+        return new ResponseEntity<String>(feedService.createComment(token,feedSeq,content), HttpStatus.OK);
+    }
+    // 댓글 삭제
+    @PostMapping("/{feed_seq}/comments/{comment_seq}")
+    public ResponseEntity<String> deleteComment(@RequestHeader("Authorization") String token,@PathVariable("feed_seq") Long feedSeq,
+                                                @PathVariable("comment_seq") Long commentSeq) {
+        return new ResponseEntity<String>(feedService.deleteComment(token,feedSeq,commentSeq), HttpStatus.OK);
+    }
 }

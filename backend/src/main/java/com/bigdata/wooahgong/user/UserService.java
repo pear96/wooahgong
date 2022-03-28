@@ -4,6 +4,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.bigdata.wooahgong.common.exception.CustomException;
 import com.bigdata.wooahgong.common.exception.ErrorCode;
+import com.bigdata.wooahgong.common.s3.S3Uploader;
 import com.bigdata.wooahgong.common.util.JwtTokenUtil;
 import com.bigdata.wooahgong.email.EmailService;
 import com.bigdata.wooahgong.feed.entity.Feed;
@@ -33,6 +34,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
@@ -51,6 +53,7 @@ public class UserService {
     private final PlaceWishRepository placeWishRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final S3Uploader s3Uploader;
 
     public String getEmailByToken(String token) {
         JWTVerifier verifier = JwtTokenUtil.getVerifier();
@@ -266,5 +269,18 @@ public class UserService {
         }
         userRepository.save(user);
         return "프로필 업데이트 완료";
+    }
+
+    @Transactional
+    public String updateProfileImg(String token, String nickname, MultipartFile image) {
+        // 토큰으로 유저 찾기
+        User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+        List<MultipartFile> images = new ArrayList<>();
+        images.add(image);
+        List<String> urls = s3Uploader.upload(images, "static", "profile");
+        String url = urls.get(0);
+        user.setImageUrl(url);
+        return url;
     }
 }

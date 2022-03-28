@@ -14,6 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -102,5 +103,11 @@ public class UserController {
     public ResponseEntity<String> updateProfile(@RequestHeader("Authorization") String token, @PathVariable String nickname,
                                                 @RequestBody UpdateProfileReq updateProfileReq) {
         return new ResponseEntity<>(userService.updateProfile(token, nickname,updateProfileReq), HttpStatus.OK);
+    }
+    // 프로필 수정하기 버튼 클릭
+    @PatchMapping("/{nickname}/profileimg")
+    public ResponseEntity<String> updateProfileImg(@RequestHeader("Authorization") String token, @PathVariable String nickname,
+                                                   @RequestPart(value = "image") MultipartFile image) {
+        return new ResponseEntity<>(userService.updateProfileImg(token, nickname,image), HttpStatus.OK);
     }
 }

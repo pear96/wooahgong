@@ -6,6 +6,7 @@ import com.bigdata.wooahgong.common.exception.CustomException;
 import com.bigdata.wooahgong.common.exception.ErrorCode;
 import com.bigdata.wooahgong.common.util.JwtTokenUtil;
 import com.bigdata.wooahgong.email.EmailService;
+import com.bigdata.wooahgong.feed.dtos.response.getUserInfoRes;
 import com.bigdata.wooahgong.mood.entity.Mood;
 import com.bigdata.wooahgong.mood.repository.MoodRepository;
 import com.bigdata.wooahgong.user.dtos.request.FindPwSendEmailReq;
@@ -22,6 +23,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -131,5 +134,26 @@ public class UserService {
                 new CustomException(ErrorCode.NOT_OUR_USER));
         user.resetPwd(password);
         userRepository.save(user);
+    }
+
+    public getUserInfoRes getUserInfo(String token, String nickname) {
+        // 토큰으로 유저 찾기
+        User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+        // 닉네임으로 유저 찾기
+        User Owner = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+        boolean isOwner = user.getNickname().equals(nickname);
+        int feedsCnt = Owner.getFeeds().size();
+        int likedCnt = Owner.getFeedLikes().size();
+        int bookmark = Owner.getPlaceWishes().size();
+        List<String> moods = new ArrayList<>();
+        for(UserMood userMood : Owner.getUserMoods()){
+            moods.add(userMood.getMood().getMood());
+        }
+        return getUserInfoRes.builder()
+                .isOwner(isOwner).feedsCnt(feedsCnt)
+                .likedCnt(likedCnt).bookmarkedCnt(bookmark)
+                .moods(moods).build();
     }
 }

@@ -4,12 +4,14 @@ import com.bigdata.wooahgong.common.util.BaseTimeEntity;
 import com.bigdata.wooahgong.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlaceWish extends BaseTimeEntity {

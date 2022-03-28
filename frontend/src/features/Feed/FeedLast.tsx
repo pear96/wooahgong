@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import FindAddress from './modal/FindAddress';
 import { feed, setImage, setType, Feed } from './feedReducer';
 import Pin from '../../assets/pin.png';
 import Quote from '../../assets/quote.png';
@@ -35,7 +36,8 @@ function FeedLast() {
     const [placeAddres, setPlaceAddress] = useState<string>("");
     const [desc, setDesc] = useState<string>("");
     const [score, setScore] = useState<number>(1);
-    
+    const [open, setIsOpen] = useState<boolean>(false);
+    const [position, setPosition] = useState<{lat : number, lng : number}>();
     const feedstore = useSelector<ReducerType, Feed>((state) => state.feedReducer);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -55,6 +57,14 @@ function FeedLast() {
     
     
     console.log(feedstore);
+    const handleOpenModal = (e : React.MouseEvent) => {
+        setIsOpen(true);
+    }
+    const handleCloseModal = (e : React.MouseEvent) => {
+        console.log("미쳤냐 진짜?");
+        setIsOpen(false);
+    }
+
     const handleChangePlaceName = (e : React.ChangeEvent<HTMLInputElement>) =>{
         e.stopPropagation();
         setPlaceName(e.currentTarget.value);
@@ -64,7 +74,11 @@ function FeedLast() {
         const word = e.currentTarget.value;
         setDesc(word);
     }
-
+    const handleInputAddress = (data : {latlng : {lat : number, lng : number}, addr : string}) => {
+        console.log(data);
+        setPosition(data.latlng);
+        setPlaceAddress(data.addr);
+    }
     const handleClickAtmos = (e : React.MouseEvent<HTMLButtonElement>) =>{
         e.stopPropagation();
         const index : number = +e.currentTarget.value;
@@ -235,19 +249,24 @@ function FeedLast() {
                         marginTop : 40
                     }}>
                     <img src={Pin} style={{width : 20, height : 20, marginRight : 10}} alt="pin"/>
-                    <input
+                    <button type="button"
                     style={{
                         width : 280,
+                        textAlign : "left",
                         borderLeft : "none",
                         borderRight : "none",
                         borderTop : "none",
+                        borderColor : "#D7D7D7",
                         background : "none",
+                        paddingLeft : 2,
                         fontSize : 16,
                         fontWeight : 700,
-                        fontFamily: 'NotoSansKR'
+                        fontFamily: 'NotoSansKR',
+                        cursor : "pointer"
                     }}
-                    // value={placeAddres}
-                    type="text" placeholder="주소를 검색해주세요"/>
+                    value={placeAddres}
+                    onClick={handleOpenModal}
+                    >{placeAddres.length > 0 ? placeAddres : "주소를 검색해주세요"}</button>
                 </div>
             </div>)}
             <div style={{
@@ -296,7 +315,7 @@ function FeedLast() {
                             const idx = i;
                             if(v.check === false){
                                 return(
-                                    <button type="button" value={idx} style={
+                                    <button key={idx} type="button" value={idx} style={
                                         {
                                             fontFamily: 'NotoSansKR',
                                             marginRight : 10, 
@@ -309,7 +328,7 @@ function FeedLast() {
                                 )
                             }
                             return(
-                                    <button type="button" value={idx} style={
+                                    <button key={idx} type="button" value={idx} style={
                                         {
                                             fontFamily: 'NotoSansKR',
                                             marginRight : 10, 
@@ -362,7 +381,9 @@ function FeedLast() {
                         }} onInput={handleStar} value="1" step="2" min="0" max="10"/>
                     </span>
                     <ActiveButton onClick={handleClickRegist}>등록</ActiveButton>
+            
             </div>
+            {open ? (<FindAddress open={open} onClose={handleCloseModal} handleInput={handleInputAddress}/>) : null}
         </div>
     );
 }

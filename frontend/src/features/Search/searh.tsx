@@ -13,7 +13,6 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
 // components
-import { margin } from '@mui/system';
 import SearchApi from 'common/api/SearchApi';
 import SearchBar from './searchBar';
 import SearchHistory from './searchHistory';
@@ -37,7 +36,9 @@ export const ListContainer = styled.ul`
 // 즉, 나 자신(li)들에서 마지막 요소 값을 제외한 값에 margin-bottom 속성 지정
 export const KeywordContainer = styled.li`
   overflow: hidden;
-
+  &:hover {
+    background-color: #b8b2f8;
+  }
   &:not(:last-child) {
     margin-bottom: 18px;
   }
@@ -82,26 +83,23 @@ const search = () => {
   const { isFocus } = useSelector((state: ReducerType) => state.search);
 
   const { getPlaceResults } = SearchApi;
-
+  const { postPlaceSearchResult } = SearchApi;
   const handleChange = (event: any, newValue: any) => {
     setValue(newValue);
     // navigate(newValue);
   };
 
-  // 자동완성 기능 구현
+  const onClickserchResult = useCallback(
+    (placeSeq) => () => {
+      // 상세페이지 이동페이지 만들어지면 navigate 추가해서 넣자
+      console.log(placeSeq, typeof placeSeq);
+      const result = postPlaceSearchResult(placeSeq);
+      console.log(result);
+    },
+    [],
+  );
 
-  const data = [
-    { id: 1, name: '키움증권', img: 'https://picsum.photos/100' },
-    { id: 2, name: '삼성전자', img: 'https://picsum.photos/100' },
-    { id: 3, name: '삼성블루드래곤', img: 'https://picsum.photos/100' },
-    { id: 4, name: 'LG전자', img: 'https://picsum.photos/100' },
-    { id: 5, name: '스튜디오드래곤', img: 'https://picsum.photos/100' },
-    { id: 6, name: '영호화학', img: 'https://picsum.photos/100' },
-    { id: 7, name: '씨젠', img: 'https://picsum.photos/100' },
-    { id: 8, name: 'LG화학', img: 'https://picsum.photos/100' },
-    { id: 9, name: 'DL', img: 'https://picsum.photos/100' },
-    { id: 10, name: '오뚜기', img: 'https://picsum.photos/100' },
-  ];
+  // 자동완성 기능 구현
   const [keyword, setKeyword] = useState<any>();
   const [results, setResult] = useState<any>([]);
 
@@ -120,10 +118,16 @@ const search = () => {
 
   // 입력된 텍스트로 data 배열에서 찾아 매칭되는 결과들을 저장
   const onSearch = async (text: any) => {
-    const result = await getPlaceResults(text);
+    if (text !== '') {
+      const result = await getPlaceResults(text);
+      setResult(result.data.results);
+      console.log(result.data.results);
+    } else {
+      setResult([]);
+    }
 
-    const results: any = data.filter((item) => matchName(item.name, text) === true);
-    setResult({ results });
+    // const results: any = data.filter((item) => matchName(item.name, text) === true);
+    // console.log(results);
   };
 
   // 검색해야할 문자열을 키워드와 비교하여 매칭이 되는지 체크
@@ -134,7 +138,7 @@ const search = () => {
     return name === keyword.toString().toLowerCase();
   };
 
-  console.log(isFocus);
+  console.log(autoCompete);
   return (
     <>
       <SearchBar keyword={keyword} results={results} updateField={updateField} />
@@ -154,17 +158,11 @@ const search = () => {
       <div style={{ position: 'relative', zIndex: 1 }}>
         {/* 자동검색결과 */}
         <ListContainer>
-          {(autoCompete as any[])?.map(({ id, img, name }: any) => {
+          {(autoCompete as any[])?.map((props: any) => {
             return (
-              <KeywordContainer key={id}>
-                <img src={img} alt="img" style={{ width: 30, height: 30, marginRight: 15 }} />
-                <Keyword
-                  onClick={() => {
-                    console.log('이거 눌럿다');
-                  }}
-                >
-                  {name}
-                </Keyword>
+              <KeywordContainer key={props.placeSeq} onClick={onClickserchResult(props.placeSeq)}>
+                <img src={props.imageUrl} alt="img" style={{ width: 30, height: 30, marginRight: 15 }} />
+                <Keyword>{props.name}</Keyword>
               </KeywordContainer>
             );
           })}
@@ -173,8 +171,7 @@ const search = () => {
       </div>
 
       <Routes>
-        <Route path="/search/places" element={<SearchResultPlaces />} />
-        {/* <Route path="/nicknames" element={<SearchResultNicknames />} /> */}
+        <Route path="/places" element={<SearchResultPlaces />} />
       </Routes>
     </>
   );

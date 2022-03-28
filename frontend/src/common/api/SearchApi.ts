@@ -60,12 +60,8 @@ const deleteAllSeacrhHistory = async (historyId: string) => {
 // 검색 결과 조회 장소 (자동완성)
 
 const getPlaceResults = async (searchWord: string) => {
-  console.log(searchWord);
-  await axios({
-    method: 'GET',
-    url: `${BASE_URL}/place?searchWord=${searchWord}`,
-    headers: { Authorization: `Bearer ${token}` },
-  })
+  const result = await axios
+    .get(`${BASE_URL}/place?searchWord=${searchWord}`, { headers: { Authorization: `Bearer ${token}` } })
     .then((res) => {
       console.log(res);
       return res;
@@ -74,6 +70,7 @@ const getPlaceResults = async (searchWord: string) => {
       console.dir(err);
       return err;
     });
+  return result;
 };
 
 // 검색 결과 조회 유저 (자동완성)
@@ -95,13 +92,12 @@ const getNicknameResults = async (searchWord: string) => {
 };
 
 // 검색 결과 선택 - 장소(무엇을 선택했는지 서버에 알려준다)
-const postPlaceSearchResult = async (data: { placeId: string }) => {
-  await axios({
-    method: 'POST',
-    url: `${BASE_URL}/place`,
-    headers: { Authorization: `Bearer ${token}` },
-    data,
-  })
+const postPlaceSearchResult = async (data: { placeSeq: string }) => {
+  console.log(data);
+  const result = await axios
+    .post(`${BASE_URL}/place`, data, {
+      headers: { Authorization: `Bearer ${token}`, 'Content-type': 'application/json' },
+    })
     .then((res) => {
       console.log(res);
       return res;
@@ -110,7 +106,22 @@ const postPlaceSearchResult = async (data: { placeId: string }) => {
       console.dir(err);
       return err;
     });
+  return result;
 };
+
+// const getPlaceResults = async (searchWord: string) => {
+//   const result = await axios
+//     .get(`${BASE_URL}/place?searchWord=${searchWord}`, { headers: { Authorization: `Bearer ${token}` } })
+//     .then((res) => {
+//       console.log(res);
+//       return res;
+//     })
+//     .catch((err) => {
+//       console.dir(err);
+//       return err;
+//     });
+//   return result;
+// };
 
 // 검색 결과 선택 - 유저(무엇을 선택했는지 서버에 알려준다)
 const postUserSearchResult = async (data: { nickname: string }) => {

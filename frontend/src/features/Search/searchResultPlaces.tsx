@@ -37,8 +37,9 @@ const dummyData = [
 ];
 
 function SearchResultPlaces() {
+  console.log('hello');
   return (
-    <div style={{}}>
+    <div style={{ position: 'relative', zIndex: 1 }}>
       <ListContainer>
         {dummyData.map(({ id, img, name }) => {
           return (

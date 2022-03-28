@@ -10,14 +10,20 @@ import com.bigdata.wooahgong.feed.entity.Feed;
 import com.bigdata.wooahgong.feed.repository.FeedRepository;
 import com.bigdata.wooahgong.mood.entity.Mood;
 import com.bigdata.wooahgong.mood.repository.MoodRepository;
+import com.bigdata.wooahgong.place.entity.Place;
+import com.bigdata.wooahgong.place.entity.PlaceWish;
+import com.bigdata.wooahgong.place.repository.PlaceWishRepository;
 import com.bigdata.wooahgong.user.dtos.request.FindPwSendEmailReq;
 import com.bigdata.wooahgong.user.dtos.request.ResetPwdReq;
 import com.bigdata.wooahgong.user.dtos.request.SignUpReq;
 import com.bigdata.wooahgong.user.dtos.response.GetMyFeedsRes;
 import com.bigdata.wooahgong.user.dtos.response.GetMyInfoRes;
+import com.bigdata.wooahgong.user.dtos.response.GetMyPlacesRes;
 import com.bigdata.wooahgong.user.dtos.response.GetUserInfoRes;
+import com.bigdata.wooahgong.user.entity.FeedLike;
 import com.bigdata.wooahgong.user.entity.User;
 import com.bigdata.wooahgong.user.entity.UserMood;
+import com.bigdata.wooahgong.user.repository.FeedLikeRepository;
 import com.bigdata.wooahgong.user.repository.UserMoodRepository;
 import com.bigdata.wooahgong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +46,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMoodRepository userMoodRepository;
     private final FeedRepository feedRepository;
+    private final FeedLikeRepository feedLikeRepository;
+    private final PlaceWishRepository placeWishRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
@@ -183,14 +191,56 @@ public class UserService {
                 new CustomException(ErrorCode.NOT_OUR_USER));
         Page<Feed> pages = feedRepository.findByUserOrderByModifiedDateDesc(user, pageable);
         List<GetMyFeedsRes> getMyFeedsResList = new ArrayList<>();
-        for (Feed feed : pages){
+        for (Feed feed : pages) {
             String image = null;
-            if(feed.getFeedImages().size() != 0){
-                image = feed.getFeedImages().get(feed.getFeedImages().size()-1).getImageUrl();
+            if (feed.getFeedImages().size() != 0) {
+                image = feed.getFeedImages().get(feed.getFeedImages().size() - 1).getImageUrl();
             }
             getMyFeedsResList.add(GetMyFeedsRes.builder()
                     .feedSeq(feed.getFeedSeq()).imageUrl(image).build());
         }
         return getMyFeedsResList;
+    }
+
+    public List<GetMyFeedsRes> getMyLikeFeeds(String token, String nickname, Pageable pageable) {
+        // 토큰으로 유저 찾기
+        User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+        Page<FeedLike> pages = feedLikeRepository.findByUserOrderByModifiedDateDesc(user, pageable);
+        List<GetMyFeedsRes> getMyFeedsResList = new ArrayList<>();
+        for (FeedLike feedLike : pages) {
+            Feed feed = feedLike.getFeed();
+            String image = null;
+            if (feed.getFeedImages().size() != 0) {
+                image = feed.getFeedImages().get(feed.getFeedImages().size() - 1).getImageUrl();
+            }
+            getMyFeedsResList.add(GetMyFeedsRes.builder()
+                    .feedSeq(feed.getFeedSeq()).imageUrl(image).build());
+        }
+        return getMyFeedsResList;
+    }
+
+    @Transactional
+    public List<GetMyPlacesRes> getMyWishedPlaces(String token, String nickname, Pageable pageable) {
+        // 토큰으로 유저 찾기
+        User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+        Page<PlaceWish> pages = placeWishRepository.findByUserOrderByModifiedDateDesc(user, pageable);
+        List<GetMyPlacesRes> getMyPlacesResList = new ArrayList<>();
+        for (PlaceWish placeWish : pages) {
+            Place place = placeWish.getPlace();
+            String image = null;
+            // 피드가 존재할때만
+            if (place.getFeeds().size() != 0) {
+                Feed feed = place.getFeeds().get(place.getFeeds().size()-1);
+                // 피드에 사진이 있을 경우에만
+                if (feed.getFeedImages().size() != 0) {
+                    image = feed.getFeedImages().get(feed.getFeedImages().size() - 1).getImageUrl();
+                }
+            }
+            getMyPlacesResList.add(GetMyPlacesRes.builder()
+                    .placeSeq(place.getPlaceSeq()).thumbnail(image).build());
+        }
+        return getMyPlacesResList;
     }
 }

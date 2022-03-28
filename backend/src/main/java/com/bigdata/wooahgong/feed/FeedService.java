@@ -216,4 +216,23 @@ public class FeedService {
         commentRepository.delete(comment);
         return "삭제 완료";
     }
+    @Transactional
+    public boolean likedFeed(String token, Long feedSeq) {
+        // 토큰으로 유저 찾기
+        User user = userRepository.findByEmail(userService.getEmailByToken(token)).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+        Feed feed = feedRepository.findByFeedSeq(feedSeq).orElseThrow(() ->
+                new CustomException(ErrorCode.DATA_NOT_FOUND));
+        boolean isLiked = true;
+        FeedLike feedLike = feedLikeRepository.findByFeedAndUser(feed, user).orElseGet(null);
+        // 좋아요를 누르지 않았음
+        if(feedLike == null){
+            feedLikeRepository.save(FeedLike.builder()
+                    .user(user).feed(feed).build());
+        }else{
+            feedLikeRepository.delete(feedLike);
+            isLiked = false;
+        }
+        return isLiked;
+    }
 }

@@ -71,4 +71,10 @@ public class FeedController {
                                                 @PathVariable("comment_seq") Long commentSeq) {
         return new ResponseEntity<String>(feedService.deleteComment(token,feedSeq,commentSeq), HttpStatus.OK);
     }
+    // 피드 좋아요
+    @PostMapping("/{feed_seq}")
+    public ResponseEntity<Boolean> likedFeed(@RequestHeader("Authorization") String token, @PathVariable("feed_seq") Long feedSeq) {
+        return new ResponseEntity<Boolean>(feedService.likedFeed(token, feedSeq),HttpStatus.OK);
+    }
+
 }

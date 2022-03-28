@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import FeedImage from './FeedImage';
 import SearchPlace from './SearchPlace';
+import FeedLast from './FeedLast';
 import { feed, setImage, setType } from './feedReducer';
 import { ReducerType } from '../../app/rootReducer';
 
@@ -24,6 +25,7 @@ function Feedsadd() {
             <Routes>
                 <Route path="/" element={<FeedImage/>} />
                 <Route path="/searchplace" element={<SearchPlace/>}/>
+                <Route path="/final" element={<FeedLast/>}/>
             </Routes>
         </Container>
     );

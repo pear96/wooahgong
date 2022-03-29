@@ -174,17 +174,20 @@ function FeedLast() {
                 else if(result?.status === 201){
                     console.log("된거니?!?!?!?!");
                     const formData = new FormData();
+                    // const list = [];
                     for(let i = 0; i < feedstore.image.length; i += 1){
+                        // list.push(feedstore.image[i]);
                         formData.append("images", feedstore.image[i]);
                     }
+                    // formData.append("images", list);
                     const data = {
                         placeSeq : result.placeSeq,
-                        images : formData,
                         content : desc,
                         ratings : score,
                         moods : atmos.map(v => v.title)
                     }
-                    const res = await getFeedAddResult(data);
+                    formData.append("data", new Blob([JSON.stringify(data)], {type : "application/json"}) );
+                    const res = await getFeedAddResult(formData);
                 }
             }
         }

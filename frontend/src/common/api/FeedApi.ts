@@ -28,17 +28,13 @@ const getPlaceAddReulst = async (body : {name : string, address : string, lat : 
     }
     return null;
 }
-const getFeedAddResult = async (body : {
-                                            placeSeq : number, 
-                                            images : FormData, 
-                                            content : string, 
-                                            ratings : number, 
-                                            moods : string[]}) => {
+const getFeedAddResult = async (body : FormData) => {
     console.log(body);
     if(token){
         console.log("된거니??");
         const result = await axios.post(`${BASE_URL}`, body, {
-            headers : {Authorization: token}
+            
+            headers : {Authorization: token, 'Content-type' : "multipart/form-data"}
         }).then((response)=>{
             const value = {
                 status : response.status

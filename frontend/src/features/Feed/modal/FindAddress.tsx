@@ -130,20 +130,6 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
                 setCheck(true);
                 map.setCenter(new window.Tmapv2.LatLng(lat, lng));
             })
-
-
-
-            // console.log(name, lat, lng);
-            // const marker = new window.Tmapv2.Marker({
-            //     position : new window.Tmapv2.LatLng(lat, lng),
-            //     icon : My,
-            //     map
-            // })
-            // // console.log(marker);
-            // setMarkerList(marker);
-            // setPosition({lat, lng});
-            // setCheck(true);
-            // map.setCenter(new window.Tmapv2.LatLng(lat, lng));
         })
         
     }

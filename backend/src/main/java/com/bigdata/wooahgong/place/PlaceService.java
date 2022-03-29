@@ -48,6 +48,11 @@ public class PlaceService {
             throw new CustomException(ErrorCode.WRONG_DATA);
         }
 
+        // 주소 중복 검사
+        if (placeRepository.findByAddress(address).size() > 0) {
+            throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
+        }
+
         // 장소를 생성한다.
         Place newPlace = Place.builder()
                 .user(user)

@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import SearchApi from 'common/api/SearchApi';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import { feed, setImage, setType, setPlace,Feed } from './feedReducer';
@@ -49,31 +50,35 @@ function SearchPlace() {
     const [places, setPlaces] = useState<{name : string, address : string}[]>([]);
     const navigate = useNavigate();
 
+    const {getPlaceResults} = SearchApi;
     const feedstore = useSelector<ReducerType, Feed>((state) => state.feedReducer);
     const dispatch = useDispatch();
     console.log(feedstore);
-
-    const testData = [
-        {placeSeq : 1, name : "명동", address : "비밀임"},
-        {placeSeq : 2, name : "명동제과", address : "알고싶징"},
-        {placeSeq : 3, name : "명동성당", address : "안알려쥼"},
-        {placeSeq : 4, name : "명동거리 한복판", address : "어딘가"},
-        {placeSeq : 5, name : "우리집", address : "비밀"},
-        {placeSeq : 6, name : "명동어딘가", address : "알고 싶니"},
-        {placeSeq : 7, name : "우리집", address : "안알려 줄꺼지롱"}
-    ]
-    const handleSearch = (e : React.MouseEvent | React.KeyboardEvent) => {
+    
+    const handleSearch = async(e : React.MouseEvent | React.KeyboardEvent) => {
         // api 통신 부분
         if(word !== ""){
             console.log(word);
-            const result = testData.filter(v => v.name.includes(word));
-            if(result.length > 0){
-                setPlaces([...result]);
+            const result = await getPlaceResults(word);
+            console.log(result);
+            const resultdata = [];
+            console.log(result.data);
+            if(result.data.results.length > 0){
+                console.log("???");
+                for(let i = 0; i < result.data.results.length; i+=1){
+                    const temp = {
+                        placeSeq : result.data.results[i].placeSeq,
+                        name : result.data.results[i].name,
+                        address : result.data.results[i].address,
+                    }
+                    resultdata.push(temp);
+                }
+                setPlaces([...resultdata]);
                 setIsPlaces(true);
             }
             else{
                 const reset : {name : string, address : string}[] = places;
-                // reset = places;
+                    // reset = places;
                 setPlaces(reset.filter(v => v));
                 setIsPlaces(false);
             }

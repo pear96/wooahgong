@@ -33,7 +33,6 @@ const getFeedAddResult = async (data : FormData) => {
     //     console.log(pair[0]+ ', ' + pair[1]);
     // }
     if(token){
-        
         const result = await axios.post(`${BASE_URL}`, data, {
             
             headers : {Authorization: token, 'Content-type' : "multipart/form-data"}

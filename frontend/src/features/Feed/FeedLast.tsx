@@ -125,6 +125,22 @@ function FeedLast() {
                     role: 'alert',
                 });
             }
+            else {
+                const formData = new FormData();
+                for (let i = 0; i < feedstore.image.length; i += 1) {
+                    formData.append("images", feedstore.image[i]);
+                }
+                const data = {
+                    placeSeq: feedstore.place.placeSeq,
+                    content: desc,
+                    ratings: score,
+                    moods: atmos.map(v => v.title)
+                }
+                formData.append("data", new Blob([JSON.stringify(data)], { type: "application/json" }));    
+                const res = await getFeedAddResult(formData);
+
+                // 리턴값 가지고 피드 상세로 이동 시켜야함
+            }
         }
         else{
             let count = 0;
@@ -184,9 +200,9 @@ function FeedLast() {
                         moods: atmos.map(v => v.title)
                     }
                     formData.append("data", new Blob([JSON.stringify(data)], { type: "application/json" }));
-                    
-                    
                     const res = await getFeedAddResult(formData);
+
+                    // 리턴값 가지고 피드 상세로 이동 시켜야함
                 }
             }
         }

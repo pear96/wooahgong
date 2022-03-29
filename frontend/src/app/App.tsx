@@ -29,6 +29,8 @@ const SearchNickname = loadable(() => import('../features/Search/searchResultNic
 const Profile = loadable(() => import('../features/Profile'));
 const ProfileUpdate = loadable(() => import('../features/Profile/profileUpdate'));
 
+const Place = loadable(() => import('../features/Place'));
+
 function App() {
   // 리프레시 토큰 사용하면
   /*
@@ -79,6 +81,7 @@ function App() {
             <Route path="/search/*" element={<Search />} />
             <Route path="/profile/:nickname" element={<Profile />} />
             <Route path="/profile/:nickname/edit" element={<ProfileUpdate />} />
+            <Route path="/place/:placeSeq" element={<Place />} />
             <Route path="/not-found" element={<NotFound />} />
           </Route>
         </Routes>

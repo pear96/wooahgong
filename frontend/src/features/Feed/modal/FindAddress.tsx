@@ -87,17 +87,63 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
             const lng = +result["0"].frontLon;
             // console.log(name);
             const {name} = result["0"];
-            // console.log(name, lat, lng);
-            const marker = new window.Tmapv2.Marker({
-                position : new window.Tmapv2.LatLng(lat, lng),
-                icon : My,
-                map
+            console.log(result["0"].newAddressList.newAddress[0].fullAddressRoad);
+            
+            axios({
+                method : 'GET',
+                url : "https://apis.openapi.sk.com/tmap/geo/reversegeocoding?version=1&format=json&callback=result",
+                params : {
+                    "appKey" : "l7xx76446024905c421fa3c63af0f5bb9175",
+                    "coordType" : "WGS84GEO",
+                    "addressType" : "A10",
+                    "lon" : lng,
+                    "lat" : lat
+                }
+            }).then((newresponse)=>{
+                console.log(markerRef.current);
+                if(markerRef.current !== null){
+                    
+                    console.log("???????????????????");
+                    markerRef.current.setMap(null);
+                }
+                const newresult = newresponse.data.addressInfo;
+                // const check = result.city_do+' '+result.gu_gun;
+                let resAdr = `${newresult.city_do} ${newresult.gu_gun} `;
+                const lastLegal = newresult.legalDong.charAt(newresult.legalDong.length-1);
+                if(lastLegal === '읍' || lastLegal === '면'){
+                    resAdr = `${resAdr}${newresult.legalDong} `;
+                }
+                else if(newresult.eup_myun !==''){
+                    console.log("????왜 실행됨??", lastLegal);
+                    resAdr = `${resAdr}${newresult.eup_myun} `;
+                }
+                resAdr = `${resAdr}${newresult.roadName} ${newresult.buildingIndex}`;
+                console.log(newresult, resAdr);
+                const marker = new window.Tmapv2.Marker({
+                    position : new window.Tmapv2.LatLng(lat, lng),
+                    icon : My,
+                    map
+                })
+                setMarkerList(marker);
+                setPosition({lat, lng});
+                setAddress(resAdr);
+                setCheck(true);
+                map.setCenter(new window.Tmapv2.LatLng(lat, lng));
             })
-            // console.log(marker);
-            setMarkerList(marker);
-            setPosition({lat, lng});
-            setCheck(true);
-            map.setCenter(new window.Tmapv2.LatLng(lat, lng));
+
+
+
+            // console.log(name, lat, lng);
+            // const marker = new window.Tmapv2.Marker({
+            //     position : new window.Tmapv2.LatLng(lat, lng),
+            //     icon : My,
+            //     map
+            // })
+            // // console.log(marker);
+            // setMarkerList(marker);
+            // setPosition({lat, lng});
+            // setCheck(true);
+            // map.setCenter(new window.Tmapv2.LatLng(lat, lng));
         })
         
     }
@@ -189,6 +235,12 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
             <section className={style.modalForm} onClick={handleStopEvent} onKeyDown={handleStopEvent} role="button" tabIndex={0}>
             <header>
                 <h3 className={style.title}>주소 등록 🚋</h3>
+                <h3 style={{
+                    fontSize: 12,
+                    fontFamily: 'NotoSansKR',
+                    marginBottom : 10,
+                    textAlign : "center",
+                }}>주소 검색은 정확하지 않을 수 있습니다 <br/>정확한 위치는 지도를 클릭하여 위치를 조정해주세요</h3>
             </header>
             <main>
                 <div className={style.configForm}>

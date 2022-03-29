@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
+import FeedApi from 'common/api/FeedApi';
 import { toast } from 'react-toastify';
 import FindAddress from './modal/FindAddress';
 import { feed, setImage, setType, Feed } from './feedReducer';
@@ -39,6 +40,9 @@ function FeedLast() {
     const [open, setIsOpen] = useState<boolean>(false);
     const [position, setPosition] = useState<{lat : number, lng : number}>();
     const feedstore = useSelector<ReducerType, Feed>((state) => state.feedReducer);
+    
+    const {getPlaceAddReulst} = FeedApi;
+    
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -101,7 +105,7 @@ function FeedLast() {
             else if (+e.target.value === 0 && score !== 1) setScore(1);
         }
     }
-    const handleClickRegist = (e : React.MouseEvent) => {
+    const handleClickRegist = async (e : React.MouseEvent) => {
         // api 요청 있는 곳
         if(feedstore.type){
             let count = 0;
@@ -152,8 +156,15 @@ function FeedLast() {
                     role: 'alert',
                 });
             }
-            
-            
+            else{
+                const body = {
+                    name : placeName, 
+                    address : placeAddres, 
+                    lat : position?.lat, 
+                    lng : position?.lng
+                }
+                getPlaceAddReulst(body);
+            }
         }
         // type false 경우
     }

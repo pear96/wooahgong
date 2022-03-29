@@ -13,7 +13,7 @@ const getProfile = async (nickname: string) => {
     .then((res) => {
       return res;
     })
-    .then((err) => {
+    .catch((err) => {
       return err;
     });
 };

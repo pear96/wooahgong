@@ -1,7 +1,11 @@
 import axios from 'axios';
 import { saveToken, getToken } from './JTW-Token';
 
+<<<<<<< HEAD
 const BASE_URL = 'https://j6a505.p.ssafy.io:8080/api/users';
+=======
+const BASE_URL = "https://j6a505.p.ssafy.io:8080/api/users"
+>>>>>>> b714c679bbefef02c8dea825f50298ff67c73307
 // const BASE_URL = "http://localhost:8080/api/users"
 
 const getEmailCheckResult = (body: { email: string }) => {

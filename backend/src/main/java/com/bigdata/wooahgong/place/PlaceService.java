@@ -48,6 +48,10 @@ public class PlaceService {
             throw new CustomException(ErrorCode.WRONG_DATA);
         }
 
+        // 위도 경도 중복 검사
+        placeRepository.findByLatitudeAndLongitude(lat,lng).orElseThrow(() ->
+                new CustomException(ErrorCode.DUPLICATE_RESOURCE));
+
         // 장소를 생성한다.
         Place newPlace = Place.builder()
                 .user(user)

@@ -186,8 +186,8 @@ function FeedLast() {
                         ratings : score,
                         moods : atmos.map(v => v.title)
                     }
-                    formData.append("data", new Blob([JSON.stringify(data)], {type : "application/json"}) );
-                    const res = await getFeedAddResult(formData);
+                    formData.append("data", new Blob([JSON.stringify(data)], {type : "application/x-www-form-urlencoded"}) );
+                    const res = await getFeedAddResult(data);
                 }
             }
         }

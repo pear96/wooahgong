@@ -41,7 +41,7 @@ function FeedLast() {
     const [position, setPosition] = useState<{lat : number, lng : number}>();
     const feedstore = useSelector<ReducerType, Feed>((state) => state.feedReducer);
     
-    const {getPlaceAddReulst} = FeedApi;
+    const {getPlaceAddReulst, getFeedAddResult} = FeedApi;
     
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -163,7 +163,19 @@ function FeedLast() {
                     lat : position?.lat, 
                     lng : position?.lng
                 }
-                getPlaceAddReulst(body);
+                const result = await getPlaceAddReulst(body);
+                if(result?.status === 409){
+                    toast.error(<div style={{ width: 'inherit', fontSize: '14px' }}>해당 위치(좌표)에 등록된 장소가 있습니다. 위치를 조정해주세요</div>, {
+                        position: toast.POSITION.TOP_CENTER,
+                        role: 'alert',
+                    });
+                }
+                else if(result?.status === 200){
+                    const formData = new FormData();
+                    const data = {
+                        placeSeq : result.placeSeq,
+                    }
+                }
             }
         }
         // type false 경우

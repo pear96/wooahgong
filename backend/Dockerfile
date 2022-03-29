@@ -10,4 +10,5 @@ RUN cp /homepage/properties/keystore.p12 /homepage/src/main/resources/
 RUN chmod +x ./gradlew
 RUN ./gradlew build
 RUN cp /homepage/build/libs/*.jar /homepage/
+EXPOSE 8080
 CMD java -jar backend-1.0-SNAPSHOT.jar

@@ -1,8 +1,8 @@
 import axios from "axios";
 import {saveToken, getToken} from "./JTW-Token";
 
-const BASE_URL = "https://j6a505.p.ssafy.io:8080/api/feed";
-const PLACE_URL = "https://j6a505.p.ssafy.io:8080/api/place";
+const BASE_URL = "http://localhost:8080/api/feed";
+const PLACE_URL = "http://localhost:8080/api/place";
 const token = getToken();
 
 const getPlaceAddReulst = async (body : {name : string, address : string, lat : number | undefined, lng : number | undefined}) => {
@@ -28,11 +28,13 @@ const getPlaceAddReulst = async (body : {name : string, address : string, lat : 
     }
     return null;
 }
-const getFeedAddResult = async (body : FormData) => {
-    console.log(body);
+const getFeedAddResult = async (data : FormData) => {
+    // for (var pair of body.entries()) {
+    //     console.log(pair[0]+ ', ' + pair[1]);
+    // }
     if(token){
-        console.log("된거니??");
-        const result = await axios.post(`${BASE_URL}`, body, {
+        
+        const result = await axios.post(`${BASE_URL}`, data, {
             
             headers : {Authorization: token, 'Content-type' : "multipart/form-data"}
         }).then((response)=>{

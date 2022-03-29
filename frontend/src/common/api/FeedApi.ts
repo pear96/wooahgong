@@ -1,8 +1,8 @@
 import axios from "axios";
 import {saveToken, getToken} from "./JTW-Token";
 
-const BASE_URL = "http://localhost:8080/api/feed";
-const PLACE_URL = "http://localhost:8080/api/place";
+const BASE_URL = "https://j6a505.p.ssafy.io//api/feed";
+const PLACE_URL = "https://j6a505.p.ssafy.io//api/place";
 const token = getToken();
 
 const getPlaceAddReulst = async (body : {name : string, address : string, lat : number | undefined, lng : number | undefined}) => {

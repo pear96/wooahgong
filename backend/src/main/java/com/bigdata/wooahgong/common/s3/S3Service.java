@@ -47,10 +47,10 @@ public class S3Service {
                 withRegion(this.region).build();
     }
 
-    public List<String> uploadImg(List<MultipartFile> files,String command) throws IOException {
+    public List<String> uploadImg(List<MultipartFile> files, String command) throws IOException {
         List<String> imgList = new ArrayList<>();
-        for (MultipartFile file : files){
-            String fileName = UUID.randomUUID() + file.getOriginalFilename();
+        for (MultipartFile file : files) {
+            String fileName = "/static" + command + UUID.randomUUID() + file.getOriginalFilename();
             System.out.println(fileName + " " + file.getInputStream());
             //s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), null).withCannedAcl(CannedAccessControlList.PublicRead));
             java.util.Date expiration = new java.util.Date();
@@ -58,7 +58,7 @@ public class S3Service {
             expTime += 1000 * 60 * 60;
             expiration.setTime(expTime);
             //presigned url 생성
-            GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucket+"/static"+command, fileName).withMethod(HttpMethod.PUT).withExpiration(expiration);
+            GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucket, fileName).withMethod(HttpMethod.PUT).withExpiration(expiration);
 
             URL url = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
 

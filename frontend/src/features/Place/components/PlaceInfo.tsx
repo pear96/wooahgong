@@ -40,7 +40,7 @@ function PlaceInfo({ thumbnail, name, address, avgRatings, lat, lng, isWished }:
   const toggleBookmark = async () => {
     if (placeSeq !== undefined) {
       const result = await PlaceApi.bookmarkPlace(placeSeq);
-      setBookmarked(result.isWished);
+      if (result.status === 200) setBookmarked(result.isWished);
       // if (isBookmarked) setBookmarked(false);
       // else setBookmarked(true);
     }

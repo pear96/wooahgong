@@ -49,8 +49,10 @@ public class PlaceService {
         }
 
         // 위도 경도 중복 검사
-        placeRepository.findByLatitudeAndLongitude(lat,lng).orElseThrow(() ->
-                new CustomException(ErrorCode.DUPLICATE_RESOURCE));
+        Place place = placeRepository.findByLatitudeAndLongitude(lat,lng).orElseGet( null);
+        if(place != null){
+            throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
+        }
 
         // 장소를 생성한다.
         Place newPlace = Place.builder()

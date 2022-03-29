@@ -57,6 +57,9 @@ public class UserService {
 
     public String getEmailByToken(String token) {
         JWTVerifier verifier = JwtTokenUtil.getVerifier();
+        if("".equals(token)) {
+            throw new CustomException(ErrorCode.NOT_OUR_USER);
+        }
         JwtTokenUtil.handleError(token);
         DecodedJWT decodedJWT = verifier.verify(token.replace(JwtTokenUtil.TOKEN_PREFIX, ""));
         return decodedJWT.getSubject();

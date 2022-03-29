@@ -115,7 +115,7 @@ public class PlaceService {
         DetailPlaceRes detailPlaceRes = DetailPlaceRes.builder()
                 .name(place.getName())
                 .address(place.getAddress())
-                .avgRatings(avgRating)
+                .avgRatings(avgRating).latitude(place.getLatitude()).longitude(place.getLongitude())
                 .placeImageUrl(placeImageUrl)
                 .feeds(customFeeds)
                 .isWished(isWished)

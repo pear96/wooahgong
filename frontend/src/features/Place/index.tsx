@@ -77,7 +77,7 @@ function PlacePage() {
         />
         {/* <PlaceFeeds feeds={feeds} sortFeeds={criterion => handleSortFeeds(criterion)}/>
          */}
-        <PlaceFeeds />
+        <PlaceFeeds placeFeeds={place.feeds} />
       </div>
     </div>
   );

@@ -50,7 +50,7 @@ public class S3Service {
     public List<String> uploadImg(List<MultipartFile> files, String command) throws IOException {
         List<String> imgList = new ArrayList<>();
         for (MultipartFile file : files) {
-            String fileName = "/static" + command + UUID.randomUUID() + file.getOriginalFilename();
+            String fileName = "/static" + command + "/" + UUID.randomUUID() + file.getOriginalFilename();
             System.out.println(fileName + " " + file.getInputStream());
             //s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), null).withCannedAcl(CannedAccessControlList.PublicRead));
             java.util.Date expiration = new java.util.Date();

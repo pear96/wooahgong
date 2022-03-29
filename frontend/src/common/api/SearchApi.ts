@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getToken } from './JTW-Token';
 
-const BASE_URL = 'https://j6a505.p.ssafy.io:8080/api/search';
+const BASE_URL = 'https://j6a505.p.ssafy.io/api/search';
 const token = getToken();
 
 // 최근 검색어 조회

@@ -9,6 +9,7 @@ application-aws.properties
 application-db.properties
 application-social.properties
 application-email.properties
+application-ssl.properties
 ### STS ###
 .apt_generated
 .classpath

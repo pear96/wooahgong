@@ -1,7 +1,10 @@
 package com.bigdata.wooahgong.user.entity;
 
+import com.bigdata.wooahgong.comment.entity.Comment;
 import com.bigdata.wooahgong.common.util.BaseTimeEntity;
 import com.bigdata.wooahgong.feed.entity.Feed;
+import com.bigdata.wooahgong.place.entity.Place;
+import com.bigdata.wooahgong.place.entity.PlaceWish;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -46,14 +49,32 @@ public class User extends BaseTimeEntity {
     @JsonManagedReference // 순환 참조 방어
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserMood> userMoods = new ArrayList<>();
+    @JsonManagedReference // 순환 참조 방어
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+    @JsonManagedReference // 순환 참조 방어
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<CommentLike> commentLikes = new ArrayList<>();
+    @JsonManagedReference // 순환 참조 방어
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<FeedLike> feedLikes = new ArrayList<>();
+    @JsonManagedReference // 순환 참조 방어
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Place> places = new ArrayList<>();
+    @JsonManagedReference // 순환 참조 방어
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<PlaceWish> placeWishes = new ArrayList<>();
+    @JsonManagedReference // 순환 참조 방어
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<SearchHistory> searchHistories = new ArrayList<>();
 
     public void resetPwd(String password){
         this.password = password;
     }
     public void setAuthCode(String authCode) { this.authCode = authCode;}
+    public void setNickname(String nickname) { this.nickname = nickname;}
+    public void setMbti(String mbti){this.mbti = mbti;}
+    public void setImageUrl(String url){this.imageUrl = url;}
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//    @JsonManagedReference
-//    private List<History> histories = new ArrayList<>();
 }
 

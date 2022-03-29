@@ -198,7 +198,7 @@ public class SearchService {
 
     // 검색 결과 하나만 지우기
     @Transactional
-    public ResponseEntity<String> deleteOneSearchHistory(String token, Long historySeq) {
+    public ResponseEntity<SearchHistoriesRes> deleteOneSearchHistory(String token, Long historySeq) {
         // token이 유효한지 검사한다.
         User user = userService.getUserByToken(token);
 
@@ -209,6 +209,7 @@ public class SearchService {
 
         for (SearchHistory searchHistory : searchHistories) {
             if (searchHistory.getHistorySeq().equals(historySeq)) {
+                searchHistories.remove(searchHistory);
                 isMine = true;
                 break;
             }
@@ -219,6 +220,24 @@ public class SearchService {
 
         searchHistoryRepository.deleteByHistorySeq(historySeq);
 
-        return ResponseEntity.status(204).body("특정 검색 기록 제거");
+        List<SearchHistoryDto> recentSearchHistoriesExceptUser = new ArrayList<>();
+
+        // 사용자 정보를 제외하고 최신순 정렬
+        for (int i = searchHistories.size() - 1; i >= 0; i--) {
+            SearchHistory searchHistory = searchHistories.get(i);
+            SearchHistoryDto customSearchHistory = SearchHistoryDto.builder()
+                    .historySeq(searchHistory.getHistorySeq())
+                    .type(searchHistory.getType())
+                    .searchWord(searchHistory.getSearchWord())
+                    .imageUrl(searchHistory.getImageUrl())
+                    .placeSeq(searchHistory.getPlaceSeq())
+                    .build();
+            recentSearchHistoriesExceptUser.add(customSearchHistory);
+        }
+        SearchHistoriesRes searchHistoriesRes = SearchHistoriesRes.builder()
+                .recentSearches(recentSearchHistoriesExceptUser)
+                .build();
+
+        return ResponseEntity.status(200).body(searchHistoriesRes);
     }
 }

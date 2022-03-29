@@ -51,7 +51,7 @@ public class SearchController {
 
     // 특정 최근 검색어 삭제
     @DeleteMapping("/{history_seq}")
-    public ResponseEntity<String> deleteOneSearchHistory(@RequestHeader("Authorization") String token, @PathVariable Long history_seq) {
+    public ResponseEntity<SearchHistoriesRes> deleteOneSearchHistory(@RequestHeader("Authorization") String token, @PathVariable Long history_seq) {
         return searchService.deleteOneSearchHistory(token, history_seq);
     }
 }

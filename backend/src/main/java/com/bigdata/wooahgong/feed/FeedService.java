@@ -31,7 +31,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +57,7 @@ public class FeedService {
 //    }
 
     @Transactional
-    public String createFeed(String token, List<MultipartFile> images, CreateFeedReq createFeedReq) {
+    public Map<String,Long> createFeed(String token, List<MultipartFile> images, CreateFeedReq createFeedReq) {
         // 토큰으로 유저 찾기
         User user = userRepository.findByEmail(userService.getEmailByToken(token)).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_OUR_USER));
@@ -89,7 +91,9 @@ public class FeedService {
                     .imageUrl(url).build();
             feedImageRepository.save(feedImage);
         }
-        return null;
+        HashMap<String,Long> hm = new HashMap<>();
+        hm.put("FeedSeq",feed.getFeedSeq());
+        return hm;
     }
 
 

@@ -7,7 +7,7 @@ const token = getToken();
 
 const getPlaceAddReulst = async (body : {name : string, address : string, lat : number | undefined, lng : number | undefined}) => {
     // const token = getToken();
-    console.log(body);
+    console.log(body, token);
     if(token){
         const result = await axios.post(`${PLACE_URL}`, body, {headers : {Authorization: token}})
                                 .then((response)=>{
@@ -30,22 +30,25 @@ const getPlaceAddReulst = async (body : {name : string, address : string, lat : 
 }
 const getFeedAddResult = async (body : {
                                             placeSeq : number, 
-                                            images : any[], 
-                                            thumbnail : any, 
+                                            images : FormData, 
                                             content : string, 
                                             ratings : number, 
                                             moods : string[]}) => {
+    console.log(body);
     if(token){
+        console.log("된거니??");
         const result = await axios.post(`${BASE_URL}`, body, {
             headers : {Authorization: token}
         }).then((response)=>{
             const value = {
                 status : response.status
             }
+            return value;
         }).catch((e)=>{
             const value = {
                 status : 401
             }
+            return value;
         })
         return result;
     }

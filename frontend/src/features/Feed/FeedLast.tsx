@@ -164,17 +164,27 @@ function FeedLast() {
                     lng : position?.lng
                 }
                 const result = await getPlaceAddReulst(body);
+                console.log(result?.status);
                 if(result?.status === 409){
                     toast.error(<div style={{ width: 'inherit', fontSize: '14px' }}>해당 위치(좌표)에 등록된 장소가 있습니다. 위치를 조정해주세요</div>, {
                         position: toast.POSITION.TOP_CENTER,
                         role: 'alert',
                     });
                 }
-                else if(result?.status === 200){
+                else if(result?.status === 201){
+                    console.log("된거니?!?!?!?!");
                     const formData = new FormData();
+                    for(let i = 0; i < feedstore.image.length; i += 1){
+                        formData.append("images", feedstore.image[i]);
+                    }
                     const data = {
                         placeSeq : result.placeSeq,
+                        images : formData,
+                        content : desc,
+                        ratings : score,
+                        moods : atmos.map(v => v.title)
                     }
+                    const res = await getFeedAddResult(data);
                 }
             }
         }

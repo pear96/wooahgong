@@ -16,6 +16,7 @@ public enum ErrorCode {
     INVALID_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰이 유효하지 않습니다"),
     MISMATCH_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰의 유저 정보가 일치하지 않습니다"),
     CANNOT_FOLLOW_MYSELF(BAD_REQUEST, "자기 자신은 팔로우 할 수 없습니다"),
+    WRONG_DATA(BAD_REQUEST, "유효하지 않은 정보를 입력했습니다."),
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
     INVALID_AUTH_TOKEN(UNAUTHORIZED, "권한 정보가 없는 토큰입니다"),
@@ -33,6 +34,9 @@ public enum ErrorCode {
     REFRESH_TOKEN_NOT_FOUND(NOT_FOUND, "로그아웃 된 사용자입니다"),
     EMAIL_NOT_FOUND(NOT_FOUND, "해당 이메일을 찾을 수 없습니다"),
     DATA_NOT_FOUND(NOT_FOUND, "데이터를 찾을 수 없습니다."),
+    PLACE_NOT_FOUND(NOT_FOUND, "해당 장소를 찾을 수 없습니다"),
+    FEED_NOT_FOUND(NOT_FOUND, "해당 피드를 찾을 수 없습니다"),
+    MOOD_NOT_FOUND(NOT_FOUND, "해당 분위기를 찾을 수 없습니다"),
 
     /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     DUPLICATE_RESOURCE(CONFLICT, "데이터가 이미 존재합니다"),

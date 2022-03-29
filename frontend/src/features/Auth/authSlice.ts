@@ -3,8 +3,6 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { saveToken } from '../../common/api/JTW-Token';
 
-
-
 // 일반 login
 export interface Data {
   id: string;

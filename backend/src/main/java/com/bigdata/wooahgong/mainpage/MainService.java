@@ -2,25 +2,38 @@ package com.bigdata.wooahgong.mainpage;
 
 import com.bigdata.wooahgong.mainpage.dtos.request.GetMapReq;
 import com.bigdata.wooahgong.place.entity.Place;
+import com.bigdata.wooahgong.place.repository.PlaceRepository;
+import com.bigdata.wooahgong.search.dtos.response.SearchPlaceDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MainService {
-    public List<Place> getMap(GetMapReq getMapReq) {
+    private final PlaceRepository placeRepository;
+
+    public List<SearchPlaceDto> getMap(GetMapReq getMapReq) {
         int radius = getMapReq.getRadius();
         Double lat = getMapReq.getLat();
         Double lng = getMapReq.getLng();
-        List<Place> answers = new ArrayList<>();
+        List<SearchPlaceDto> answers = new ArrayList<>();
 
-        // 킬로미터(Kilo Meter) 단위
-        double distanceKiloMeter =
-                distance(lat, lng, 37.6264146, 126.70673858, "kilometer");
-
-        System.out.println(distanceKiloMeter);
-
+        List<Place> places = placeRepository.findAll();
+        for (Place place : places) {
+            // 킬로미터(Kilo Meter) 단위
+            double distanceKiloMeter =
+                    distance(lat, lng, place.getLatitude(), place.getLongitude(), "meter");
+            if (distanceKiloMeter < radius) {
+                // 피드 맨 최근꺼 사진 첫번째꺼 가져오기
+                String url = place.getFeeds().get(place.getFeeds().size() - 1).getThumbnail();
+                answers.add(SearchPlaceDto.builder()
+                        .address(place.getAddress()).placeSeq(place.getPlaceSeq())
+                        .name(place.getName()).imageUrl(url).build());
+            }
+        }
         return answers;
     }
 
@@ -35,7 +48,7 @@ public class MainService {
 
         if (unit == "kilometer") {
             dist = dist * 1.609344;
-        } else if(unit == "meter"){
+        } else if (unit == "meter") {
             dist = dist * 1609.344;
         }
 

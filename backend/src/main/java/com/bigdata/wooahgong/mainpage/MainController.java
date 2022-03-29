@@ -1,7 +1,7 @@
 package com.bigdata.wooahgong.mainpage;
 
 import com.bigdata.wooahgong.mainpage.dtos.request.GetMapReq;
-import com.bigdata.wooahgong.place.entity.Place;
+import com.bigdata.wooahgong.search.dtos.response.SearchPlaceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import java.util.List;
 public class MainController {
     private final MainService mainService;
     @PostMapping("/map")
-    public ResponseEntity<List<Place>> getMap(@RequestBody GetMapReq getMapReq) {
+    public ResponseEntity<List<SearchPlaceDto>> getMap(@RequestBody GetMapReq getMapReq) {
         return new ResponseEntity<>(mainService.getMap(getMapReq), HttpStatus.OK);
     }
 }

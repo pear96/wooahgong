@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Row, Col, Rate } from 'antd';
 import styled from 'styled-components';
-import { BsBookmarkHeartFill, BsBookmarkHeart, BsShare, BsPinMap } from 'react-icons/bs';
+import { BsBookmarkHeartFill, BsBookmarkHeart, BsPinMap } from 'react-icons/bs';
 import { MdOutlineCreate } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
@@ -18,7 +18,7 @@ import PlaceApi from 'common/api/PlaceApi';
 import { setAddress, setName, setPlaceSeq, setRegistered } from '../reducers/PlaceReducter';
 import KakaoShareIcon from './KakaoShareIcon';
 
-function PlaceInfo({ thumbnail, name, address, avgRatings, isWished }: any) {
+function PlaceInfo({ thumbnail, name, address, avgRatings, lat, lng, isWished }: any) {
   const { placeSeq } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -37,12 +37,12 @@ function PlaceInfo({ thumbnail, name, address, avgRatings, isWished }: any) {
     };
   }, []);
 
-  const toggleBookmark = () => {
+  const toggleBookmark = async () => {
     if (placeSeq !== undefined) {
-      PlaceApi.bookmarkPlace(placeSeq);
-
-      if (isBookmarked) setBookmarked(false);
-      else setBookmarked(true);
+      const result = await PlaceApi.bookmarkPlace(placeSeq);
+      if (result.status === 200) setBookmarked(result.isWished);
+      // if (isBookmarked) setBookmarked(false);
+      // else setBookmarked(true);
     }
     // TODO: axios 호출
     // const token = localStorage.getItem('Token');
@@ -61,6 +61,11 @@ function PlaceInfo({ thumbnail, name, address, avgRatings, isWished }: any) {
     dispatch(setAddress(address));
 
     navigate('/report');
+  };
+
+  const viewOnMap = () => {
+    // navigate(`/map?lat=${lat}/lng='${lng}`);
+    navigate(`/map`, { state: { lat, lng } });
   };
 
   return (
@@ -88,7 +93,7 @@ function PlaceInfo({ thumbnail, name, address, avgRatings, isWished }: any) {
             {/* <BsShare /> */}
           </Icon>
           <Icon>
-            <BsPinMap />
+            <BsPinMap onClick={viewOnMap} />
           </Icon>
         </Icons>
       </Row>

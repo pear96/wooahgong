@@ -33,6 +33,18 @@ pipeline {
                     }
                 }
             }
+            stage('Bigdata image') {
+              // agent = 이 파이프라인 스크립트를 실행할 executor를 지정합니다. any로 두면 어떤 executor도 실행할 수 있다는 의미가 됩니다.
+                agent any
+              // steps에선 실제로 실행할 쉘이나 syntax를 입력해주면 됩니다.
+                steps {
+                    dir("bigdata") {
+                    sh 'pwd'
+                    sh 'echo 파이썬 빌드를 실행합니다.'
+                    sh 'docker build -t wooahgong-bigdata:latest /var/jenkins_home/workspace/wooahgong/bigdata'
+                    }
+                }
+            }
         }
     }
     stage('Docker run') {
@@ -45,7 +57,8 @@ pipeline {
                     sh 'docker container ls -a -f name=wooahgong-front -q | xargs -r docker container rm'
                     sh 'docker run -d --name wooahgong-front -p 80:80 -p 443:443 \
                     -v /home/ubuntu/sslkey/:/var/jenkins_home/workspace/wooahgong/sslkey/ \
-                    -v /etc/localtime:/etc/localtime:ro \
+                    -v /etc/letsencrypt/:/etc/letsencrypt/ \
+                    -e TZ=Asia/Seoul \
                     wooahgong-front:latest'
                 }
                 }
@@ -56,7 +69,21 @@ pipeline {
                     dir("backend"){
                     sh 'docker ps -f name=wooahgong-back -q | xargs --no-run-if-empty docker container stop'
                     sh 'docker container ls -a -f name=wooahgong-back -q | xargs -r docker container rm'
-                    sh 'docker run -d --name wooahgong-back -p 8080:8080 wooahgong-back:latest'
+                    sh 'docker run -d --name wooahgong-back -p 8080:8080 \
+                    -e TZ=Asia/Seoul \
+                    wooahgong-back:latest'
+                }
+                }
+            }
+            stage('Bigdata Container') {
+                agent any
+                steps {
+                    dir("bigdata"){
+                    sh 'docker ps -f name=wooahgong-bigdata -q | xargs --no-run-if-empty docker container stop'
+                    sh 'docker container ls -a -f name=wooahgong-bigdata -q | xargs -r docker container rm'
+                    sh 'docker run -d --name wooahgong-bigdata -p 8000:8000 \
+                    -e TZ=Asia/Seoul \
+                    wooahgong-bigdata:latest'
                 }
                 }
             }

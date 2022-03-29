@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin("*")
 @RestController
@@ -32,9 +33,9 @@ public class FeedController {
 //    }
     // 피드 쓰기
     @PostMapping
-    public ResponseEntity<String> createFeed(@RequestHeader("Authorization") String token,
-                                             @RequestPart(value = "images", required = false) List<MultipartFile> images,
-                                             @RequestPart(value = "data") CreateFeedReq createFeedReq) {
+    public ResponseEntity<Map<String, Long>> createFeed(@RequestHeader("Authorization") String token,
+                                          @RequestPart(value = "images", required = false) List<MultipartFile> images,
+                                          @RequestPart(value = "data") CreateFeedReq createFeedReq) {
         return new ResponseEntity<>(feedService.createFeed(token, images, createFeedReq), HttpStatus.OK);
     }
     // 피드 상세보기

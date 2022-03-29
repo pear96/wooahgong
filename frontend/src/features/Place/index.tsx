@@ -13,6 +13,8 @@ const dummyPlace = {
   address: '서울특별시 어쩌구 저쩌구',
   avgRatings: 3.64, // 피드들의 평균 평점
   isWished: true,
+  lat: 37.50133339807373,
+  lng: 127.03966018181657,
   feeds: [
     {
       feedSeq: 1,
@@ -34,26 +36,44 @@ const dummyPlace = {
 };
 
 function PlacePage() {
-  const [feeds, setFeeds] = useState<any>(dummyPlace.feeds);
+  // const [placeImageUrl, setPlaceImageUrl] = useState<string>('');
+  // const [name, setName] = useState<string>('');
+  // const [address, setAddress] = useState<string>('');
+  // const [avgRatings, setAvgRatings] = useState<number>();
+  // const [isWished, setWished] = useState<boolean>();
+  // const [lat, setLat] = useState<number>();
+  // const [lng, setLng] = useState<number>();
+  // const [feeds, setFeeds] = useState<any>(null);
+  const [place, setPlace] = useState<any>();
   const { placeSeq } = useParams();
 
   useEffect(() => {
-    if (placeSeq !== undefined) {
-      const result = PlaceApi.readPlace(placeSeq);
-      console.log(result);
-    }
+    const readPlaceApi = async () => {
+      if (placeSeq !== undefined) {
+        const result = await PlaceApi.readPlace(placeSeq);
+        if (result.status === 200) {
+          console.log(result);
+
+          setPlace(result.data);
+        }
+      }
+    };
+
+    readPlaceApi();
   }, []);
 
   return (
     <div>
       <div style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '1024px' }}>
-        <PlaceThumbnail thumbnail={dummyPlace.placeImageUrl} />
+        <PlaceThumbnail thumbnail={place.placeImageUrl} />
         <PlaceInfo
-          thumbnail={dummyPlace.placeImageUrl}
-          name={dummyPlace.name}
-          address={dummyPlace.address}
-          avgRatings={dummyPlace.avgRatings}
-          isWished={dummyPlace.isWished}
+          thumbnail={place.placeImageUrl}
+          name={place.name}
+          address={place.address}
+          avgRatings={place.avgRatings}
+          lat={place.latitude}
+          lng={place.longitude}
+          isWished={place.isWished}
         />
         {/* <PlaceFeeds feeds={feeds} sortFeeds={criterion => handleSortFeeds(criterion)}/>
          */}

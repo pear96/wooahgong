@@ -59,29 +59,31 @@ const Input = styled.input`
 function SearchBar({ keyword, results, updateField }: any) {
   const dispatch = useAppDispatch();
   const [isOpen, setIsOpen] = useState(false);
+  const [nickname, setNickname] = useState('');
 
   const onClickToggle = useCallback(() => {
     setIsOpen((prev) => !prev);
   }, []);
 
-  console.log(results);
   // 자동완성 구현
   const updateText = useCallback((text: any) => {
-    // console.log(keyword);
-    // console.log('update text', text);
     updateField('keyword', text, false);
     updateField('results', []);
   }, []);
 
   let renderResults: any;
-  const arr: any[] = results.results;
+  const arr: any[] = results;
   if (arr) {
     // arr 에 검색어에 대한 결과가 담기면, SearchView 호출
     renderResults = arr.map((item: any) => {
-      console.log(item.name);
-      return <SearchView updateText={updateText} name={item.name} key={item.code} img={item.img} />;
+      // console.log(item.name);
+      return <SearchView updateText={updateText} name={item.name} key={item.placeSeq} img={item.imageUrl} />;
     });
   }
+
+  useEffect(() => {
+    return setIsOpen(false);
+  }, [keyword]);
 
   const propsTofunction = useCallback((e) => {
     updateField('keyword', e.target.value);
@@ -91,7 +93,6 @@ function SearchBar({ keyword, results, updateField }: any) {
     dispatch(setToggle(isOpen));
   }, [isOpen]);
 
-  console.log(arr);
   useEffect(() => {
     dispatch(setAutoComplete(arr as any));
   }, [results]);

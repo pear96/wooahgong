@@ -101,7 +101,7 @@ public class EmailService {
     };
 
     // 회원가입시 이메일 발송
-    public ResponseEntity<Object> checkEmailForSignup(String email) throws Exception {
+    public ResponseEntity<String> checkEmailForSignup(String email) throws Exception {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
             // 해당 이메일을 가진 사용자가 존재한다면 에러를 발생한다.
@@ -153,7 +153,7 @@ public class EmailService {
 
 
     // 회원가입시 email 테이블의 이메일과 인증 코드 일치 여부 확인
-    public ResponseEntity checkEmailAuthCodeForSignup(String email, String authCode) {
+    public ResponseEntity<String> checkEmailAuthCodeForSignup(String email, String authCode) {
         Optional<Email> checkingEmail = emailRepository.findByEmail(email);
         // 지금 입력한 이메일이 DB에 없을 수는 없다고 생각하지만
         // 혹시 모르니까 테스트 해본다.
@@ -176,7 +176,7 @@ public class EmailService {
     }
 
     // 비밀번호 수정시 user 테이블의 이메일과 인증 코드 일치 여부 확인
-    public ResponseEntity checkEmailAuthCodeForPassword(User user, String authCode) {
+    public ResponseEntity<String> checkEmailAuthCodeForPassword(User user, String authCode) {
         // 입력한 인증 코드와 인증 번호가 다르다면 오류 발생
         if (!user.getAuthCode().equals(authCode)) {
             throw new CustomException(ErrorCode.FAILED_AUTH_EMAIL);

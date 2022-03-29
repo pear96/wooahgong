@@ -4,7 +4,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.bigdata.wooahgong.common.exception.CustomException;
 import com.bigdata.wooahgong.common.exception.ErrorCode;
-import com.bigdata.wooahgong.common.s3.S3Uploader;
+import com.bigdata.wooahgong.common.s3.S3Service;
 import com.bigdata.wooahgong.common.util.JwtTokenUtil;
 import com.bigdata.wooahgong.email.EmailService;
 import com.bigdata.wooahgong.feed.entity.Feed;
@@ -38,6 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +54,7 @@ public class UserService {
     private final PlaceWishRepository placeWishRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
-    private final S3Uploader s3Uploader;
+    private final S3Service s3Service;
 
     public String getEmailByToken(String token) {
         JWTVerifier verifier = JwtTokenUtil.getVerifier();
@@ -281,7 +282,12 @@ public class UserService {
                 new CustomException(ErrorCode.NOT_OUR_USER));
         List<MultipartFile> images = new ArrayList<>();
         images.add(image);
-        List<String> urls = s3Uploader.upload(images, "static", "profile");
+        List<String> urls = null;
+        try {
+            urls = s3Service.uploadImg(images, "/profile");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         String url = urls.get(0);
         user.setImageUrl(url);
         return url;

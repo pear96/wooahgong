@@ -32,7 +32,7 @@ public class FeedController {
 //        return new ResponseEntity<>(feedService.getFeedsTrend(token.split(" ")[1]), HttpStatus.OK);
 //    }
     // 피드 쓰기
-    @PostMapping
+    @PostMapping(consumes = {"multipart/form-data", "application/json"})
     public ResponseEntity<Map<String, Long>> createFeed(@RequestHeader("Authorization") String token,
                                           @RequestPart(value = "images", required = false) List<MultipartFile> images,
                                           @RequestPart(value = "data") CreateFeedReq createFeedReq) {

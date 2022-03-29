@@ -8,7 +8,6 @@ import java.util.List;
 @Data
 public class CreateFeedReq {
     private Long placeSeq;
-    private String address;
     private String content;
     private Double ratings;
     private List<Mood> moods;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   PlaceFeedsWrapper,
@@ -55,23 +55,36 @@ const dummyPopularFeeds = [
   },
 ];
 
-function PlaceFeeds({ placeFeeds }: any) {
-  const { placeSeq } = useParams<string>();
+type MyProps = {
+  placeFeeds : {
+    feedSeq : number,
+    thumbnail : string
+  }
+}
+
+function PlaceFeeds({ placeFeeds }: MyProps) {
+  
+  const {placeSeq} = useParams();
   const [feeds, setFeeds] = useState<any>(placeFeeds);
+  const navigate = useNavigate();
+
 
   const sortFeeds = async (value: string) => {
     // TODO: axios
     console.log(`selected ${value}`);
-    if (placeSeq !== undefined) {
-      if (value === 'latest') {
-        const result = await PlaceApi.getLatestFeeds(placeSeq);
-        if (result.status === 200) setFeeds(result.data.feeds);
-      } else if (value === 'popular') {
-        const result = await PlaceApi.getPopularFeeds(placeSeq);
-        if (result.status === 200) setFeeds(result.data.feeds);
-      }
-    }
+    // if (placeSeq !== undefined) {
+    //   // if (value === 'latest') {
+    //   //   const result = await PlaceApi.getLatestFeeds(placeSeq);
+    //   //   if (result?.status === 200) setFeeds(result.data.feeds);
+    //   // } else if (value === 'popular') {
+    //   //   const result = await PlaceApi.getPopularFeeds(placeSeq);
+    //   //   if (result.status === 200) setFeeds(result.data.feeds);
+    //   // }
+    // }
   };
+  const handleClickFeed = (value : number | string) =>{
+      navigate(`/place/${placeSeq}/feeds/${value}`)
+  }
 
   return (
     <PlaceFeedsWrapper>
@@ -82,9 +95,9 @@ function PlaceFeeds({ placeFeeds }: any) {
         </Select>
       </SortOption>
       <PlaceFeedsGrid>
-        {feeds.map((feed: any) => (
+        {feeds.map((feed: {feedSeq : number, thumbnail : string}) => (
           // <FeedWrapper>
-          <FeedImageWrapper>
+          <FeedImageWrapper onClick={() => handleClickFeed(feed.feedSeq)}>
             <FeedImage src={feed.thumbnail} alt="" />
           </FeedImageWrapper>
           // </FeedWrapper>

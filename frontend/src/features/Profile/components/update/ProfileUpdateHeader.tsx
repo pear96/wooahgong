@@ -13,11 +13,11 @@ import { useSelector } from 'react-redux';
 import { ReducerType } from 'app/rootReducer';
 
 interface InfoPropTypes {
-  newPassword: string;
-  newPasswordCheck: string;
-  newNickname: string;
-  newMbti: string;
-  newMoods: string[];
+  newPassword: string | undefined;
+  newPasswordCheck: string | undefined;
+  newNickname: string | undefined;
+  newMbti: string | undefined;
+  newMoods: string[] | undefined;
 }
 
 function ProfileUpdateHeader({ newPassword, newPasswordCheck, newNickname, newMbti, newMoods }: InfoPropTypes) {
@@ -28,7 +28,7 @@ function ProfileUpdateHeader({ newPassword, newPasswordCheck, newNickname, newMb
       message.error('비밀번호가 다릅니다');
       return;
     }
-    if (newMoods.length < 1 || newMoods.length > 2) {
+    if (newMoods !== undefined && (newMoods.length < 1 || newMoods.length > 2)) {
       message.error('관심 분위기는 최소 1개 최대 2개 설정해야 합니다.');
       return;
     }

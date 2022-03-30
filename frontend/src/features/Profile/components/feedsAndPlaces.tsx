@@ -1,9 +1,11 @@
 import React from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Tabs } from 'antd';
 import { BsGrid3X3, BsHeart, BsBookmarkHeart } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReducerType } from 'app/rootReducer';
 import styled from 'styled-components';
+import ProfileApi from 'common/api/ProfileApi';
 import { FeedsAndPlacesWrapper } from '../styles/StyledFeedsAndPlaces';
 import ProfileFeeds from './ProfileFeeds';
 import ProfilePlaces from './ProfilePlaces';
@@ -55,20 +57,60 @@ const dummyPlaces = [
 ];
 
 function FeedsAndPlaces() {
+  const { nickname } = useParams<string>();
   const { feeds } = useSelector((state: ReducerType) => state.profileFeed);
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const getMyFeedsApi = async () => {
+    if (nickname !== undefined) {
+      const result = await ProfileApi.getMyFeeds(nickname);
+
+      if (result.status === 200) {
+        dispatch(setFeeds(result.data));
+      } else {
+        navigate('/not-found');
+      }
+    }
+  };
+
+  const getLikedFeedsApi = async () => {
+    if (nickname !== undefined) {
+      const result = await ProfileApi.getLikedFeeds(nickname);
+
+      if (result.status === 200) {
+        dispatch(setFeeds(result.data));
+      } else {
+        navigate('/not-found');
+      }
+    }
+  };
+
+  const getWishedFeedsApi = async () => {
+    if (nickname !== undefined) {
+      const result = await ProfileApi.getWishedFeeds(nickname);
+
+      if (result.status === 200) {
+        dispatch(setFeeds(result.data));
+      } else {
+        navigate('/not-found');
+      }
+    }
+  };
 
   const setFeedsOrPlaces = (key: string) => {
     switch (key) {
       case '1':
-        dispatch(setFeeds(dummyFeeds));
+        getMyFeedsApi();
+        // dispatch(setFeeds(dummyFeeds));
         break;
       case '2':
-        dispatch(setFeeds(dummyFeeds));
+        getLikedFeedsApi();
+        // dispatch(setFeeds(dummyFeeds));
         break;
       case '3':
-        dispatch(setPlaces(dummyPlaces));
+        getWishedFeedsApi();
+        // dispatch(setPlaces(dummyPlaces));
         break;
       default:
         break;

@@ -6,35 +6,6 @@ import PlaceThumbnail from './components/PlaceThumbnail';
 import PlaceInfo from './components/PlaceInfo';
 import PlaceFeeds from './components/PlaceFeeds';
 
-const dummyPlace = {
-  // 피드 0번 인덱스의 사진을 썸네일 활용
-  placeImageUrl: 'https://picsum.photos/640/320',
-  name: '장소이름',
-  address: '서울특별시 어쩌구 저쩌구',
-  avgRatings: 3.64, // 피드들의 평균 평점
-  isWished: true,
-  lat: 37.50133339807373,
-  lng: 127.03966018181657,
-  feeds: [
-    {
-      feedSeq: 1,
-      thumbnail: 'https://picsum.photos/640/260',
-    },
-    {
-      feedSeq: 2,
-      thumbnail: 'https://picsum.photos/640/300',
-    },
-    {
-      feedSeq: 3,
-      thumbnail: 'https://picsum.photos/640/340',
-    },
-    {
-      feedSeq: 4,
-      thumbnail: 'https://picsum.photos/640/380',
-    },
-  ],
-};
-
 function PlacePage() {
   // const [placeImageUrl, setPlaceImageUrl] = useState<string>('');
   // const [name, setName] = useState<string>('');
@@ -44,40 +15,49 @@ function PlacePage() {
   // const [lat, setLat] = useState<number>();
   // const [lng, setLng] = useState<number>();
   // const [feeds, setFeeds] = useState<any>(null);
-  const [place, setPlace] = useState<any>();
+  const [place, setPlace] = useState<{
+    address : string, 
+    avgRatings : number, 
+    feeds : {
+      feedSeq : number, 
+      thumbnail : string
+    }, 
+    isWished : boolean, 
+    latitude : number, 
+    longitude : number, 
+    name : string, 
+    placeImageUrl : string}>();
   const { placeSeq } = useParams();
+  const readPlaceApi = async () => {
+    if (placeSeq !== undefined) {
+      const result = await PlaceApi.readPlace(placeSeq);
+      console.log(result)
+      if (result?.status === 200) {
+        console.log(result);
 
-  useEffect(() => {
-    const readPlaceApi = async () => {
-      if (placeSeq !== undefined) {
-        const result = await PlaceApi.readPlace(placeSeq);
-        if (result.status === 200) {
-          console.log(result);
-
-          setPlace(result.data);
-        }
+        setPlace(result.data);
       }
-    };
-
+    }
+  };
+  
+  useEffect(() => {
     readPlaceApi();
-  }, []);
+  },[]);
 
   return (
     <div>
       <div style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '1024px' }}>
-        <PlaceThumbnail thumbnail={place.placeImageUrl} />
-        <PlaceInfo
-          thumbnail={place.placeImageUrl}
-          name={place.name}
-          address={place.address}
-          avgRatings={place.avgRatings}
-          lat={place.latitude}
-          lng={place.longitude}
-          isWished={place.isWished}
-        />
-        {/* <PlaceFeeds feeds={feeds} sortFeeds={criterion => handleSortFeeds(criterion)}/>
-         */}
-        <PlaceFeeds placeFeeds={place.feeds} />
+        {place === undefined ? (<>로딩중</>) 
+        : (
+          <>
+            <PlaceThumbnail thumbnail={place.placeImageUrl} />
+            <PlaceInfo placeInfo={place}
+            />
+            {/* <PlaceFeeds feeds={feeds} sortFeeds={criterion => handleSortFeeds(criterion)}/>
+            */}
+            <PlaceFeeds placeFeeds={place.feeds} />
+        </>
+        )}
       </div>
     </div>
   );

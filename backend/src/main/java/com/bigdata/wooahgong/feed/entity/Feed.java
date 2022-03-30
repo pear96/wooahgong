@@ -10,12 +10,14 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Setter
 @Getter
 @NoArgsConstructor
 public class Feed extends BaseTimeEntity {
@@ -44,14 +46,14 @@ public class Feed extends BaseTimeEntity {
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<FeedImage> feedImages = new ArrayList<>();
-    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<FeedMood> feedMoods = new ArrayList<>();
 
-    public void updateContent(String content){
+    public void updateContent(String content) {
         this.content = content;
     }
 

@@ -2,8 +2,9 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Slider from "react-slick";
-import { useNavigate } from 'react-router-dom';
-import { feed, setImage, setType, Feed } from './feedReducer';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { feed, setImage, setType, Feed, setPlace } from './feedReducer';
+
 import { ReducerType } from '../../app/rootReducer';
 
 
@@ -97,6 +98,13 @@ const ActiveButton = styled.button`
         transform: translateY(-7px);
     }
 `;
+interface Location {
+    placeSeq : number,
+    flag : boolean,
+    name : string,
+    address : string
+}
+
 
 function FeedImage() {
 
@@ -104,6 +112,9 @@ function FeedImage() {
     const [preview, setPreview] = useState<string[]>([]);
     
     const feedstore = useSelector<ReducerType, Feed>((state) => state.feedReducer);
+    // const placestore = useSelector<ReducerType, PlaceInterface>((state) => state.PlaceReducer);
+    const location = useLocation();
+    const state = location.state as Location;
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -130,8 +141,21 @@ function FeedImage() {
     const handleNextStep = (e : React.MouseEvent) => {
         e.preventDefault();
         dispatch(setImage(images));
-        navigate(`/report/searchplace`);
-        console.log(images, preview);
+        if(state !== null && state.flag){
+            const body = {
+                placeSeq : state.placeSeq,
+                name : state.name,
+                address : state.address
+            }
+            dispatch(setPlace(body));
+            dispatch(setType(true));
+            // dispatch(setRegistered(false));
+            navigate(`/report/final`);
+        }
+        else{
+            navigate(`/report/searchplace`);
+            console.log(images, preview);
+        }
     }
     useEffect(()=>{
         if(feedstore.image.length > 0){

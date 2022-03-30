@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Col } from 'antd';
 
 export const PlaceInfoWrapper = styled.div`
-  margin: 2rem 1rem 0 1rem;
+  margin: 0.5rem 1rem 0 1rem;
 `;
 
 export const PlaceName = styled.div`
@@ -18,7 +18,7 @@ export const AverageRatings = styled.div`
 `;
 
 export const Address = styled.div`
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: bold;
 `;
 

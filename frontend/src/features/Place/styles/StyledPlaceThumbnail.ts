@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const PlaceThumbnailWrapper = styled.div`
-  margin-top: 2rem;
+  margin-top: 10px;
   display: flex;
   justify-content: center;
   /* align-items: center; */

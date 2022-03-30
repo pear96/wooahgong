@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Row, Col, Rate } from 'antd';
 import styled from 'styled-components';
 import { BsBookmarkHeartFill, BsBookmarkHeart, BsPinMap } from 'react-icons/bs';
@@ -15,7 +15,7 @@ import {
   Icon,
 } from 'features/Place/styles/StyledPlaceInfo';
 import PlaceApi from 'common/api/PlaceApi';
-import { setAddress, setName, setPlaceSeq, setRegistered } from '../reducers/PlaceReducter';
+import { setAddress, setName, setPlaceSeq, setRegistered } from '../reducers/PlaceReducer';
 import KakaoShareIcon from './KakaoShareIcon';
 
 
@@ -56,6 +56,7 @@ function PlaceInfo({placeInfo}: MyProps) {
     if (placeSeq !== undefined) {
       const result = await PlaceApi.bookmarkPlace(placeSeq);
       if (result.status === 200) setBookmarked(result.isWished);
+
     }
   };
 
@@ -70,7 +71,11 @@ function PlaceInfo({placeInfo}: MyProps) {
 
   const viewOnMap = () => {
     // navigate(`/map?lat=${lat}/lng='${lng}`);
-    navigate(`/map`, { state: { lat : placeInfo.latitude, lng : placeInfo.longitude } });
+    const sendData = {
+      name : placeInfo.name,
+
+    }
+    navigate(`/map`, { state: { placeSeq , ...placeInfo } });
   };
 
   return (

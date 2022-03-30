@@ -3,7 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Slider from "react-slick";
 import { useNavigate } from 'react-router-dom';
-import { feed, setImage, setType, Feed } from './feedReducer';
+import { feed, setImage, setType, Feed, setPlace } from './feedReducer';
+import { setAddress, setName, setPlaceSeq, setRegistered, PlaceInterface } from '../Place/reducers/PlaceReducer';
+
 import { ReducerType } from '../../app/rootReducer';
 
 
@@ -104,6 +106,7 @@ function FeedImage() {
     const [preview, setPreview] = useState<string[]>([]);
     
     const feedstore = useSelector<ReducerType, Feed>((state) => state.feedReducer);
+    const placestore = useSelector<ReducerType, PlaceInterface>((state) => state.PlaceReducer);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -130,8 +133,21 @@ function FeedImage() {
     const handleNextStep = (e : React.MouseEvent) => {
         e.preventDefault();
         dispatch(setImage(images));
-        navigate(`/report/searchplace`);
-        console.log(images, preview);
+        if(placestore.isRegistered){
+            const body = {
+                placeSeq : placestore.placeSeq,
+                name : placestore.name,
+                address : placestore.address
+            }
+            dispatch(setPlace(body));
+            dispatch(setType(true));
+            dispatch(setRegistered(false));
+            navigate(`/report/final`);
+        }
+        else{
+            navigate(`/report/searchplace`);
+            console.log(images, preview);
+        }
     }
     useEffect(()=>{
         if(feedstore.image.length > 0){

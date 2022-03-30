@@ -159,8 +159,15 @@ public class FeedService {
 
     public String deleteFeed(String token, Long feedSeq) {
         Feed feed = check(token, feedSeq);
+        Place place = feed.getPlace();
+        // 최후의 피드라면 장소도 같이 삭제
+        if(place.getFeeds().size() == 1){
+            feedRepository.delete(feed);
+            placeRepository.delete(place);
+            return "장소, 피드 삭제 완료";
+        }
         feedRepository.delete(feed);
-        return "수정 완료.";
+        return "삭제 완료.";
     }
 
     public Feed check(String token, Long feedSeq) {

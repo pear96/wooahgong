@@ -93,35 +93,44 @@ const getWishedFeeds = (nickname: string) => {
     });
 };
 
-const updateProfile = (
-  nickname: string,
-  data: { password: string; nickname: string; mbti: string; moods: string[] },
-) => {
+const updateProfile = (nickname: string, data: { nickname: string; mbti: string; moods: string[] }) => {
   return axios({
     method: 'PATCH',
     url: `${BASE_URL}/${nickname}`,
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${token}`, 'Access-Control-Allow-Methods': 'PATCH' },
     data,
   })
     .then((res) => {
       return res;
     })
     .catch((err) => {
+      console.log(`${BASE_URL}/${nickname}`);
+
       return err;
     });
 };
 
-const updateProfileImage = (nickname: string, data: { image: string }) => {
+const updateProfileImage = (nickname: string, data: FormData) => {
   return axios({
     method: 'PATCH',
     url: `${BASE_URL}/${nickname}/profileimg`,
-    headers: { Authorization: `Bearer ${token}` },
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${token}`,
+      'Access-Control-Allow-Origin': 'http://localhost:3000',
+      // 'Access-Control-Allow-Credentials': true,
+      'Access-Control-Allow-Methods': 'PATCH',
+      // 'Access-Control-Allow-Headers':
+      //   'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers',
+    },
     data,
   })
     .then((res) => {
       return res;
     })
     .catch((err) => {
+      console.log(`${BASE_URL}/${nickname}/profileimg`);
+
       return err;
     });
 };

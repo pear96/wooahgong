@@ -166,9 +166,6 @@ function ProfileUpdateBody({
 
   return (
     <>
-      <div>
-        {userId} {oldNickname} {oldMbti} {oldMoods}
-      </div>
       <StyledUpdateBody>
         <CenterAlignedSpace direction="vertical">
           {loading && <Spin size="large" tip="로딩 중..." />}
@@ -283,14 +280,14 @@ function ProfileUpdateBody({
                 bordered={false}
               >
                 {moodOpts.map((mood) => (
-                  <Option value={mood} key={mood} disabled={moods.length > 1 ? !moods.includes(mood) : false}>
+                  <Option value={mood} key={mood} disabled={oldMoods.length > 1 ? !oldMoods.includes(mood) : false}>
                     #{mood}
                   </Option>
                 ))}
               </Select>
             </UnderlinedDiv>
           </Col>
-          {(moods.length > 2 || moods.length === 0) && (
+          {(oldMoods.length > 2 || oldMoods.length === 0) && (
             <Warning>관심 분위기는 최소 1개 최대 2개 선택해야 합니다.</Warning>
           )}
         </StyledInfoRow>

@@ -59,61 +59,18 @@ function UserPage() {
     const getProfileApi = async () => {
       if (nickname !== undefined) {
         const result = await ProfileApi.getProfile(nickname);
-        // return result;
-        // console.log('result', result);
 
         if (result.status === 200) {
-          // console.log('before result.data', result.data);
-          // console.log('before userProps', userProps);
-
           setUserProps(result.data);
-          // console.log('after result.data', result.data);
-          // console.log('after userProps', userProps);
         } else {
           navigate('/not-found');
         }
       }
     };
-    // const getProfileApi = async () => {
-    //   const result = await ProfileApi.getProfile(nickname);
-    //   // return result;
-    //   // console.log('result', result);
 
-    //   if (result.status === 200) {
-    //     // console.log('before result.data', result.data);
-    //     // console.log('before userProps', userProps);
-
-    //     setUserProps(result.data);
-    //     // console.log('after result.data', result.data);
-    //     // console.log('after userProps', userProps);
-    //   } else {
-    //     navigate('/not-found');
-    //   }
-    // };
-    // const getMyFeedsApi = async () => {
-    //   const result = await ProfileApi.getMyFeeds(nickname);
-    //   // console.log(result);
-
-    //   if (result.status === 200) {
-    //     dispatch(setFeeds(result.data));
-    //   } else {
-    //     navigate('/not-found');
-    //   }
-    // };
-
-    // ProfileApi.getProfile(nickname).then((res: any) => {
-    //   console.log('res', res);
-    //   setUserProps(res.data);
-    //   console.log('userProps', userProps);
-    // });
-
-    // console.log(ProfileApi.getProfile(nickname));
-    // console.log('getProfileApi result', getProfileApi());
     setLoading(true);
     getProfileApi();
-    // console.log('getProfileApi');
-    // getMyFeedsApi();
-    // console.log('getMyFeedsApi');
+
     return () => setLoading(false);
   }, [userProps]);
 
@@ -121,7 +78,6 @@ function UserPage() {
     if (nickname !== undefined) {
       const getMyFeedsApi = async () => {
         const result = await ProfileApi.getMyFeeds(nickname);
-        // console.log(result);
 
         if (result.status === 200) {
           dispatch(setFeeds(result.data));

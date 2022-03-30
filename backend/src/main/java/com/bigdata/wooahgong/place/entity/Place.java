@@ -4,6 +4,7 @@ import com.bigdata.wooahgong.common.util.BaseTimeEntity;
 import com.bigdata.wooahgong.feed.entity.Feed;
 import com.bigdata.wooahgong.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Entity
 @Builder

@@ -12,8 +12,7 @@ import { Menu, Dropdown } from 'antd';
 // assets
 import { Link } from 'react-router-dom';
 import { ReactComponent as Hamburger } from '../../../assets/feedDetail/hamburger1.svg';
-import { ReactComponent as Mapmarker } from '../../../assets/feedDetail/test.svg';
-import Test from '../../../assets/feedDetail/mapmarker.png';
+import Mapmarker from '../../../assets/feedDetail/mapmarker.png';
 // styled
 import {
   HeaderContainer,
@@ -37,7 +36,7 @@ function Feedheader({ nickname, userImage, feedSeq, placeName, address }: any) {
   return (
     <>
       <HeaderContainer>
-        <div style={{ marginRight: '12px' }}>
+        <div style={{ marginRight: '-20px' }}>
           <Avatar size={64} src={userImage} icon={<UserOutlined />} />
         </div>
         <NicknameContainer>{nickname}</NicknameContainer>
@@ -50,7 +49,7 @@ function Feedheader({ nickname, userImage, feedSeq, placeName, address }: any) {
         </HamburgerContainer>
       </HeaderContainer>
       <HeaderBelowContainer>
-        <img src={Test} alt="test" />
+        <img src={Mapmarker} alt="test" />
         <Link to="/" style={{ color: '#8C8C8C' }}>
           {placeName}, {address}
         </Link>

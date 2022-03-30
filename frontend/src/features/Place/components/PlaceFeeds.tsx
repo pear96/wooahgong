@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   PlaceFeedsWrapper,
@@ -7,6 +8,7 @@ import {
   FeedImageWrapper,
   FeedImage,
 } from 'features/Place/styles/StyledPlaceFeeds';
+import PlaceApi from 'common/api/PlaceApi';
 import { Select } from 'antd';
 
 const { Option } = Select;
@@ -53,15 +55,22 @@ const dummyPopularFeeds = [
   },
 ];
 
-function PlaceFeeds() {
-  const [feeds, setFeeds] = useState<any>(dummyLatestFeeds);
+function PlaceFeeds({ placeFeeds }: any) {
+  const { placeSeq } = useParams<string>();
+  const [feeds, setFeeds] = useState<any>(placeFeeds);
 
-  const sortFeeds = (value: string) => {
+  const sortFeeds = async (value: string) => {
     // TODO: axios
-    console.log(`selected ${value}`);
-
-    if (value === 'latest') setFeeds(dummyLatestFeeds);
-    else if (value === 'popular') setFeeds(dummyPopularFeeds);
+    // console.log(`selected ${value}`);
+    // if (placeSeq !== undefined) {
+    //   if (value === 'latest') {
+    //     const result = await PlaceApi.getLatestFeeds(placeSeq);
+    //     if (result?.status === 200) setFeeds(result.data.feeds);
+    //   } else if (value === 'popular') {
+    //     const result = await PlaceApi.getPopularFeeds(placeSeq);
+    //     if (result.status === 200) setFeeds(result.data.feeds);
+    //   }
+    // }
   };
 
   return (

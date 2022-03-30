@@ -20,7 +20,6 @@ function Feedimages({ images }: any) {
       className="mySwiper"
     >
       {images.map((props: any) => {
-        console.log(props);
         return (
           <SwiperSlide key={props}>
             <img src={props} />

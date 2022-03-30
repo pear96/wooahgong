@@ -28,6 +28,7 @@ public class S3Uploader {
     public String bucket;  // S3 버킷 이름
 
     public List<String> upload(List<MultipartFile> multipartFiles, String dirName, String target) {
+        System.out.println("multipartFiles 사이즈 : "+multipartFiles.size());
         List<String> urls = new ArrayList<>();
         for(MultipartFile multipartFile : multipartFiles){
             System.out.println(multipartFile);
@@ -64,6 +65,7 @@ public class S3Uploader {
 
     // 로컬에 파일 업로드 하기
     private Optional<File> convert(MultipartFile file) {
+        System.out.println("convert 유저 디렉토리 : "+System.getProperty("user.dir"));
         // 파일을 굳이 만들지 않고 S3에 보낼 순 있음.
         File convertFile = new File(System.getProperty("user.dir") + "/static" + file.getOriginalFilename());
 //        String name = System.getProperty("user.dir") + "/static" + file.getOriginalFilename();

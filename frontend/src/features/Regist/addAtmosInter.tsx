@@ -87,14 +87,14 @@ function AddAtmosInter({ progress }: MyProps) {
   const [selectedAtmos, setSelectedAtmos] = useState<string[]>([]);
   const [checkMax, setCheckMax] = useState<number[]>([]);
   const [atmos, setStateAtmos] = useState([
-    { type: '모던', check: false, color: '#565656' },
-    { type: '내추럴', check: false, color: '#78F19A' },
-    { type: '러블리', check: false, color: '#FFB0EE' },
-    { type: '럭셔리', check: false, color: '#B6B026' },
-    { type: '유니크', check: false, color: '#896CFE' },
-    { type: '빈티지', check: false, color: '#BF8A00' },
-    { type: '액티브', check: false, color: '#FF9292' },
-    { type: '클럽', check: false, color: '#FFC092' },
+    { type: '현대적인', check: false, color: '#565656' },
+    { type: '자연주의', check: false, color: '#78F19A' },
+    { type: '복고풍의', check: false, color: '#FFB0EE' },
+    { type: '활동적인', check: false, color: '#B6B026' },
+    { type: '낭만적인', check: false, color: '#896CFE' },
+    { type: '야경이멋진', check: false, color: '#BF8A00' },
+    { type: '평화로운', check: false, color: '#FF9292' },
+    { type: '이국적인', check: false, color: '#FFC092' },
     { type: '기타', check: false, color: '#BBBBBB' },
   ]);
   const navigate = useNavigate();
@@ -170,33 +170,45 @@ function AddAtmosInter({ progress }: MyProps) {
           <Desc>최대 두가지 선택 가능</Desc>
           <div
             style={{
-              marginLeft: '40px',
-              width: '280px',
-              textAlign: 'center',
-            }}
+                        display : "flex",
+                        alignItems : "center",
+                        flexWrap : "wrap",
+                        justifyContent: "center",
+                        // textAlign : "center",
+                        width : 310,
+                        marginLeft : 25,
+                        fontWeight : 700,
+                        marginTop : 10
+                    }}
           >
             {atmos.map((v: { type: string; check: boolean; color: string }, i: number) => {
               // console.log(v);
               const index = i;
               if (v.check) {
                 return (
-                  <Button
-                    key={`key${index + 1}`}
-                    value={i}
-                    onClick={handleAtmos}
-                    style={{
-                      background: `${v.color}`,
-                      color: 'white',
-                    }}
-                  >
-                    {v.type}
-                  </Button>
+                  <button key={index} type="button" value={index} style={
+                    {
+                        fontFamily: 'NotoSansKR',
+                        marginRight : 10, 
+                        marginTop : 5, 
+                        border : "none", 
+                        borderRadius : 5, 
+                        cursor : "pointer",
+                        background : `${v.color}`,
+                        color : "white"
+                    }} onClick={handleAtmos}>#{v.type}</button>
                 );
               }
               return (
-                <Button key={`key${index + 1}`} value={i} onClick={handleAtmos}>
-                  {v.type}
-                </Button>
+                <button key={index} type="button" value={index} style={
+                  {
+                      fontFamily: 'NotoSansKR',
+                      marginRight : 10, 
+                      marginTop : 5, 
+                      borderRadius : 5, 
+                      cursor : "pointer",
+                      border : "none"
+                  }} onClick={handleAtmos}> #{v.type} </button>
               );
             })}
           </div>

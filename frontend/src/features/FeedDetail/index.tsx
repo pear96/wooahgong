@@ -59,16 +59,22 @@ function FeedDetail() {
                 feedSeq={props.feedSeq}
                 placeName={props.placeName}
                 address={props.address}
+                amIOwner={props.amIOwner}
               />
             </div>
             <div>
               <Feedimages images={props.images} />
             </div>
             <div>
-              <Feedcontent />
+              <Feedcontent
+                ratings={props.ratings}
+                content={props.content}
+                createDate={props.createDate}
+                moods={props.moods}
+              />
             </div>
             <div>
-              <Feedfooter />
+              <Feedfooter amILike={props.amILike} likesCnt={props.likesCnt} commentsCnt={props.commentsCnt} />
             </div>
           </div>
         );

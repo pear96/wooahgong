@@ -28,6 +28,7 @@ dependencies {
     // lombok
     compileOnly 'org.projectlombok:lombok'
 //    testCompile "org.projectlombok:lombok"
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 

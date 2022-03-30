@@ -19,18 +19,6 @@ import java.util.Map;
 public class FeedController {
     private final FeedService feedService;
 
-//    // 메인 - For me 피드 가져오기
-//    @GetMapping("/forme")
-//    public ResponseEntity<List<Feed>> getFeedsForMe(@RequestHeader("Authorization") String token) {
-//        return new ResponseEntity<>(feedService.getFeedsForMe(token.split(" ")[1]), HttpStatus.OK);
-//    }
-
-    // 메인 - trend 피드 가져오기
-    // 대문을 거치지 않고 둘러보게 하려면 여기랑 WebConfig 수정 ㄱㄱ
-//    @GetMapping("/trend")
-//    public ResponseEntity<List<Feed>> getFeedsTrend(@RequestHeader("Authorization") String token) {
-//        return new ResponseEntity<>(feedService.getFeedsTrend(token.split(" ")[1]), HttpStatus.OK);
-//    }
     // 피드 쓰기
     @PostMapping(consumes = {"multipart/form-data", "application/json"})
     public ResponseEntity<Map<String, Long>> createFeed(@RequestHeader("Authorization") String token,

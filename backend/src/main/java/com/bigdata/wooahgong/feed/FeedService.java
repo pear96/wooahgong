@@ -146,8 +146,8 @@ public class FeedService {
     }
 
     public boolean amIPressedLike(Feed feed, User user) {
-        FeedLike feedLike = feedLikeRepository.findByFeedAndUser(feed, user).orElse(null);
-        return feedLike != null;
+        FeedLike feedLike = feedLikeRepository.findByFeedAndUser(feed, user).orElseGet(FeedLike::new);
+        return feedLike.getFeed() != null;
     }
 
     public String updateFeed(String token, Long feedSeq, String content) {
@@ -191,8 +191,8 @@ public class FeedService {
             // 댓글 쓴사람
             User CommentOwner = comment.getUser();
             // 내가 좋아요를 눌렀는지
-            CommentLike commentLike = commentLikeRepository.findByCommentAndUser(comment, user).orElseGet(null);
-            boolean amILike = true ? commentLike != null : false;
+            CommentLike commentLike = commentLikeRepository.findByCommentAndUser(comment, user).orElseGet(CommentLike::new);
+            boolean amILike = commentLike.getCommentLikeSeq() != null;
             // 댓글 주인인지
             boolean amIOwner = true ? user.getUserSeq() == CommentOwner.getUserSeq() : false;
 
@@ -240,9 +240,9 @@ public class FeedService {
         Feed feed = feedRepository.findByFeedSeq(feedSeq).orElseThrow(() ->
                 new CustomException(ErrorCode.DATA_NOT_FOUND));
         boolean isLiked = true;
-        FeedLike feedLike = feedLikeRepository.findByFeedAndUser(feed, user).orElseGet(null);
+        FeedLike feedLike = feedLikeRepository.findByFeedAndUser(feed, user).orElseGet(FeedLike::new);
         // 좋아요를 누르지 않았음
-        if(feedLike == null){
+        if(feedLike.getFeed() == null){
             feedLikeRepository.save(FeedLike.builder()
                     .user(user).feed(feed).build());
         }else{
@@ -259,9 +259,9 @@ public class FeedService {
         Comment comment = commentRepository.findByCommentSeq(commentSeq).orElseThrow(() ->
                 new CustomException(ErrorCode.DATA_NOT_FOUND));
         boolean isLiked = true;
-        CommentLike commentLike = commentLikeRepository.findByCommentAndUser(comment,user).orElseGet(null);
+        CommentLike commentLike = commentLikeRepository.findByCommentAndUser(comment,user).orElseGet(CommentLike::new);
         // 좋아요를 누르지 않았음
-        if(commentLike == null){
+        if(commentLike.getCreatedDate() == null){
             commentLikeRepository.save(CommentLike.builder()
                     .user(user).comment(comment).build());
         }else{

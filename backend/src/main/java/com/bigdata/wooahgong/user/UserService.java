@@ -105,24 +105,24 @@ public class UserService {
 
     // 아이디 중복 체크
     public void dupCheckUserId(String userId) {
-        User user = userRepository.findByUserId(userId).orElse(null);
-        if (user != null) {
+        User user = userRepository.findByUserId(userId).orElseGet(User::new);
+        if (user.getUserSeq() != null) {
             throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
         }
     }
 
     // 닉네임 중복 체크
     public void dupCheckNickname(String nickname) {
-        User user = userRepository.findByNickname(nickname).orElse(null);
-        if (user != null) {
+        User user = userRepository.findByNickname(nickname).orElseGet(User::new);
+        if (user.getUserSeq() != null) {
             throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
         }
     }
 
     // 아이디 찾기
     public String findId(String email) {
-        User user = userRepository.findByEmail(email).orElse(null);
-        if (user == null) {
+        User user = userRepository.findByEmail(email).orElseGet(User::new);
+        if (user.getUserSeq() == null) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
         return user.getUserId();

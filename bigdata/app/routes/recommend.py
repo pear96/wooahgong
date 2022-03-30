@@ -17,6 +17,7 @@ PREFIX = "Bearer "
 # Header로 Authorization 받음
 @router.get("/forme")
 async def forme(request: Request, searchRadius: int, lat: float, lng: float, session: Session = Depends(db.session)):
+    # 사용자 찾기
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -31,11 +32,8 @@ async def forme(request: Request, searchRadius: int, lat: float, lng: float, ses
         raise credentials_exception
     # 해당 email로 user를 찾음
     print("----------------찾은 유저 출력---------------")
-    print(user_email)
     user = session.query(User).filter(User.email == user_email).all()
-    print(user)
-    print("----------------찾은 유저 출력---------------")
-    # data = {"user": user}
+    print("사용자 : ", user)
     return user
 
 

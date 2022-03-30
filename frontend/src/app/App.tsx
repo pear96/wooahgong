@@ -11,9 +11,8 @@ import Navbar from '../common/Navbar';
 import Regist from '../features/Regist/regist';
 import Map from '../features/Map/Map';
 import FeedAdd from '../features/Feed/Feedadd';
-import 'antd/dist/antd.css';
-import "slick-carousel/slick/slick.css"; 
-import "slick-carousel/slick/slick-theme.css";
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const SocialLogin = loadable(() => import('../features/Auth/kakaosocialLogin/socialLogin'));
 const MainLogin = loadable(() => import('../features/Auth/mainLogin'));
@@ -32,6 +31,7 @@ const Profile = loadable(() => import('../features/Profile'));
 const ProfileUpdate = loadable(() => import('../features/Profile/profileUpdate'));
 
 const Place = loadable(() => import('../features/Place'));
+const FeedDetail = loadable(() => import('../features/FeedDetail'));
 
 function App() {
   // 리프레시 토큰 사용하면
@@ -84,8 +84,9 @@ function App() {
             <Route path="/profile/:nickname" element={<Profile />} />
             <Route path="/profile/:nickname/edit" element={<ProfileUpdate />} />
             <Route path="/place/:placeSeq" element={<Place />} />
+            <Route path="/place/:placeSeq/feeds" element={<FeedDetail />} />
             <Route path="/not-found" element={<NotFound />} />
-            <Route path="/report/*" element={<FeedAdd/>}/>
+            <Route path="/report/*" element={<FeedAdd />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -65,7 +65,7 @@ function PlaceFeeds({ placeFeeds }: any) {
     if (placeSeq !== undefined) {
       if (value === 'latest') {
         const result = await PlaceApi.getLatestFeeds(placeSeq);
-        if (result.status === 200) setFeeds(result.data.feeds);
+        if (result?.status === 200) setFeeds(result.data.feeds);
       } else if (value === 'popular') {
         const result = await PlaceApi.getPopularFeeds(placeSeq);
         if (result.status === 200) setFeeds(result.data.feeds);

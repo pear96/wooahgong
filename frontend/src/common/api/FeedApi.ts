@@ -38,12 +38,14 @@ const getFeedAddResult = async (data : FormData) => {
             headers : {Authorization: token, 'Content-type' : "multipart/form-data"}
         }).then((response)=>{
             const value = {
-                status : response.status
+                status : response.status,
+                FeedSeq : response.data.FeedSeq
             }
             return value;
         }).catch((e)=>{
             const value = {
-                status : 401
+                status : 401,
+                FeedSeq : undefined
             }
             return value;
         })

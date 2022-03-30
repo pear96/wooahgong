@@ -9,6 +9,8 @@ const styles = {
   height: '44px',
 };
 
+// const nickname = useSelector((state: ReducerType) => state.login.nickname);
+
 export const SidebarList = [
   {
     title: '홈',
@@ -17,7 +19,7 @@ export const SidebarList = [
   },
   {
     title: '프로필',
-    path: '/profile',
+    path: `/profile`,
     icon: <img style={styles} src={ProfileIcon} alt="ProfileIcon" />,
   },
   {

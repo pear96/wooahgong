@@ -84,7 +84,7 @@ function App() {
             <Route path="/profile/:nickname" element={<Profile />} />
             <Route path="/profile/:nickname/edit" element={<ProfileUpdate />} />
             <Route path="/place/:placeSeq" element={<Place />} />
-            <Route path="/place/:placeSeq/feeds" element={<FeedDetail />} />
+            <Route path="/place/:placeSeq/feeds/:feedSeq" element={<FeedDetail />} />
             <Route path="/not-found" element={<NotFound />} />
             <Route path="/report/*" element={<FeedAdd />} />
           </Route>

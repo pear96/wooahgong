@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import FeedDetailApi from 'common/api/FeedDetailApi';
 import { Spin } from 'antd';
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
 import Feedcontent from './components/Feedcontent';
 import Feedfooter from './components/Feedfooter';
 import Feedimages from './components/Feedimages';
 import Feedheader from './components/Feedheader';
+
 
 const CustomSpin = styled.div`
   margin-left: 45%;
@@ -16,11 +18,19 @@ function FeedDetail() {
   const [FeedDetails, setFeedDetails] = useState<any>();
   const { getFeedDetail } = FeedDetailApi;
 
+  const {feedSeq} = useParams();
+  
   const [loadingFinsh, setLoadingFinsh] = useState(false);
   async function getAndFeedDetail() {
-    const result = await getFeedDetail();
-    console.log(result.data);
-    setFeedDetails(result.data);
+    if(feedSeq !== undefined) {
+      const result = await getFeedDetail(feedSeq);
+      console.log(result.data);
+      setFeedDetails(result.data);
+    }
+    else{
+      console.log("error");
+      // 여기 토스트 메세지 써줘야 할듯
+    }
   }
 
   useEffect(() => {

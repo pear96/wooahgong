@@ -38,7 +38,7 @@ function FeedLast() {
   const [open, setIsOpen] = useState<boolean>(false);
   const [position, setPosition] = useState<{ lat: number; lng: number }>();
   const feedstore = useSelector<ReducerType, Feed>((state) => state.feedReducer);
-
+  
   const { getPlaceAddReulst, getFeedAddResult } = FeedApi;
 
   const dispatch = useDispatch();
@@ -118,6 +118,12 @@ function FeedLast() {
         });
       } else {
         const formData = new FormData();
+        const select = [];
+        for(let i = 0; i < atmos.length; i+=1){
+          if(atmos[i].check){
+            select.push(atmos[i].title);
+          }
+        }
         for (let i = 0; i < feedstore.image.length; i += 1) {
           formData.append('images', feedstore.image[i]);
         }
@@ -125,11 +131,12 @@ function FeedLast() {
           placeSeq: feedstore.place.placeSeq,
           content: desc,
           ratings: score,
-          moods: atmos.map((v) => v.title),
+          moods: select,
         };
         formData.append('data', new Blob([JSON.stringify(data)], { type: 'application/json' }));
         const res = await getFeedAddResult(formData);
-
+        console.log(res);
+        navigate(`/place/${feedstore.place.placeSeq}/feeds/${res?.FeedSeq}`);
         // 리턴값 가지고 피드 상세로 이동 시켜야함
       }
     } else {
@@ -180,6 +187,12 @@ function FeedLast() {
         } else if (result?.status === 201) {
           console.log('된거니?!?!?!?!');
           const formData = new FormData();
+          const select = [];
+          for(let i = 0; i < atmos.length; i+=1){
+            if(atmos[i].check){
+              select.push(atmos[i].title);
+            }
+          }
           for (let i = 0; i < feedstore.image.length; i += 1) {
             formData.append('images', feedstore.image[i]);
           }
@@ -187,11 +200,11 @@ function FeedLast() {
             placeSeq: result.placeSeq,
             content: desc,
             ratings: score,
-            moods: atmos.map((v) => v.title),
+            moods: select,
           };
           formData.append('data', new Blob([JSON.stringify(data)], { type: 'application/json' }));
           const res = await getFeedAddResult(formData);
-
+          navigate(`/place/${result.placeSeq}/feeds/${res?.FeedSeq}`);
           // 리턴값 가지고 피드 상세로 이동 시켜야함
         }
       }

@@ -6,9 +6,9 @@ const token = getToken();
 
 // 피드 상세 정보 조회
 
-const getFeedDetail = async () => {
+const getFeedDetail = async (seq : number | string ) => {
   const result = await axios
-    .get(`${BASE_URL}/10`, { headers: { Authorization: `Bearer ${token}` } })
+    .get(`${BASE_URL}/${seq}`, { headers: { Authorization: `Bearer ${token}` } })
     .then((res) => {
       console.log(res);
       return res;

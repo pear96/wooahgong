@@ -9,14 +9,17 @@ import {
   StyledUpdateInfo,
   UnderlinedDiv,
   Warning,
+  RePwdButton,
 } from 'features/Profile/styles/update/StyledUpdateBody';
 import { UserOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReducerType } from 'app/rootReducer';
 import { setImage, setOriginalImg } from 'features/Profile/reducers/profileImageReducer';
 import styled from 'styled-components';
 import LeaveModal from 'features/Profile/components/update/LeaveModal';
+import ProfileApi from 'common/api/ProfileApi';
 
 const { Option } = Select;
 
@@ -79,19 +82,36 @@ function beforeUpload(file: any) {
   return isJpgOrPng && isLt10M;
 }
 
-function ProfileUpdateBody({ changePassword, changePasswordCheck, changeNickname, changeMbti, changeMoods }: any) {
+function ProfileUpdateBody({
+  userId,
+  oldNickname,
+  oldMbti,
+  oldMoods,
+  isProvider,
+  changePassword,
+  changePasswordCheck,
+  changeNickname,
+  changeMbti,
+  changeMoods,
+}: any) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   // const { nickname, profileImg } = useSelector((state: ReducerType) => state.login);
   // 위에 만들어야함 리덕스
 
   const { file, image, originalImg } = useSelector((state: ReducerType) => state.profileImage);
 
   const [loading, setLoading] = useState<boolean>(false);
+
   const [password, setPassword] = useState<string>('');
   const [passwordCheck, setPasswordCheck] = useState<string>('');
-  const [nickname, setNickname] = useState<string>('');
+  // const [userId, setUserId] = useState<string>('');
+  const [nick, setNick] = useState<string>(oldNickname);
   const [mbti, setMbti] = useState<string>('');
   const [moods, setMoods] = useState<string[]>([]);
+  // const [isProvider, setProvider] = useState<boolean>();
+
+  const [dataLoading, setDataLoading] = useState<boolean>(false);
 
   const [showLeaveModal, setShowLeaveModal] = useState<boolean>(false);
 
@@ -111,20 +131,44 @@ function ProfileUpdateBody({ changePassword, changePasswordCheck, changeNickname
     }
     setLoading(false);
   };
+  // const getProfileForUpdateApi = async () => {
+  //   if (nickname !== undefined) {
+  //     const result = await ProfileApi.getProfileForUpdate(nickname);
+  //     console.log('sss', result.data);
 
-  useEffect(() => {
-    dispatch(setImage(dummyLoggedInUserFromRedux.profileImg));
-    if (!dummyLoggedInUserFromRedux.provider) {
-      setPassword(dummyLoggedInUserFromRedux.password);
-      setPasswordCheck(dummyLoggedInUserFromRedux.password);
-    }
-    setNickname(dummyLoggedInUserFromRedux.nickname);
-    setMbti(dummyLoggedInUserFromRedux.mbti);
-    setMoods(dummyLoggedInUserFromRedux.moods);
-  }, []);
+  //     if (result.status === 200) {
+  //       dispatch(setImage(result.data.profileImg));
+  //       setUserId(result.data.userId);
+  //       setNick(result.data.nickname);
+  //       setMbti(result.data.mbti);
+  //       setMoods(result.data.moods);
+  //       setProvider(result.data.provider);
+  //       console.log(userId, nick, mbti, isProvider);
+  //     } else {
+  //       navigate('/not-found');
+  //     }
+  //   }
+  // };
+  // useEffect(() => {
+  //   // dispatch(setImage(dummyLoggedInUserFromRedux.profileImg));
+  //   // if (!dummyLoggedInUserFromRedux.provider) {
+  //   //   setPassword(dummyLoggedInUserFromRedux.password);
+  //   //   setPasswordCheck(dummyLoggedInUserFromRedux.password);
+  //   // }
+  //   // setNickname(dummyLoggedInUserFromRedux.nickname);
+  //   // setMbti(dummyLoggedInUserFromRedux.mbti);
+  //   // setMoods(dummyLoggedInUserFromRedux.moods);
+
+  //   setDataLoading(true);
+  //   getProfileForUpdateApi();
+  //   return () => setDataLoading(false);
+  // }, [isProvider]);
 
   return (
     <>
+      <div>
+        {userId} {oldNickname} {oldMbti} {oldMoods}
+      </div>
       <StyledUpdateBody>
         <CenterAlignedSpace direction="vertical">
           {loading && <Spin size="large" tip="로딩 중..." />}
@@ -144,14 +188,17 @@ function ProfileUpdateBody({ changePassword, changePasswordCheck, changeNickname
       <StyledUpdateInfo>
         <StyledInfoRow align="middle">
           <StyledInfoTitle xs={10}>아이디</StyledInfoTitle>
-          <Col xs={14}>{dummyLoggedInUserFromRedux.userId}</Col>
+          <Col xs={14}>{userId}</Col>
         </StyledInfoRow>
-        {!dummyLoggedInUserFromRedux.provider && (
+        {!isProvider && (
           <>
             <StyledInfoRow align="middle">
               <StyledInfoTitle xs={10}>비밀번호</StyledInfoTitle>
               <Col xs={14}>
-                <UnderlinedDiv>
+                <RePwdButton size="small" href="/">
+                  비밀번호 변경
+                </RePwdButton>
+                {/* <UnderlinedDiv>
                   <Input.Password
                     bordered={false}
                     defaultValue={dummyLoggedInUserFromRedux.password}
@@ -160,10 +207,10 @@ function ProfileUpdateBody({ changePassword, changePasswordCheck, changeNickname
                       changePassword(e.target.value);
                     }}
                   />
-                </UnderlinedDiv>
+                </UnderlinedDiv> */}
               </Col>
             </StyledInfoRow>
-            <StyledInfoRow align="middle">
+            {/* <StyledInfoRow align="middle">
               <StyledInfoTitle xs={10}>비밀번호 확인</StyledInfoTitle>
               <Col xs={14}>
                 <UnderlinedDiv>
@@ -178,7 +225,7 @@ function ProfileUpdateBody({ changePassword, changePasswordCheck, changeNickname
                 </UnderlinedDiv>
               </Col>
               {password !== passwordCheck && <Warning>비밀번호가 일치하지 않습니다.</Warning>}
-            </StyledInfoRow>
+            </StyledInfoRow> */}
           </>
         )}
         <StyledInfoRow align="middle">
@@ -187,9 +234,9 @@ function ProfileUpdateBody({ changePassword, changePasswordCheck, changeNickname
             <UnderlinedDiv>
               <Input
                 bordered={false}
-                defaultValue={dummyLoggedInUserFromRedux.nickname}
+                value={oldNickname}
                 onChange={(e) => {
-                  setNickname(e.target.value);
+                  // setNick(e.target.value);
                   changeNickname(e.target.value);
                 }}
               />
@@ -203,9 +250,9 @@ function ProfileUpdateBody({ changePassword, changePasswordCheck, changeNickname
               <Select
                 bordered={false}
                 style={{ width: '100%' }}
-                defaultValue={dummyLoggedInUserFromRedux.mbti}
+                value={oldMbti}
                 onChange={(e) => {
-                  setMbti(e);
+                  // setMbti(e);
                   changeMbti(e);
                 }}
               >
@@ -227,9 +274,9 @@ function ProfileUpdateBody({ changePassword, changePasswordCheck, changeNickname
               <Select
                 mode="multiple"
                 style={{ width: '100%' }}
-                defaultValue={dummyLoggedInUserFromRedux.moods}
+                value={oldMoods}
                 onChange={(e) => {
-                  setMoods(e);
+                  // setMoods(e);
                   changeMoods(e);
                 }}
                 showArrow
@@ -253,4 +300,5 @@ function ProfileUpdateBody({ changePassword, changePasswordCheck, changeNickname
     </>
   );
 }
+
 export default ProfileUpdateBody;

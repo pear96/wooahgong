@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Row, Col, Space } from 'antd';
 
 export const UserProfileWrapper = styled.div`
   display: grid;

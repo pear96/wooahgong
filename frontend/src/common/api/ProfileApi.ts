@@ -1,30 +1,44 @@
 import axios from 'axios';
 import { getToken } from './JTW-Token';
 
-const BASE_URL = 'http://j6a505.p.ssafy.io:8080/api/users';
+const BASE_URL = 'https://j6a505.p.ssafy.io/api/users';
 const token = getToken();
 
-const getProfile = async (nickname: string) => {
-  await axios({
+const getProfile = (nickname: string) => {
+  console.log('nickname', nickname);
+
+  console.log('this is get profile');
+
+  return axios({
     method: 'GET',
     url: `${BASE_URL}/${nickname}`,
     headers: { Authorization: `Bearer ${token}` },
   })
     .then((res) => {
+      // console.log(`getProfile ${nickname} Success`);
+      // console.log(res);
+
       return res;
     })
     .catch((err) => {
+      console.log(err);
+
       return err;
     });
 };
 
-const getProfileForUpdate = async (nickname: string) => {
-  await axios({
+const getProfileForUpdate = (nickname: string) => {
+  console.log('nickname', nickname);
+  console.log('this is get profile for update');
+  return axios({
     method: 'GET',
     url: `${BASE_URL}/${nickname}/update`,
     headers: { Authorization: `Bearer ${token}` },
   })
     .then((res) => {
+      // console.log('getProfileForUpdate success');
+      console.log(`${BASE_URL}/${nickname}/update`);
+
       return res;
     })
     .catch((err) => {
@@ -32,13 +46,14 @@ const getProfileForUpdate = async (nickname: string) => {
     });
 };
 
-const getMyFeeds = async (nickname: string) => {
-  await axios({
+const getMyFeeds = (nickname: string) => {
+  return axios({
     method: 'GET',
     url: `${BASE_URL}/${nickname}/feeds`,
     headers: { Authorization: `Bearer ${token}` },
   })
     .then((res) => {
+      console.log(`getMyFeeds ${nickname} Success`);
       return res;
     })
     .catch((err) => {
@@ -46,13 +61,15 @@ const getMyFeeds = async (nickname: string) => {
     });
 };
 
-const getLikedFeeds = async (nickname: string) => {
-  await axios({
+const getLikedFeeds = (nickname: string) => {
+  return axios({
     method: 'GET',
     url: `${BASE_URL}/${nickname}/liked`,
     headers: { Authorization: `Bearer ${token}` },
   })
     .then((res) => {
+      console.log(`getLikedFeeds ${nickname} Success`);
+
       return res;
     })
     .catch((err) => {
@@ -60,13 +77,15 @@ const getLikedFeeds = async (nickname: string) => {
     });
 };
 
-const getWishedFeeds = async (nickname: string) => {
-  await axios({
+const getWishedFeeds = (nickname: string) => {
+  return axios({
     method: 'GET',
     url: `${BASE_URL}/${nickname}/wished`,
     headers: { Authorization: `Bearer ${token}` },
   })
     .then((res) => {
+      console.log(`getWishedFeeds ${nickname} Success`);
+
       return res;
     })
     .catch((err) => {
@@ -74,11 +93,11 @@ const getWishedFeeds = async (nickname: string) => {
     });
 };
 
-const updateProfile = async (
+const updateProfile = (
   nickname: string,
   data: { password: string; nickname: string; mbti: string; moods: string[] },
 ) => {
-  await axios({
+  return axios({
     method: 'PATCH',
     url: `${BASE_URL}/${nickname}`,
     headers: { Authorization: `Bearer ${token}` },
@@ -92,8 +111,8 @@ const updateProfile = async (
     });
 };
 
-const updateProfileImage = async (nickname: string, data: { image: string }) => {
-  await axios({
+const updateProfileImage = (nickname: string, data: { image: string }) => {
+  return axios({
     method: 'PATCH',
     url: `${BASE_URL}/${nickname}/profileimg`,
     headers: { Authorization: `Bearer ${token}` },
@@ -107,8 +126,8 @@ const updateProfileImage = async (nickname: string, data: { image: string }) => 
     });
 };
 
-const resign = async (nickname: string) => {
-  await axios({
+const resign = (nickname: string) => {
+  return axios({
     method: 'DELETE',
     url: `${BASE_URL}/${nickname}`,
     headers: { Authorization: `Bearer ${token}` },

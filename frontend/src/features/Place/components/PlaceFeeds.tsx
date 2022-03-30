@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   PlaceFeedsWrapper,
@@ -63,8 +63,11 @@ type MyProps = {
 }
 
 function PlaceFeeds({ placeFeeds }: MyProps) {
-  const { placeSeq } = useParams<string>();
+  
+  const {placeSeq} = useParams();
   const [feeds, setFeeds] = useState<any>(placeFeeds);
+  const navigate = useNavigate();
+
 
   const sortFeeds = async (value: string) => {
     // TODO: axios
@@ -79,6 +82,9 @@ function PlaceFeeds({ placeFeeds }: MyProps) {
     //   // }
     // }
   };
+  const handleClickFeed = (value : number | string) =>{
+      navigate(`/place/${placeSeq}/feeds/${value}`)
+  }
 
   return (
     <PlaceFeedsWrapper>
@@ -89,9 +95,9 @@ function PlaceFeeds({ placeFeeds }: MyProps) {
         </Select>
       </SortOption>
       <PlaceFeedsGrid>
-        {feeds.map((feed: any) => (
+        {feeds.map((feed: {feedSeq : number, thumbnail : string}) => (
           // <FeedWrapper>
-          <FeedImageWrapper>
+          <FeedImageWrapper onClick={() => handleClickFeed(feed.feedSeq)}>
             <FeedImage src={feed.thumbnail} alt="" />
           </FeedImageWrapper>
           // </FeedWrapper>

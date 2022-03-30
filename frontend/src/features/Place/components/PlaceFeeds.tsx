@@ -55,22 +55,29 @@ const dummyPopularFeeds = [
   },
 ];
 
-function PlaceFeeds({ placeFeeds }: any) {
+type MyProps = {
+  placeFeeds : {
+    feedSeq : number,
+    thumbnail : string
+  }
+}
+
+function PlaceFeeds({ placeFeeds }: MyProps) {
   const { placeSeq } = useParams<string>();
   const [feeds, setFeeds] = useState<any>(placeFeeds);
 
   const sortFeeds = async (value: string) => {
     // TODO: axios
     console.log(`selected ${value}`);
-    if (placeSeq !== undefined) {
-      if (value === 'latest') {
-        const result = await PlaceApi.getLatestFeeds(placeSeq);
-        if (result?.status === 200) setFeeds(result.data.feeds);
-      } else if (value === 'popular') {
-        const result = await PlaceApi.getPopularFeeds(placeSeq);
-        if (result.status === 200) setFeeds(result.data.feeds);
-      }
-    }
+    // if (placeSeq !== undefined) {
+    //   // if (value === 'latest') {
+    //   //   const result = await PlaceApi.getLatestFeeds(placeSeq);
+    //   //   if (result?.status === 200) setFeeds(result.data.feeds);
+    //   // } else if (value === 'popular') {
+    //   //   const result = await PlaceApi.getPopularFeeds(placeSeq);
+    //   //   if (result.status === 200) setFeeds(result.data.feeds);
+    //   // }
+    // }
   };
 
   return (

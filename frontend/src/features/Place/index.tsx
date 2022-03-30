@@ -44,40 +44,49 @@ function PlacePage() {
   // const [lat, setLat] = useState<number>();
   // const [lng, setLng] = useState<number>();
   // const [feeds, setFeeds] = useState<any>(null);
-  const [place, setPlace] = useState<any>();
+  const [place, setPlace] = useState<{
+    address : string, 
+    avgRatings : number, 
+    feeds : {
+      feedSeq : number, 
+      thumbnail : string
+    }, 
+    isWished : boolean, 
+    latitude : number, 
+    longitude : number, 
+    name : string, 
+    placeImageUrl : string}>();
   const { placeSeq } = useParams();
+  const readPlaceApi = async () => {
+    if (placeSeq !== undefined) {
+      const result = await PlaceApi.readPlace(placeSeq);
+      console.log(result)
+      if (result?.status === 200) {
+        console.log(result);
+
+        setPlace(result.data);
+      }
+    }
+  };
 
   useEffect(() => {
-    const readPlaceApi = async () => {
-      if (placeSeq !== undefined) {
-        const result = await PlaceApi.readPlace(placeSeq);
-        if (result.status === 200) {
-          console.log(result);
-
-          setPlace(result.data);
-        }
-      }
-    };
-
     readPlaceApi();
-  }, []);
+  },[]);
 
   return (
     <div>
       <div style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '1024px' }}>
-        <PlaceThumbnail thumbnail={place.placeImageUrl} />
-        <PlaceInfo
-          thumbnail={place.placeImageUrl}
-          name={place.name}
-          address={place.address}
-          avgRatings={place.avgRatings}
-          lat={place.latitude}
-          lng={place.longitude}
-          isWished={place.isWished}
-        />
-        {/* <PlaceFeeds feeds={feeds} sortFeeds={criterion => handleSortFeeds(criterion)}/>
-         */}
-        <PlaceFeeds placeFeeds={place.feeds} />
+        {place === undefined ? (<>로딩중</>) 
+        : (
+          <>
+            <PlaceThumbnail thumbnail={place.placeImageUrl} />
+            <PlaceInfo placeInfo={place}
+            />
+            {/* <PlaceFeeds feeds={feeds} sortFeeds={criterion => handleSortFeeds(criterion)}/>
+            */}
+            <PlaceFeeds placeFeeds={place.feeds} />
+        </>
+        )}
       </div>
     </div>
   );

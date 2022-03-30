@@ -41,12 +41,13 @@ public class Place extends BaseTimeEntity {
     @Column(nullable = false)
     private Double longitude;
 
-    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Feed> feeds = new ArrayList<>();
     @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<PlaceWish> placeWishes = new ArrayList<>();
+
     @Builder
     public Place(User user, String name, String address, Double latitude, Double longitude) {
         this.user = user;

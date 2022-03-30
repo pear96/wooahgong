@@ -59,9 +59,9 @@ public class FeedService {
 //    }
 
     @Transactional
-    public Map<String,Long> createFeed(String token, List<MultipartFile> images, CreateFeedReq createFeedReq) {
-        for (MultipartFile multipartFile : images){
-            System.out.println("Service multipartFile : "+ multipartFile);
+    public Map<String, Long> createFeed(String token, List<MultipartFile> images, CreateFeedReq createFeedReq) {
+        for (MultipartFile multipartFile : images) {
+            System.out.println("Service multipartFile : " + multipartFile);
         }
         // 토큰으로 유저 찾기
         User user = userRepository.findByEmail(userService.getEmailByToken(token)).orElseThrow(() ->
@@ -97,14 +97,14 @@ public class FeedService {
         }
         // 피드_사진 테이블에 저장
         for (String url : urls) {
-            System.out.println("사진 url = "+url);
+            System.out.println("사진 url = " + url);
             FeedImage feedImage = FeedImage.builder()
                     .feed(feed)
                     .imageUrl(url).build();
             feedImageRepository.save(feedImage);
         }
-        HashMap<String,Long> hm = new HashMap<>();
-        hm.put("FeedSeq",feed.getFeedSeq());
+        HashMap<String, Long> hm = new HashMap<>();
+        hm.put("FeedSeq", feed.getFeedSeq());
         return hm;
     }
 
@@ -157,16 +157,20 @@ public class FeedService {
         return "수정 완료.";
     }
 
+    @Transactional
     public String deleteFeed(String token, Long feedSeq) {
         Feed feed = check(token, feedSeq);
         Place place = feed.getPlace();
         // 최후의 피드라면 장소도 같이 삭제
-        if(place.getFeeds().size() == 1){
-            feedRepository.delete(feed);
+        if (place.getFeeds().size() == 1) {
+            place.getFeeds().remove(feed);
             placeRepository.delete(place);
             return "장소, 피드 삭제 완료";
         }
-        feedRepository.delete(feed);
+        // 2. 부모에서 자식 삭제
+        place.getFeeds().remove(feed);
+        // 3. 삭제
+//        feedRepository.delete(feed);
         return "삭제 완료.";
     }
 
@@ -239,6 +243,7 @@ public class FeedService {
         commentRepository.delete(comment);
         return "삭제 완료";
     }
+
     @Transactional
     public boolean likedFeed(String token, Long feedSeq) {
         // 토큰으로 유저 찾기
@@ -249,15 +254,16 @@ public class FeedService {
         boolean isLiked = true;
         FeedLike feedLike = feedLikeRepository.findByFeedAndUser(feed, user).orElseGet(FeedLike::new);
         // 좋아요를 누르지 않았음
-        if(feedLike.getFeed() == null){
+        if (feedLike.getFeed() == null) {
             feedLikeRepository.save(FeedLike.builder()
                     .user(user).feed(feed).build());
-        }else{
+        } else {
             feedLikeRepository.delete(feedLike);
             isLiked = false;
         }
         return isLiked;
     }
+
     @Transactional
     public Boolean likeComment(String token, Long feedSeq, Long commentSeq) {
         // 토큰으로 유저 찾기
@@ -266,12 +272,12 @@ public class FeedService {
         Comment comment = commentRepository.findByCommentSeq(commentSeq).orElseThrow(() ->
                 new CustomException(ErrorCode.DATA_NOT_FOUND));
         boolean isLiked = true;
-        CommentLike commentLike = commentLikeRepository.findByCommentAndUser(comment,user).orElseGet(CommentLike::new);
+        CommentLike commentLike = commentLikeRepository.findByCommentAndUser(comment, user).orElseGet(CommentLike::new);
         // 좋아요를 누르지 않았음
-        if(commentLike.getCreatedDate() == null){
+        if (commentLike.getCreatedDate() == null) {
             commentLikeRepository.save(CommentLike.builder()
                     .user(user).comment(comment).build());
-        }else{
+        } else {
             commentLikeRepository.delete(commentLike);
             isLiked = false;
         }

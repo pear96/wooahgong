@@ -19,7 +19,8 @@ interface Location {
     latitude : number, 
     longitude : number, 
     name : string, 
-    placeImageUrl : string}
+    placeImageUrl : string
+}
 
 
 function Map() {

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import FeedApi from 'common/api/FeedApi';
 import { toast } from 'react-toastify';
 import FindAddress from './modal/FindAddress';
-import { feed, setImage, setType, Feed } from './feedReducer';
+import { feed, setImage, setType, setInitState, Feed } from './feedReducer';
 import Pin from '../../assets/pin.png';
 import Quote from '../../assets/quote.png';
 import Tag from '../../assets/tag.png';
@@ -136,6 +136,7 @@ function FeedLast() {
         formData.append('data', new Blob([JSON.stringify(data)], { type: 'application/json' }));
         const res = await getFeedAddResult(formData);
         console.log(res);
+        dispatch(setInitState());
         navigate(`/place/${feedstore.place.placeSeq}/feeds/${res?.FeedSeq}`);
         // 리턴값 가지고 피드 상세로 이동 시켜야함
       }
@@ -204,6 +205,7 @@ function FeedLast() {
           };
           formData.append('data', new Blob([JSON.stringify(data)], { type: 'application/json' }));
           const res = await getFeedAddResult(formData);
+          dispatch(setInitState());
           navigate(`/place/${result.placeSeq}/feeds/${res?.FeedSeq}`);
           // 리턴값 가지고 피드 상세로 이동 시켜야함
         }

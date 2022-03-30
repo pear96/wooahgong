@@ -5,7 +5,6 @@ import profileFeedReducer from 'features/Profile/reducers/profileFeedReducer';
 import profilePlaceReducer from 'features/Profile/reducers/profilePlaceReducer';
 import profileImageReducer from 'features/Profile/reducers/profileImageReducer';
 import feedReducer from 'features/Feed/feedReducer';
-import PlaceReducer from 'features/Place/reducers/PlaceReducer';
 import searchReducer from 'features/Search/searchSlice';
 import registerReducer from '../features/Regist/registerReducer';
 import authSlice from '../features/Auth/authSlice';
@@ -15,7 +14,6 @@ import authSlice from '../features/Auth/authSlice';
 const rootReducer = combineReducers({
   registerReducer,
   feedReducer,
-  PlaceReducer,
   login: authSlice,
   profileFeed: profileFeedReducer,
   profilePlace: profilePlaceReducer,

@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate} from 'react-router-dom';
 import { Row, Col, Rate } from 'antd';
-import styled from 'styled-components';
 import { BsBookmarkHeartFill, BsBookmarkHeart, BsPinMap } from 'react-icons/bs';
 import { MdOutlineCreate } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
-import axios from 'axios';
 import {
   PlaceInfoWrapper,
   PlaceName,
@@ -15,7 +13,6 @@ import {
   Icon,
 } from 'features/Place/styles/StyledPlaceInfo';
 import PlaceApi from 'common/api/PlaceApi';
-import { setAddress, setName, setPlaceSeq, setRegistered } from '../reducers/PlaceReducer';
 import KakaoShareIcon from './KakaoShareIcon';
 
 
@@ -61,12 +58,7 @@ function PlaceInfo({placeInfo}: MyProps) {
   };
 
   const goCreateFeed = () => {
-    dispatch(setPlaceSeq(Number(placeSeq)));
-    dispatch(setRegistered(true));
-    dispatch(setName(placeInfo.name));
-    dispatch(setAddress(placeInfo.address));
-
-    navigate('/report');
+    navigate('/report', {state : {placeSeq, flag : true, name : placeInfo.name, address : placeInfo.address}});
   };
 
   const viewOnMap = () => {

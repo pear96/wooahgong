@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +35,8 @@ public class FeedController {
     // 피드 수정
     @PatchMapping("/{feed_seq}")
     public ResponseEntity<String> updateFeed(@RequestHeader("Authorization") String token, @PathVariable("feed_seq") Long feedSeq,
-                                                    @RequestParam String content) {
-        return new ResponseEntity<>(feedService.updateFeed(token, feedSeq,content),HttpStatus.OK);
+                                                    @RequestBody HashMap<String,String> content) {
+        return new ResponseEntity<>(feedService.updateFeed(token, feedSeq,content.get("content")),HttpStatus.OK);
     }
     // 피드 삭제
     @DeleteMapping("/{feed_seq}")

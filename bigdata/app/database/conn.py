@@ -35,13 +35,13 @@ class SQLAlchemy:
         @app.on_event("startup")
         def startup():
             self._engine.connect()
-            logging.info("DB connected.")
+            # logging.info("DB connected.")
 
         @app.on_event("shutdown")
         def shutdown():
             self._session.close_all()
             self._engine.dispose()
-            logging.info("DB disconnected")
+            # logging.info("DB disconnected")
 
     def get_db(self):
         """

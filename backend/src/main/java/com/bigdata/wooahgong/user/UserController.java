@@ -103,9 +103,8 @@ public class UserController {
 
     // 프로필 수정하기 버튼 클릭
     @PatchMapping("/{nickname}")
-    public ResponseEntity<String> updateProfile(@RequestHeader("Authorization") String token, @PathVariable String nickname,
-                                                @RequestBody UpdateProfileReq updateProfileReq) {
-        return new ResponseEntity<>(userService.updateProfile(token, nickname,updateProfileReq), HttpStatus.OK);
+    public ResponseEntity<String> updateProfile(@RequestHeader("Authorization") String token, @RequestBody UpdateProfileReq updateProfileReq) {
+        return new ResponseEntity<>(userService.updateProfile(token, updateProfileReq), HttpStatus.OK);
     }
     // 프로필 수정하기 버튼 클릭
     @PatchMapping("/{nickname}/profileimg")

@@ -251,12 +251,22 @@ public class UserService {
     }
 
     @Transactional
-    public String updateProfile(String token, String nickname, UpdateProfileReq updateProfileReq) {
+    public String updateProfile(String token, UpdateProfileReq updateProfileReq) {
         // 토큰으로 유저 찾기
         User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_OUR_USER));
+        // 2. 유저가 닉네임을 변경
         if (!user.getNickname().equals(updateProfileReq.getNickname())) {
-            user.setNickname(updateProfileReq.getNickname());
+            // 해당 닉네임을 가진 유저를 찾는다.
+            User nickUser = userRepository.findByNickname(updateProfileReq.getNickname()).orElseGet(User::new);
+            // 없으면 닉네임을 세팅
+            if(nickUser.getUserSeq() == null){
+                user.setNickname(updateProfileReq.getNickname());
+            }
+            // 있으면 오류
+            else{
+                throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
+            }
         }
         if (!user.getMbti().equals(updateProfileReq.getMbti())) {
             user.setMbti(updateProfileReq.getMbti());

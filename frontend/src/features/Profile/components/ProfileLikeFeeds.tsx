@@ -5,6 +5,7 @@ import {
   ProfileFeedsOrPlacesGrid,
   FeedOrPlaceImageWrapper,
 } from 'features/Profile/styles/StyledFeedsAndPlaces';
+import { Spin } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 
 function ProfileLikeFeeds() {
@@ -75,23 +76,36 @@ function ProfileLikeFeeds() {
   
 
   return (
-    <ProfileFeedsOrPlacesGrid>
+    <div>
       {feeds !== undefined ? (
-        feeds.map((feed, i) => { 
-          const idx = i   
-          return (
-              <FeedOrPlaceImageWrapper key={idx} onClick={() => handleClickFeed({feedSeq : feed.feedSeq, placeSeq : feed.placeSeq})}>
-                <img src={feed.imageUrl} alt="" style={{ width: '100%', height: '100%' }} />
-              </FeedOrPlaceImageWrapper>
-          )})
-      ) : (<>loading</>)}
-      <div
-          ref={setTarget}
-          style={{
-            height: "15px",
+        <ProfileFeedsOrPlacesGrid>
+          {feeds.map((feed, i) => { 
+              const idx = i   
+              return (
+                  <FeedOrPlaceImageWrapper key={idx} onClick={() => handleClickFeed({feedSeq : feed.feedSeq, placeSeq : feed.placeSeq})}>
+                    <img src={feed.imageUrl} alt="" style={{ width: '100%', height: '100%' }} />
+                  </FeedOrPlaceImageWrapper>
+              )})
+          }
+          <div
+              ref={setTarget}
+              style={{
+                height: "15px",
           }}
-      />
-    </ProfileFeedsOrPlacesGrid>
+          />
+        </ProfileFeedsOrPlacesGrid>
+      ): (
+        <div style={{
+          height : 380,
+          display : "flex",
+          alignItems : "center",
+          justifyContent : "center"
+        }}>
+          <Spin size='large'/>
+        </div>
+      )}
+      
+    </div>
   );
 }
 

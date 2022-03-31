@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Spin } from 'antd';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import ProfileApi from 'common/api/ProfileApi';
@@ -12,19 +13,16 @@ function ProfileUpdate() {
   const [newMbti, setNewMbti] = useState<string>("");
   const [newMoods, setNewMoods] = useState<string[]>([]);
   const [isProvider, setProvider] = useState<boolean>();
-  // const props = {newPassword,newPasswordCheck,newNickname,newMbti,newMoods};
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [isNick,setIsnickName] = useState<boolean>(true);
   const [mounted, setMounted] = useState<boolean>(false);
 
   const { nickname } = useParams<string>();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const getProfileForUpdateApi = async () => {
     if (nickname !== undefined) {
       const result = await ProfileApi.getProfileForUpdate(nickname);
-      // console.log('gpfua', result);
-
+  
       if (result.status === 200) {
         setUserId(result.data.userId);
         setNewNickname(result.data.nickname);
@@ -85,7 +83,14 @@ function ProfileUpdate() {
           />
         </>
       ) : (
-        <p>Loading..</p>
+        <div style={{
+          height : 720,
+          display : "flex",
+          alignItems : "center",
+          justifyContent : "center"
+        }}>
+          <Spin size='large'/>
+        </div>
       )}
     </div>
   );

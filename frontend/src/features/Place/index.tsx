@@ -1,20 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { Spin } from 'antd';
 import PlaceApi from 'common/api/PlaceApi';
 import PlaceThumbnail from './components/PlaceThumbnail';
 import PlaceInfo from './components/PlaceInfo';
 import PlaceFeeds from './components/PlaceFeeds';
 
 function PlacePage() {
-  // const [placeImageUrl, setPlaceImageUrl] = useState<string>('');
-  // const [name, setName] = useState<string>('');
-  // const [address, setAddress] = useState<string>('');
-  // const [avgRatings, setAvgRatings] = useState<number>();
-  // const [isWished, setWished] = useState<boolean>();
-  // const [lat, setLat] = useState<number>();
-  // const [lng, setLng] = useState<number>();
-  // const [feeds, setFeeds] = useState<any>(null);
   const [place, setPlace] = useState<{
     address : string, 
     avgRatings : number, 
@@ -47,16 +39,22 @@ function PlacePage() {
   return (
     <div>
       <div style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '1024px' }}>
-        {place === undefined ? (<>로딩중</>) 
+        {place === undefined ? (
+            <div style={{
+              height : 720,
+              display : "flex",
+              alignItems : "center",
+              justifyContent : "center"
+            }}>
+              <Spin size='large'/>
+            </div>
+        ) 
         : (
           <>
             <PlaceThumbnail thumbnail={place.placeImageUrl} />
-            <PlaceInfo placeInfo={place}
-            />
-            {/* <PlaceFeeds feeds={feeds} sortFeeds={criterion => handleSortFeeds(criterion)}/>
-            */}
+            <PlaceInfo placeInfo={place}/>
             <PlaceFeeds placeFeeds={place.feeds} />
-        </>
+          </>
         )}
       </div>
     </div>

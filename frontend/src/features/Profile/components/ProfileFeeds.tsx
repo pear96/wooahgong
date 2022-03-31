@@ -1,7 +1,4 @@
-import { ReducerType } from 'app/rootReducer';
 import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import styled from 'styled-components';
 import ProfileApi from 'common/api/ProfileApi';
 import {
   ProfileFeedsOrPlacesGrid,

@@ -27,7 +27,7 @@ declare global {
 const RediretHandler = loadable(() => import('../features/Auth/kakaosocialLogin/OAuth2RedirectHandler'));
 const Search = loadable(() => import('../features/Search/searh'));
 
-const Profile = loadable(() => import('../features/Profile'));
+const Profile = loadable(() => import('../features/Profile/Profile'));
 const ProfileUpdate = loadable(() => import('../features/Profile/profileUpdate'));
 
 const Place = loadable(() => import('../features/Place'));

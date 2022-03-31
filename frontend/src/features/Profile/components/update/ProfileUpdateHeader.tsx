@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
 import { AiOutlineCheck } from 'react-icons/ai';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReducerType } from 'app/rootReducer';
 import ProfileApi from 'common/api/ProfileApi';

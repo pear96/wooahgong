@@ -4,8 +4,6 @@ import { toast } from 'react-toastify';
 import UserApi from 'common/api/UserApi';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { ReducerType } from 'app/rootReducer';
 import { useAppDispatch } from '../../app/store';
 import useInput from '../../common/hooks/useInput';
 
@@ -92,8 +90,7 @@ export const Form = styled.form`
 const mainLogin = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { test } = useSelector((state: ReducerType) => state.login);
-  console.log(test);
+
   const { getCommonLoginResult } = UserApi;
 
   const [id, onChangeId] = useInput('');

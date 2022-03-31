@@ -32,7 +32,7 @@ function FeedDetail() {
       setFeedDetails(result.data);
     } else {
       console.log('error');
-      // 여기 토스트 메세지 써줘야 할듯
+      // 여기 토스트 메세지 써줘야 할듯 => ok
     }
   }
 

@@ -1,8 +1,7 @@
-import { Avatar, Button, Space, Upload, message, Spin, Row, Col, Input, Select } from 'antd';
+import { Avatar, Col, Input, Select } from 'antd';
 import {
   CenterAlignedSpace,
   StyledUpdateBody,
-  UploadButton,
   LeaveButton,
   StyledInfoRow,
   StyledInfoTitle,
@@ -54,34 +53,6 @@ const moodOpts = [
   '기타',
 ];
 
-const dummyLoggedInUserFromRedux = {
-  userSeq: 2,
-  userId: 'qweadzs',
-  nickname: 'nicknick',
-  password: 'passpass',
-  profileImg: 'https://picsum.photos/640/360',
-  mbti: 'ISTJ',
-  moods: ['낭만적인', '이국적인'],
-  provider: false,
-};
-
-function getBase64(img: Blob, callback: any) {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
-
-function beforeUpload(file: any) {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-  if (!isJpgOrPng) {
-    message.error('JPG/PNG 파일만 업로드 할 수 있습니다!');
-  }
-  const isLt10M = file.size / 1024 / 1024 < 10;
-  if (!isLt10M) {
-    message.error('이미지는 10MB보다 작아야 합니다!');
-  }
-  return isJpgOrPng && isLt10M;
-}
 
 function ProfileUpdateBody({
   userId,
@@ -89,10 +60,9 @@ function ProfileUpdateBody({
   oldMbti,
   oldMoods,
   isProvider,
-  changePassword,
-  changePasswordCheck,
-  changeNickname,
   changeMbti,
+  changeNickname,
+  error,
   changeMoods,
 }: any) {
   const dispatch = useDispatch();
@@ -124,6 +94,7 @@ function ProfileUpdateBody({
       }
     }
   };
+
   const handleClickPwdChange = (e : React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setIsOpen(true);
@@ -174,12 +145,14 @@ function ProfileUpdateBody({
               <Input
                 bordered={false}
                 value={oldNickname}
-                onChange={(e) => {
-                  // setNick(e.target.value);
-                  changeNickname(e.target.value);
-                }}
+                onChange={changeNickname}
               />
             </UnderlinedDiv>
+            <span style={{
+              position : "absolute",
+              fontSize : 12,
+              color : "red"
+            }}>{error}</span>
           </Col>
         </StyledInfoRow>
         <StyledInfoRow align="middle">

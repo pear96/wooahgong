@@ -7,86 +7,65 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
 import { AiOutlineCheck } from 'react-icons/ai';
-import { message } from 'antd';
+import { toast } from 'react-toastify';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ReducerType } from 'app/rootReducer';
 import ProfileApi from 'common/api/ProfileApi';
+import { setProfileNick } from '../../../Auth/authSlice';
 
-interface InfoPropTypes {
-  newNickname: string | undefined;
-  newMbti: string | undefined;
-  newMoods: string[] | undefined;
+
+type MyProps = {
+  newNickname: string,
+  newMbti: string,
+  newMoods: string[],
+  isNick : boolean
 }
 
-function ProfileUpdateHeader({ newNickname, newMbti, newMoods }: InfoPropTypes) {
+function ProfileUpdateHeader({ newNickname, newMbti, newMoods, isNick }: MyProps) {
+
   const navigate = useNavigate();
   const currentNickname = useSelector((state: ReducerType) => state.login.nickname);
-
+  const dispatch = useDispatch();
   const updateProfile = async () => {
-    // if (newPassword !== newPasswordCheck) {
-    //   message.error('비밀번호가 다릅니다');
-    //   return;
-    // }
+    
     if (newMoods !== undefined && (newMoods.length < 1 || newMoods.length > 2)) {
-      message.error('관심 분위기는 최소 1개 최대 2개 설정해야 합니다.');
+      toast.error(<div style={{ width: 'inherit', fontSize: '14px' }}>관심 분위기는 최소 1개 최대 2개 설정해야 합니다.</div>, {
+        position: toast.POSITION.TOP_CENTER,
+        role: 'alert',
+      });
       return;
     }
-
-    // const token = localStorage.getItem('Token');
-    // const formData = new FormData();
-    // formData.append('image', image);
-
-    // 프로필 사진 변경
+    if(!isNick){
+      toast.error(<div style={{ width: 'inherit', fontSize: '14px' }}>닉네임 형식이 올바르지 않습니다.</div>, {
+        position: toast.POSITION.TOP_CENTER,
+        role: 'alert',
+      });
+      return;
+    }
     if (newNickname !== undefined && newMbti !== undefined && newMoods !== undefined) {
-      // const imageResult = await ProfileApi.updateProfileImage(currentNickname, formData);
       const result = await ProfileApi.updateProfile(currentNickname, {
         nickname: newNickname,
         mbti: newMbti,
         moods: newMoods,
       });
       if (result.status === 200 && result.status === 200) {
-        message.success('정보를 수정하였습니다.');
+        toast.success(<div style={{ width: 'inherit', fontSize: '14px' }}>회원정보를 업데이트 완료 했습니다.</div>, {
+          position: toast.POSITION.TOP_CENTER,
+          role: 'alert',
+        });
+        if(currentNickname !== newNickname){
+          dispatch(setProfileNick(newNickname));
+        }
+        navigate(`/profile/${newNickname}`);
       } else {
         console.log('infoResult', result);
-        message.error('정보를 수정하지 못하였습니다.');
+        toast.error(<div style={{ width: 'inherit', fontSize: '14px' }}>사용불가능한 닉네임 입니다.</div>, {
+          position: toast.POSITION.TOP_CENTER,
+          role: 'alert',
+        });
       }
     }
-    // axios({
-    //   method: 'PATCH',
-    //   url: `/users/${currentNickname}/profileimg`,
-    //   headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` },
-    //   data: formData,
-    // })
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     console.log('프로필 이미지 바꾸기 성공');
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     console.log('프로필 이미지 바꾸기 실패');
-    //   });
-
-    // // 프로필 정보 변경
-    // axios({
-    //   method: 'PATCH',
-    //   url: `/users/${currentNickname}`,
-    //   headers: { Authorization: `Bearer ${token}` },
-    //   data: {
-    //     password: newPassword,
-    //     nickname: newNickname,
-    //     mbti: newMbti,
-    //     moods: newMoods,
-    //   },
-    // })
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     console.log('프로필 정보 바꾸기 성공');
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     console.log('프로필 정보 바꾸기 실패');
-    //   });
   };
 
   return (
@@ -99,9 +78,6 @@ function ProfileUpdateHeader({ newNickname, newMbti, newMoods }: InfoPropTypes) 
         onClick={updateProfile}
         style={{ width: '30px', height: '30px', marginRight: '1rem', cursor: 'pointer' }}
       />
-      {/* <div>체크</div> */}
-      {/* <img src={mainLogo} alt="mainLogo" width={50} height={50} /> */}
-      {/* <AiOutlineSearch style={{ width: '40px', height: '40px', marginRight: '1rem' }} /> */}
     </StyledProfileUpdateHeader>
   );
 }

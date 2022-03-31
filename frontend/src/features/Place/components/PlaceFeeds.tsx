@@ -13,48 +13,6 @@ import { Select } from 'antd';
 
 const { Option } = Select;
 
-const dummyLatestFeeds = [
-  {
-    feedSeq: 1,
-    thumbnail: 'https://picsum.photos/640/260',
-  },
-  {
-    feedSeq: 2,
-    thumbnail: 'https://picsum.photos/640/300',
-  },
-  {
-    feedSeq: 3,
-    thumbnail: 'https://picsum.photos/640/340',
-  },
-  {
-    feedSeq: 4,
-    thumbnail: 'https://picsum.photos/640/380',
-  },
-];
-
-const dummyPopularFeeds = [
-  {
-    feedSeq: 1,
-    thumbnail: 'https://picsum.photos/640/240',
-  },
-  {
-    feedSeq: 2,
-    thumbnail: 'https://picsum.photos/640/280',
-  },
-  {
-    feedSeq: 3,
-    thumbnail: 'https://picsum.photos/640/320',
-  },
-  {
-    feedSeq: 4,
-    thumbnail: 'https://picsum.photos/640/360',
-  },
-  {
-    feedSeq: 5,
-    thumbnail: 'https://picsum.photos/640/400',
-  },
-];
-
 type MyProps = {
   placeFeeds : {
     feedSeq : number,
@@ -95,13 +53,14 @@ function PlaceFeeds({ placeFeeds }: MyProps) {
         </Select>
       </SortOption>
       <PlaceFeedsGrid>
-        {feeds.map((feed: {feedSeq : number, thumbnail : string}) => (
-          // <FeedWrapper>
-          <FeedImageWrapper onClick={() => handleClickFeed(feed.feedSeq)}>
-            <FeedImage src={feed.thumbnail} alt="" />
-          </FeedImageWrapper>
-          // </FeedWrapper>
-        ))}
+          {feeds.map((feed: {feedSeq : number, thumbnail : string}, i : number) => {
+            const idx = i;
+            return (
+              <FeedImageWrapper key = {idx} onClick={() => handleClickFeed(feed.feedSeq)}>
+                <FeedImage src={feed.thumbnail} alt="" />
+              </FeedImageWrapper>
+            )}
+          )}
       </PlaceFeedsGrid>
     </PlaceFeedsWrapper>
   );

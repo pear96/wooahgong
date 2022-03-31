@@ -9,34 +9,6 @@ import { ReducerType } from 'app/rootReducer';
 import ProfileApi from 'common/api/ProfileApi';
 // import { setFeeds } from './reducers/profileFeedReducer';
 
-const dummyUserProps = {
-  isOwner: true,
-  feedsCnt: 15,
-  likedCnt: 175,
-  bookmarkedCnt: 286,
-  moods: ['감성적', '빈티지'],
-};
-
-const dummyFeeds = [
-  {
-    feedSeq: 1,
-    imageUrl: 'https://picsum.photos/640/300',
-  },
-  {
-    feedSeq: 2,
-    imageUrl: 'https://picsum.photos/640/340',
-  },
-  {
-    feedSeq: 3,
-    imageUrl: 'https://picsum.photos/640/380',
-  },
-  {
-    feedSeq: 4,
-    imageUrl: 'https://picsum.photos/640/420',
-  },
-];
-
-
 function UserPage() {
   const { nickname } = useParams<string>();
 

@@ -27,15 +27,15 @@ interface InfoPropTypes {
 }
 
 function ProfileUpdate() {
-  const [newPassword, setNewPassword] = useState<string>(dummyLoggedInUserFromRedux.password);
-  const [newPasswordCheck, setNewPasswordCheck] = useState<string>(dummyLoggedInUserFromRedux.password);
-
-  const [userId, setUserId] = useState<string>();
-  const [newNickname, setNewNickname] = useState<string>();
-  const [newMbti, setNewMbti] = useState<string>();
-  const [newMoods, setNewMoods] = useState<string[]>();
+  
+  const [userId, setUserId] = useState<string>("");
+  const [newNickname, setNewNickname] = useState<string>("");
+  const [newMbti, setNewMbti] = useState<string>("");
+  const [newMoods, setNewMoods] = useState<string[]>([]);
   const [isProvider, setProvider] = useState<boolean>();
   // const props = {newPassword,newPasswordCheck,newNickname,newMbti,newMoods};
+  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [isNick,setIsnickName] = useState<boolean>(true);
   const [mounted, setMounted] = useState<boolean>(false);
 
   const { nickname } = useParams<string>();
@@ -59,6 +59,30 @@ function ProfileUpdate() {
       }
     }
   };
+  const handleCheckNickname = (e : React.ChangeEvent<HTMLInputElement>)=>{
+    // e.preventDefault()
+    const alphaRegex = /[a-zA-Z]/;
+    const hanRegex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+    const specialRegex =  /[!?@#$%^&*():;+=~{}<>\\-]|[|\\"',/`₩]/;
+    const numberRegex = /[0-9]/;
+
+    const curWord = e.currentTarget.value;
+    console.log(curWord);
+    if ((curWord.length < 5 || curWord.length > 8) && 
+              (hanRegex.test(curWord) || alphaRegex.test(curWord))) {
+      setErrorMsg("5글자 이상 8글자 이하, 한글 영문 숫자만 사용가능합니다");
+      setIsnickName(false);
+
+    } else if(specialRegex.test(curWord)) {
+      console.log("???")
+      setErrorMsg("특수 문자는 . _ 만 사용가능합니다");
+      setIsnickName(false);
+    } else{
+      setErrorMsg("");
+      setIsnickName(true);
+    }
+    setNewNickname(curWord);
+  }
 
   useEffect(() => {
     getProfileForUpdateApi();
@@ -68,16 +92,15 @@ function ProfileUpdate() {
     <div style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '1024px' }}>
       {mounted ? (
         <>
-          <ProfileUpdateHeader newNickname={newNickname} newMbti={newMbti} newMoods={newMoods} />
+          <ProfileUpdateHeader newNickname={newNickname} newMbti={newMbti} newMoods={newMoods} isNick = {isNick} />
           <ProfileUpdateBody
             userId={userId}
             oldNickname={newNickname}
             oldMbti={newMbti}
             oldMoods={newMoods}
             isProvider={isProvider}
-            changePassword={(password: string) => setNewPassword(password)}
-            changePasswordCheck={(passwordCheck: string) => setNewPasswordCheck(passwordCheck)}
-            changeNickname={(nnickname: string) => setNewNickname(nnickname)}
+            changeNickname={handleCheckNickname}
+            error={errorMsg}
             changeMbti={(mbti: string) => setNewMbti(mbti)}
             changeMoods={(moods: string[]) => setNewMoods(moods)}
           />

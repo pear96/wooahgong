@@ -5,17 +5,14 @@ import styled from 'styled-components';
 import ProfileApi from 'common/api/ProfileApi';
 import {
   ProfileFeedsOrPlacesGrid,
-  FeedOrPlaceWrapper,
-  FeedOrPlaceTwoModes,
   FeedOrPlaceImageWrapper,
-  HoveredFeedOrPlaceWrapper,
 } from 'features/Profile/styles/StyledFeedsAndPlaces';
 import { useNavigate, useParams } from 'react-router-dom';
 
 function ProfileFeeds() {
   // const { feeds } = useSelector((state: ReducerType) => state.profileFeed);
   const { nickname } = useParams<string>();
-  const [feeds, setFeeds] = useState<{ feedSeq: number; imageUrl: string }[]>([]);
+  const [feeds, setFeeds] = useState<{ feedSeq: number, imageUrl: string, placeSeq : number }[]>([]);
   const [target, setTarget] = useState<any>(null);
   const [page, setPage] = useState<number>(0);
   const [end, setEnd] = useState<boolean>(false);
@@ -64,29 +61,31 @@ function ProfileFeeds() {
     }
   };
 
+  const handleClickFeed = (value : {feedSeq : number, placeSeq : number}) => {
+    navigate(`/place/${value.placeSeq}/feeds/${value.feedSeq}`);
+  }
+  
   useEffect(()=>{
-    // getMyFeedsApi();
-  },[])
-  useEffect(()=>{
-    let observer;
+    let observer : any;
     if(target){
       observer = new IntersectionObserver(onIntersect, {
         threshold : 0.2,
       });
       observer.observe(target);
     }
+    return () => observer && observer.disconnect();
   }, [target]);
 
   return (
     <ProfileFeedsOrPlacesGrid>
       {feeds !== undefined ? (
-        feeds.map((feed) => (
-
-              <FeedOrPlaceImageWrapper>
+        feeds.map((feed, i) => {
+          const idx = i;
+          return (
+              <FeedOrPlaceImageWrapper key = {idx} onClick={() => handleClickFeed({feedSeq : feed.feedSeq, placeSeq : feed.placeSeq})} >
                 <img src={feed.imageUrl} alt="" style={{ width: '100%', height: '100%' }} />
               </FeedOrPlaceImageWrapper>
-
-        ))
+          )})
       ) : (<>loading</>)}
       <div
           ref={setTarget}

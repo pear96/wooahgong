@@ -1,9 +1,7 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
 // reducer
-import profileFeedReducer from 'features/Profile/reducers/profileFeedReducer';
-import profilePlaceReducer from 'features/Profile/reducers/profilePlaceReducer';
-import profileImageReducer from 'features/Profile/reducers/profileImageReducer';
+
 import feedReducer from 'features/Feed/feedReducer';
 import searchReducer from 'features/Search/searchSlice';
 import feedDeatilReducer from 'features/FeedDetail/feedDetailSlice';
@@ -16,9 +14,6 @@ const rootReducer = combineReducers({
   registerReducer,
   feedReducer,
   login: authSlice,
-  profileFeed: profileFeedReducer,
-  profilePlace: profilePlaceReducer,
-  profileImage: profileImageReducer,
   search: searchReducer,
   feeddetail: feedDeatilReducer,
 });

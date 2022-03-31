@@ -1,8 +1,7 @@
-import { Avatar, Button, Space, Upload, message, Spin, Row, Col, Input, Select } from 'antd';
+import { Avatar, Col, Input, Select } from 'antd';
 import {
   CenterAlignedSpace,
   StyledUpdateBody,
-  UploadButton,
   LeaveButton,
   StyledInfoRow,
   StyledInfoTitle,
@@ -12,15 +11,14 @@ import {
   RePwdButton,
 } from 'features/Profile/styles/update/StyledUpdateBody';
 import { UserOutlined } from '@ant-design/icons';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReducerType } from 'app/rootReducer';
-import { setProfileImg } from 'features/Auth/authSlice';
-import { setImage, setOriginalImg } from 'features/Profile/reducers/profileImageReducer';
-import styled from 'styled-components';
 import LeaveModal from 'features/Profile/components/update/LeaveModal';
 import ProfileApi from 'common/api/ProfileApi';
+import PasswordChange from './PasswordChange';
+import { setProfileImg } from '../../../Auth/authSlice';
 
 const { Option } = Select;
 
@@ -54,33 +52,16 @@ const moodOpts = [
   '기타',
 ];
 
-const dummyLoggedInUserFromRedux = {
-  userSeq: 2,
-  userId: 'qweadzs',
-  nickname: 'nicknick',
-  password: 'passpass',
-  profileImg: 'https://picsum.photos/640/360',
-  mbti: 'ISTJ',
-  moods: ['낭만적인', '이국적인'],
-  provider: false,
-};
-
-function getBase64(img: Blob, callback: any) {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
-
-function beforeUpload(file: any) {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-  if (!isJpgOrPng) {
-    message.error('JPG/PNG 파일만 업로드 할 수 있습니다!');
-  }
-  const isLt10M = file.size / 1024 / 1024 < 10;
-  if (!isLt10M) {
-    message.error('이미지는 10MB보다 작아야 합니다!');
-  }
-  return isJpgOrPng && isLt10M;
+type MyProps = {
+  userId : string,
+  oldNickname : string,
+  oldMbti : string,
+  oldMoods : string[],
+  isProvider : boolean | undefined,
+  changeNickname : (e : React.ChangeEvent<HTMLInputElement>) => void,
+  error : string,
+  changeMbti : (mbti : string) => void,
+  changeMoods : (moods : string[]) => void
 }
 
 function ProfileUpdateBody({
@@ -89,147 +70,56 @@ function ProfileUpdateBody({
   oldMbti,
   oldMoods,
   isProvider,
-  changePassword,
-  changePasswordCheck,
-  changeNickname,
   changeMbti,
+  changeNickname,
+  error,
   changeMoods,
-}: any) {
+}: MyProps) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { nickname, profileImg } = useSelector((state: ReducerType) => state.login);
   // 위에 만들어야함 리덕스
 
   // const { file, image, originalImg } = useSelector((state: ReducerType) => state.profileImage);
-  const image = useSelector((state: ReducerType) => state.profileImage.image);
+  const image = useSelector((state: ReducerType) => state.login);
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [password, setPassword] = useState<string>('');
-  const [passwordCheck, setPasswordCheck] = useState<string>('');
-  // const [userId, setUserId] = useState<string>('');
-  const [nick, setNick] = useState<string>(oldNickname);
-  const [mbti, setMbti] = useState<string>('');
-  const [moods, setMoods] = useState<string[]>([]);
-  // const [isProvider, setProvider] = useState<boolean>();
-
-  const [dataLoading, setDataLoading] = useState<boolean>(false);
-
   const [showLeaveModal, setShowLeaveModal] = useState<boolean>(false);
+  const [open, setIsOpen] = useState<boolean>(false);
 
-  const [tempImg, setTempImg] = useState<string>();
 
-  const handleUploadChange = (info: any) => {
-    console.log(info.file.status);
-    info.file.status = 'done';
-    if (info.file.status === 'uploading') {
-      setLoading(true);
-      return;
-    }
-    console.log(info.file.originFileObj);
-    if (info.file.status === 'done') {
-      getBase64(info.file.originFileObj, (imageUrl: any) => {
-        dispatch(setImage(imageUrl));
-        // setPic(imageUrl);
-        setLoading(false);
-      });
-    }
-  };
-  // const getProfileForUpdateApi = async () => {
-  //   if (nickname !== undefined) {
-  //     const result = await ProfileApi.getProfileForUpdate(nickname);
-  //     console.log('sss', result.data);
-
-  //     if (result.status === 200) {
-  //       dispatch(setImage(result.data.profileImg));
-  //       setUserId(result.data.userId);
-  //       setNick(result.data.nickname);
-  //       setMbti(result.data.mbti);
-  //       setMoods(result.data.moods);
-  //       setProvider(result.data.provider);
-  //       console.log(userId, nick, mbti, isProvider);
-  //     } else {
-  //       navigate('/not-found');
-  //     }
-  //   }
-  // };
-  // useEffect(() => {
-  //   // dispatch(setImage(dummyLoggedInUserFromRedux.profileImg));
-  //   // if (!dummyLoggedInUserFromRedux.provider) {
-  //   //   setPassword(dummyLoggedInUserFromRedux.password);
-  //   //   setPasswordCheck(dummyLoggedInUserFromRedux.password);
-  //   // }
-  //   // setNickname(dummyLoggedInUserFromRedux.nickname);
-  //   // setMbti(dummyLoggedInUserFromRedux.mbti);
-  //   // setMoods(dummyLoggedInUserFromRedux.moods);
-
-  //   setDataLoading(true);
-  //   getProfileForUpdateApi();
-  //   return () => setDataLoading(false);
-  // }, [isProvider]);
-
-  const updateProfileImageApi = async (data: FormData) => {
-    const result = await ProfileApi.updateProfileImage(nickname, data);
-    if (result.status === 200 && tempImg !== undefined) {
-      message.success('프로필 이미지를 변경하였습니다.');
-    } else {
-      message.error('프로필 이미지를 변경하지 못하였습니다.');
-    }
-  };
-
-  const imageHandler = (e: any) => {
-    const reader = new FileReader();
-    reader.onload = async () => {
-      if (reader.readyState === 2 && typeof reader.result === 'string') {
-        const formData = new FormData();
-        formData.append('image', reader.result);
-        // setTempImg(reader.result);
-        const result = await ProfileApi.updateProfileImage(nickname, formData);
-        if (result.status === 200) {
-          dispatch(setProfileImg(reader.result));
-          message.success('프로필 이미지를 변경하였습니다.');
-        } else {
-          message.error('프로필 이미지를 변경하지 못하였습니다.');
-        }
-
-        // updateProfileImageApi(formData);
-      }
-    };
-    reader.readAsDataURL(e.target.files[0]);
-  };
-  const imageHandler1 = async (e : React.ChangeEvent<HTMLInputElement>) => {
+  const imageHandler = async (e: any) => {
     const formData = new FormData();
     if(e.currentTarget.files){
       formData.append('image', e.currentTarget.files[0]);
     // setTempImg(reader.result);
       const result = await ProfileApi.updateProfileImage(nickname, formData);
-      if (result.status === 200) {
+      if(result?.status === 200){
         console.log(result.data);
-        // dispatch(setProfileImg(reader.result));
-        message.success('프로필 이미지를 변경하였습니다.');
-      } else {
-        message.error('프로필 이미지를 변경하지 못하였습니다.');
+        dispatch(setProfileImg(result.data));
+      }
+      else{
+        console.log("error");
       }
     }
-    
   };
+
+  const handleClickPwdChange = (e : React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setIsOpen(true);
+  }
+  const handleClosePwdModal = (e : React.MouseEvent) => {
+    e.stopPropagation();
+    setIsOpen(false);
+  }
 
   return (
     <>
       <StyledUpdateBody>
         <CenterAlignedSpace direction="vertical">
           {/* {loading && <Spin size="large" tip="로딩 중..." />} */}
-          {loading ? <Avatar size={80} icon={<UserOutlined />} /> : <Avatar size={80} src={profileImg} />}
-          {/* <Avatar size={80} src={image} /> */}
-          {/* <Upload
-            name="file"
-            maxCount={1}
-            showUploadList={false}
-            beforeUpload={beforeUpload}
-            onChange={handleUploadChange}
-          >
-            <UploadButton>프로필 사진 변경</UploadButton>
-          </Upload> */}
+          {loading ? <Avatar size={80} icon={<UserOutlined />} /> : <Avatar size={80} src={image.profileImg} />}
           <input
             type="file"
             name="image-upload"
@@ -248,44 +138,16 @@ function ProfileUpdateBody({
           <StyledInfoTitle xs={10}>아이디</StyledInfoTitle>
           <Col xs={14}>{userId}</Col>
         </StyledInfoRow>
-        {!isProvider && (
-          <>
+        {!isProvider ? (
             <StyledInfoRow align="middle">
               <StyledInfoTitle xs={10}>비밀번호</StyledInfoTitle>
               <Col xs={14}>
-                <RePwdButton size="small" href="/">
+                <RePwdButton size="small" onClick={handleClickPwdChange}>
                   비밀번호 변경
                 </RePwdButton>
-                {/* <UnderlinedDiv>
-                  <Input.Password
-                    bordered={false}
-                    defaultValue={dummyLoggedInUserFromRedux.password}
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                      changePassword(e.target.value);
-                    }}
-                  />
-                </UnderlinedDiv> */}
               </Col>
             </StyledInfoRow>
-            {/* <StyledInfoRow align="middle">
-              <StyledInfoTitle xs={10}>비밀번호 확인</StyledInfoTitle>
-              <Col xs={14}>
-                <UnderlinedDiv>
-                  <Input.Password
-                    bordered={false}
-                    defaultValue={dummyLoggedInUserFromRedux.password}
-                    onChange={(e) => {
-                      setPasswordCheck(e.target.value);
-                      changePasswordCheck(e.target.value);
-                    }}
-                  />
-                </UnderlinedDiv>
-              </Col>
-              {password !== passwordCheck && <Warning>비밀번호가 일치하지 않습니다.</Warning>}
-            </StyledInfoRow> */}
-          </>
-        )}
+        ) : (null)}
         <StyledInfoRow align="middle">
           <StyledInfoTitle xs={10}>닉네임</StyledInfoTitle>
           <Col xs={14}>
@@ -293,12 +155,14 @@ function ProfileUpdateBody({
               <Input
                 bordered={false}
                 value={oldNickname}
-                onChange={(e) => {
-                  // setNick(e.target.value);
-                  changeNickname(e.target.value);
-                }}
+                onChange={changeNickname}
               />
             </UnderlinedDiv>
+            <span style={{
+              position : "absolute",
+              fontSize : 12,
+              color : "red"
+            }}>{error}</span>
           </Col>
         </StyledInfoRow>
         <StyledInfoRow align="middle">
@@ -354,6 +218,7 @@ function ProfileUpdateBody({
         </StyledInfoRow>
       </StyledUpdateInfo>
       <LeaveButton onClick={() => setShowLeaveModal(true)}>우아공 떠나기</LeaveButton>
+      <PasswordChange open = {open} id={userId} onClose={handleClosePwdModal}/>
       {showLeaveModal && <LeaveModal setShowModal={setShowLeaveModal} />}
     </>
   );

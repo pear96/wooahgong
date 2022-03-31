@@ -8,7 +8,6 @@ import feedDeatilReducer from 'features/FeedDetail/feedDetailSlice';
 import registerReducer from '../features/Regist/registerReducer';
 import authSlice from '../features/Auth/authSlice';
 
-
 // 만들어 놓은 리듀서들을 합친다.
 const rootReducer = combineReducers({
   registerReducer,

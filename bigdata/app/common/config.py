@@ -19,6 +19,11 @@ class Config:
     secrets = json.loads(open(SECRET_FILE).read())
     DB = secrets["DB"]
     DB_URL: str = f"mysql+pymysql://{DB['USER']}:{DB['PASSWORD']}@{DB['HOST']}:{DB['PORT']}/{DB['NAME']}"
+    
+    # JWT 설정
+    JWT = secrets["JWT"]
+    JWT_SECRET = JWT["SECRET_KEY"]
+    JWT_ALGORITHM = JWT["ALGORITHM"]
 
 @dataclass
 class LocalConfig(Config):

@@ -1,20 +1,18 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
+from jose import jwt, JWTError
 from sqlalchemy.orm import Session
+from starlette.requests import Request
 from starlette.responses import Response
 from app.database.schema import User, Mood, UserMood, Place, PlaceWish, Feed, FeedLike, FeedMood
-
 from app.database.conn import db
+from app.common.config import Config
 
 router = APIRouter(prefix="/data/main")
 
-@router.get("/forme")
-async def forme(searchRadius: int, lat: float, lng: float, session: Session = Depends(db.session)):
-    user = session.query(User).all()
-    print(user)
-    data = {"user": user, "searchRadius": searchRadius, "lat": lat, "lng": lng}
-    return data
-
+SECRET_KEY = Config.JWT_SECRET
+ALGORITHM = Config.JWT_ALGORITHM
+PREFIX = "Bearer "
 
 @router.get("/trend")
 async def trend(searchRadius: int, lat: float, lng: float, session: Session = Depends(db.session)):
-    return Response({"message": "트렌드"})
+    return "트렌드"

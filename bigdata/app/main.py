@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from app.database.conn import db
 from app.common.config import conf
-from app.routes import recommend
+from app.routes import forme, trend
 
 
 def create_app():
@@ -26,7 +26,8 @@ def create_app():
         allow_headers=["*"],
     )
     # 라우터 정의
-    app.include_router(recommend.router)
+    app.include_router(forme.router)
+    app.include_router(trend.router)
     return app
 
 

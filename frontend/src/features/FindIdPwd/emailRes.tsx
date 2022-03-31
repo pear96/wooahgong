@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import ProgressBar from '@ramonak/react-progress-bar';
 import { toast } from 'react-toastify';
 import UserApi from 'common/api/UserApi';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../../assets/Logo.png';
 import { ReducerType } from '../../app/rootReducer';
 
@@ -99,43 +99,33 @@ const Desc = styled.span`
   font-family: 'NotoSansKR';
   font-size: 11px;
 `;
+const DescBold = styled.span`
+  display: block;
+  text-align: left;
+  margin-left: 60px;
+  margin-bottom: 18px;
+  font-family: 'NotoSansKR';
+  font-size: 15px;
+`;
 // type MyProps = {
 //   progress: number;
 // };
 function EmailRes() {
-  const [isOk, setIsOk] = useState<boolean>(false);
-  const [nickName, setStatenickName] = useState<string>('');
-  const [errorMsg, setErrorMsg] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [isnickName, setIsnickName] = useState<boolean>(false);
-  const navigate = useNavigate();
-
+  const location = useLocation();
   // const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
   const dispatch = useDispatch();
-
+  const { email }: any = location.state;
+  console.log(email);
   const handleInputEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
-    const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
-
-    const curWord = e.currentTarget.value;
-
-    // 이메일 형식 검사
-    if (regEmail.test(curWord) === true) {
-      setIsOk(true);
-      setErrorMsg("");
-    } else {
-      setIsOk(false);
-      setErrorMsg("이메일 형식을 맞춰주세요");
-    }
-    setEmail(curWord);
   };
 
 
   const handleOnClickNextStep = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     // dispatch(setNick(nickName));
-    navigate('/find/email');
+    // navigate('/find/email');
   };
 
   return (
@@ -145,24 +135,11 @@ function EmailRes() {
           <div>
             <Img src={Logo} alt="Logo" />
           </div>
-          <Title>이메일 검사</Title>
-          <Desc>가입 이메일을 입력하세요.</Desc>
-          <Input onChange={handleInputEmail} placeholder="이메일을 입력하세요." />
-          <ErrorMsg>{errorMsg}</ErrorMsg>
+          <Title>아이디 찾기</Title>
+          <Desc>{email} 이메일로 가입된 아이디는</Desc>
+          <DescBold>ㅇㅇ입니다.</DescBold>
 
-          <div
-            style={{
-              position: 'absolute',
-              marginLeft: '80px',
-              top: '523px',
-            }}
-          >
-            {isOk ? (
-              <ActiveButton onClick={handleOnClickNextStep}>다 음</ActiveButton>
-            ) : (
-              <DisableButton>다 음</DisableButton>
-            )}
-          </div>
+
         </div>
       </article>
     </main>

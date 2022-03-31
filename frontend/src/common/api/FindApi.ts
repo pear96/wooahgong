@@ -6,17 +6,14 @@ const token = getToken();
 
 // 이메일로 회원 아이디 찾기
 const findIdByEmail = async (email: string) => {
-  const res = await axios({
-    method: 'GET',
-    url: `${BASE_URL}/id?email=${email}`,
+  const res = await axios.get(`${BASE_URL}/id?email=${email}`
     // headers: { Authorization: `${token}` },
-  }).then((response) => {
+  ).then((response) => {
     console.log("성공")
     const value = {
       data: response.data,
       status: response.status
     }
-    console.log(value.data)
     return value;
   }).catch((e) => {
     console.log("실패")
@@ -26,6 +23,7 @@ const findIdByEmail = async (email: string) => {
     }
     return value;
   })
+  return res;
 };
 
 const FindApi = {

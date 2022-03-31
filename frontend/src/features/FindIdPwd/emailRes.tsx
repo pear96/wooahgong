@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import ProgressBar from '@ramonak/react-progress-bar';
 import { toast } from 'react-toastify';
 import UserApi from 'common/api/UserApi';
+import { Button } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../../assets/Logo.png';
 import { ReducerType } from '../../app/rootReducer';
@@ -69,12 +70,14 @@ const ActiveButton = styled.button`
   background: #80b2fe;
   border-style: none;
   border-radius: 10px;
-  width: 200px;
+  width: 240px;
   height: 40px;
   font-family: 'NotoSansKR';
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
+  margin-left: 61px;
+  margin-top: 20px;
   color: rgba(255, 255, 255, 1);
   transition: all 0.3s ease 0s;
   &:hover {
@@ -95,6 +98,16 @@ const Desc = styled.span`
   display: block;
   text-align: left;
   margin-left: 60px;
+  margin-top: 10px;
+  margin-bottom: 18px;
+  font-family: 'NotoSansKR';
+  font-size: 11px;
+`;
+const FindPwd = styled.a`
+  display: block;
+  text-align: left;
+  margin-left: 60px;
+  margin-top: 5px;
   margin-bottom: 18px;
   font-family: 'NotoSansKR';
   font-size: 11px;
@@ -110,12 +123,17 @@ const DescBold = styled.span`
 // type MyProps = {
 //   progress: number;
 // };
+interface Location {
+  email: string,
+  userId: string
+}
+
 function EmailRes() {
   const location = useLocation();
+  const navigate = useNavigate();
   // const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
   const dispatch = useDispatch();
-  const { email }: any = location.state;
-  console.log(email);
+  const state = location.state as Location;
   const handleInputEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
@@ -127,6 +145,12 @@ function EmailRes() {
     // dispatch(setNick(nickName));
     // navigate('/find/email');
   };
+  const onClickGotoLoginPage = () => {
+    navigate('/login');
+  }
+  const onClickGotoFindPwd = () => {
+    navigate('./pwd');
+  }
 
   return (
     <main>
@@ -136,9 +160,10 @@ function EmailRes() {
             <Img src={Logo} alt="Logo" />
           </div>
           <Title>아이디 찾기</Title>
-          <Desc>{email} 이메일로 가입된 아이디는</Desc>
-          <DescBold>ㅇㅇ입니다.</DescBold>
-
+          <Desc>{state.email} 이메일로 가입된 아이디는</Desc>
+          <DescBold>{state.userId}입니다.</DescBold>
+          <ActiveButton onClick={onClickGotoLoginPage}>로그인</ActiveButton>
+          <FindPwd onClick={onClickGotoFindPwd}>비밀번호 찾기</FindPwd>
 
         </div>
       </article>

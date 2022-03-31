@@ -136,13 +136,14 @@ function FindId() {
   };
 
 
-  const handleOnClickNextStep = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleOnClickNextStep = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const userId = findIdByEmail();
-    navigate('/find/email', { state: { email } });
+    const userId = await findIdByEmail();
+    navigate('/find/email', { state: { email, userId } });
   };
   const findIdByEmail = async () => {
     const result = await FindApi.findIdByEmail(email);
+    return result.data
   }
 
   return (

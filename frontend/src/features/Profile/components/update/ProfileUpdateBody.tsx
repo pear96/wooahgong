@@ -115,21 +115,23 @@ function ProfileUpdateBody({
 
   const [showLeaveModal, setShowLeaveModal] = useState<boolean>(false);
 
+  const [pic, setPic] = useState<any>();
+
   const handleUploadChange = (info: any) => {
-    setLoading(true);
     console.log(info.file.status);
     info.file.status = 'done';
     if (info.file.status === 'uploading') {
-      setLoading(false);
+      setLoading(true);
       return;
     }
+    console.log(info.file.originFileObj);
     if (info.file.status === 'done') {
       getBase64(info.file.originFileObj, (imageUrl: any) => {
         dispatch(setImage(imageUrl));
+        // setPic(imageUrl);
         setLoading(false);
       });
     }
-    setLoading(false);
   };
   // const getProfileForUpdateApi = async () => {
   //   if (nickname !== undefined) {
@@ -164,17 +166,24 @@ function ProfileUpdateBody({
   //   return () => setDataLoading(false);
   // }, [isProvider]);
 
+  const imageHandler = (e: any) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        dispatch(setImage(reader.result));
+      }
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
   return (
     <>
-      <div>
-        {userId} {oldNickname} {oldMbti} {oldMoods}
-      </div>
       <StyledUpdateBody>
         <CenterAlignedSpace direction="vertical">
-          {loading && <Spin size="large" tip="로딩 중..." />}
-          {image ? <Avatar size={80} src={image} /> : <Avatar size={80} icon={<UserOutlined />} />}
+          {/* {loading && <Spin size="large" tip="로딩 중..." />} */}
+          {loading ? <Avatar size={80} icon={<UserOutlined />} /> : <Avatar size={80} src={image} />}
           {/* <Avatar size={80} src={image} /> */}
-          <Upload
+          {/* <Upload
             name="file"
             maxCount={1}
             showUploadList={false}
@@ -182,7 +191,18 @@ function ProfileUpdateBody({
             onChange={handleUploadChange}
           >
             <UploadButton>프로필 사진 변경</UploadButton>
-          </Upload>
+          </Upload> */}
+          <input
+            type="file"
+            name="image-upload"
+            id="input"
+            accept="image/*"
+            onChange={imageHandler}
+            style={{ display: 'none' }}
+          />
+          <label htmlFor="input">
+            <div style={{ cursor: 'pointer' }}>프로필 사진 변경</div>
+          </label>
         </CenterAlignedSpace>
       </StyledUpdateBody>
       <StyledUpdateInfo>
@@ -283,14 +303,14 @@ function ProfileUpdateBody({
                 bordered={false}
               >
                 {moodOpts.map((mood) => (
-                  <Option value={mood} key={mood} disabled={moods.length > 1 ? !moods.includes(mood) : false}>
+                  <Option value={mood} key={mood} disabled={oldMoods.length > 1 ? !oldMoods.includes(mood) : false}>
                     #{mood}
                   </Option>
                 ))}
               </Select>
             </UnderlinedDiv>
           </Col>
-          {(moods.length > 2 || moods.length === 0) && (
+          {(oldMoods.length > 2 || oldMoods.length === 0) && (
             <Warning>관심 분위기는 최소 1개 최대 2개 선택해야 합니다.</Warning>
           )}
         </StyledInfoRow>

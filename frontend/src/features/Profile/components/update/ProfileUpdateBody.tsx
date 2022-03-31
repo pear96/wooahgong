@@ -197,6 +197,22 @@ function ProfileUpdateBody({
     };
     reader.readAsDataURL(e.target.files[0]);
   };
+  const imageHandler1 = async (e : React.ChangeEvent<HTMLInputElement>) => {
+    const formData = new FormData();
+    if(e.currentTarget.files){
+      formData.append('image', e.currentTarget.files[0]);
+    // setTempImg(reader.result);
+      const result = await ProfileApi.updateProfileImage(nickname, formData);
+      if (result.status === 200) {
+        console.log(result.data);
+        // dispatch(setProfileImg(reader.result));
+        message.success('프로필 이미지를 변경하였습니다.');
+      } else {
+        message.error('프로필 이미지를 변경하지 못하였습니다.');
+      }
+    }
+    
+  };
 
   return (
     <>

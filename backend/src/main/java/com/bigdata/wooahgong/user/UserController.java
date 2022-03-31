@@ -105,7 +105,7 @@ public class UserController {
     @PatchMapping("/{nickname}")
     public ResponseEntity<String> updateProfile(@RequestHeader("Authorization") String token, @PathVariable String nickname,
                                                 @RequestBody UpdateProfileReq updateProfileReq) {
-        return new ResponseEntity<>(userService.updateProfile(token, nickname, updateProfileReq), HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateProfile(token, updateProfileReq), HttpStatus.OK);
     }
 
     // 프로필 수정하기 버튼 클릭

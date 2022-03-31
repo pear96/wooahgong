@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import ProgressBar from '@ramonak/react-progress-bar';
 import { toast } from 'react-toastify';
 import UserApi from 'common/api/UserApi';
+import FindApi from 'common/api/FindApi';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../assets/Logo.png';
 import { ReducerType } from '../../app/rootReducer';
@@ -137,9 +138,12 @@ function FindId() {
 
   const handleOnClickNextStep = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    // dispatch(setEmail(email));
-    navigate('/find/email', { state: { email } });
+    const userId =
+      navigate('/find/email', { state: { email } });
   };
+  const findIdByEmail = async () => {
+    FindApi.findIdByEmail(email);
+  }
 
   return (
     <main>

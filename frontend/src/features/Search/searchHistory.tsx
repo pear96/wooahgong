@@ -75,16 +75,20 @@ const searchHistory = () => {
   }, []);
 
   const onClickDelete = useCallback(
-    (historySeq) => () => {
+    (historySeq) => async () => {
       console.log(historySeq);
-      deleteSeacrhHistory(historySeq);
+      const result = await deleteSeacrhHistory(historySeq);
+      console.log(result.data.recentSearches);
+      setRecentSearches(result.data.recentSearches);
     },
     [recentSearches],
   );
 
-  const onClickAllDelete = useCallback(() => {
-    deleteAllSeacrhHistory();
-  }, []);
+  const onClickAllDelete = useCallback(async () => {
+    const result = await deleteAllSeacrhHistory();
+    setRecentSearches([]);
+    console.log(result);
+  }, [recentSearches]);
 
   console.log(recentSearches);
   return (

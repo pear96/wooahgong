@@ -58,39 +58,44 @@ function UserPage() {
   const getMyFeedsApi = async () => {
     if (nickname !== undefined) {
       const result = await ProfileApi.getMyFeeds(nickname);
-  
+
       if (result.status === 200) {
         dispatch(setFeeds(result.data));
         setFeedsLoading(true);
       } else {
         navigate('/not-found');
       }
-      
     }
   };
 
   const getProfileApi = async () => {
-  if (nickname !== undefined) {
-    const result = await ProfileApi.getProfile(nickname);
+    if (nickname !== undefined) {
+      const result = await ProfileApi.getProfile(nickname);
 
-    if (result.status === 200) {
-      setUserProps(result.data);
-      setProfileLoading(true);
-    } else {
-      navigate('/not-found');
+      if (result.status === 200) {
+        setUserProps(result.data);
+        setProfileLoading(true);
+      } else {
+        navigate('/not-found');
+      }
     }
-  }
-}
+  };
   useEffect(() => {
     // TODO: 해당 유저가 존재하는지 검사 & 유저 정보
     getProfileApi();
     getMyFeedsApi();
-    }, []);
+  }, [UserPage]);
 
   return (
     <div style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '1024px' }}>
-      {nickname !== undefined && isProfileLoading && isFeedsLoading ? (<><UserProfile nickname={nickname} userProps={userProps} />
-      <FeedsAndPlaces /></>):<p>Loading..</p>}
+      {nickname !== undefined && isProfileLoading && isFeedsLoading ? (
+        <>
+          <UserProfile nickname={nickname} userProps={userProps} />
+          <FeedsAndPlaces />
+        </>
+      ) : (
+        <p>Loading..</p>
+      )}
     </div>
   );
 }

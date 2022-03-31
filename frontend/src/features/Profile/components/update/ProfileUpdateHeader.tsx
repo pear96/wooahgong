@@ -35,22 +35,21 @@ function ProfileUpdateHeader({ newNickname, newMbti, newMoods }: InfoPropTypes) 
     }
 
     // const token = localStorage.getItem('Token');
-    const formData = new FormData();
-    formData.append('image', image);
+    // const formData = new FormData();
+    // formData.append('image', image);
 
     // 프로필 사진 변경
     if (newNickname !== undefined && newMbti !== undefined && newMoods !== undefined) {
-      const imageResult = await ProfileApi.updateProfileImage(currentNickname, formData);
-      const infoResult = await ProfileApi.updateProfile(currentNickname, {
+      // const imageResult = await ProfileApi.updateProfileImage(currentNickname, formData);
+      const result = await ProfileApi.updateProfile(currentNickname, {
         nickname: newNickname,
         mbti: newMbti,
         moods: newMoods,
       });
-      if (imageResult.status === 200 && infoResult.status === 200) {
+      if (result.status === 200 && result.status === 200) {
         message.success('정보를 수정하였습니다.');
       } else {
-        console.log('imageResult', imageResult);
-        console.log('infoResult', infoResult);
+        console.log('infoResult', result);
         message.error('정보를 수정하지 못하였습니다.');
       }
     }

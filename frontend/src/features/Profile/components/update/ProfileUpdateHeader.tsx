@@ -96,8 +96,11 @@ function ProfileUpdateHeader({ newNickname, newMbti, newMoods }: InfoPropTypes) 
       <BackWrapper to="#">
         <LeftOutlined style={{ color: '#000' }} onClick={() => navigate(-1)} />
       </BackWrapper>
-      <ProfileUpdateTitle>프로필 수정{newMoods?.length}</ProfileUpdateTitle>
-      <AiOutlineCheck onClick={updateProfile} style={{ width: '30px', height: '30px', marginRight: '1rem' }} />
+      <ProfileUpdateTitle>프로필 수정</ProfileUpdateTitle>
+      <AiOutlineCheck
+        onClick={updateProfile}
+        style={{ width: '30px', height: '30px', marginRight: '1rem', cursor: 'pointer' }}
+      />
       {/* <div>체크</div> */}
       {/* <img src={mainLogo} alt="mainLogo" width={50} height={50} /> */}
       {/* <AiOutlineSearch style={{ width: '40px', height: '40px', marginRight: '1rem' }} /> */}

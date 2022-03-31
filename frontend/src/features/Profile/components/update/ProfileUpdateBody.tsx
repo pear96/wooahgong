@@ -115,21 +115,23 @@ function ProfileUpdateBody({
 
   const [showLeaveModal, setShowLeaveModal] = useState<boolean>(false);
 
+  const [pic, setPic] = useState<any>();
+
   const handleUploadChange = (info: any) => {
-    setLoading(true);
     console.log(info.file.status);
     info.file.status = 'done';
     if (info.file.status === 'uploading') {
-      setLoading(false);
+      setLoading(true);
       return;
     }
+    console.log(info.file.originFileObj);
     if (info.file.status === 'done') {
       getBase64(info.file.originFileObj, (imageUrl: any) => {
         dispatch(setImage(imageUrl));
+        // setPic(imageUrl);
         setLoading(false);
       });
     }
-    setLoading(false);
   };
   // const getProfileForUpdateApi = async () => {
   //   if (nickname !== undefined) {
@@ -164,14 +166,24 @@ function ProfileUpdateBody({
   //   return () => setDataLoading(false);
   // }, [isProvider]);
 
+  const imageHandler = (e: any) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        dispatch(setImage(reader.result));
+      }
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
   return (
     <>
       <StyledUpdateBody>
         <CenterAlignedSpace direction="vertical">
-          {loading && <Spin size="large" tip="로딩 중..." />}
-          {image ? <Avatar size={80} src={image} /> : <Avatar size={80} icon={<UserOutlined />} />}
+          {/* {loading && <Spin size="large" tip="로딩 중..." />} */}
+          {loading ? <Avatar size={80} icon={<UserOutlined />} /> : <Avatar size={80} src={image} />}
           {/* <Avatar size={80} src={image} /> */}
-          <Upload
+          {/* <Upload
             name="file"
             maxCount={1}
             showUploadList={false}
@@ -179,7 +191,18 @@ function ProfileUpdateBody({
             onChange={handleUploadChange}
           >
             <UploadButton>프로필 사진 변경</UploadButton>
-          </Upload>
+          </Upload> */}
+          <input
+            type="file"
+            name="image-upload"
+            id="input"
+            accept="image/*"
+            onChange={imageHandler}
+            style={{ display: 'none' }}
+          />
+          <label htmlFor="input">
+            <div style={{ cursor: 'pointer' }}>프로필 사진 변경</div>
+          </label>
         </CenterAlignedSpace>
       </StyledUpdateBody>
       <StyledUpdateInfo>

@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import Navbar from 'common/Navbar';
 import { Col, Row } from 'antd';
 import ProfileApi from 'common/api/ProfileApi';
-import { setImage, setOriginalImg } from 'features/Profile/reducers/profileImageReducer';
 import ProfileUpdateHeader from './components/update/ProfileUpdateHeader';
 import ProfileUpdateBody from './components/update/ProfileUpdateBody';
 
@@ -48,7 +47,6 @@ function ProfileUpdate() {
       // console.log('gpfua', result);
 
       if (result.status === 200) {
-        dispatch(setImage(result.data.profileImg));
         setUserId(result.data.userId);
         setNewNickname(result.data.nickname);
         setNewMbti(result.data.mbti);

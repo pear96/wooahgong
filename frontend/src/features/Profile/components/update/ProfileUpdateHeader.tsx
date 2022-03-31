@@ -22,7 +22,6 @@ interface InfoPropTypes {
 function ProfileUpdateHeader({ newNickname, newMbti, newMoods }: InfoPropTypes) {
   const navigate = useNavigate();
   const currentNickname = useSelector((state: ReducerType) => state.login.nickname);
-  const image = useSelector((state: ReducerType) => state.profileImage.image);
 
   const updateProfile = async () => {
     // if (newPassword !== newPasswordCheck) {

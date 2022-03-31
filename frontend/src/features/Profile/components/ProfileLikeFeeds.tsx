@@ -20,6 +20,7 @@ function ProfileLikeFeeds() {
     if (nickname !== undefined) {
       const result = await ProfileApi.getLikedFeeds(nickname);
       if (result.status === 200) {
+        console.log(result.data);
         setFeeds([...result.data]);
       } else {
         navigate('/not-found');
@@ -29,7 +30,10 @@ function ProfileLikeFeeds() {
   useEffect(()=>{
     getLikedFeedsApi();
   },[])
-
+  const handleClickFeed = (e : React.MouseEvent) => {
+    e.preventDefault();
+    navigate(`/`)
+  }
 
   return (
     <ProfileFeedsOrPlacesGrid>

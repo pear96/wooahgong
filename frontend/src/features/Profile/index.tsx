@@ -53,24 +53,8 @@ function UserPage() {
     moods: string[],
     owner: boolean,
   }>({bookmarkedCnt : -1, feedsCnt : -1, image : "", likedCnt : -1, mbti : "", moods : [""], owner : false });
-  // const [feeds, setFeeds] = useState<{ feedSeq: number; imageUrl: string }[]>([]);
-  
-  
+
   const [isProfileLoading, setProfileLoading] = useState<boolean>(false);
-  const [isFeedsLoading, setFeedsLoading] = useState<boolean>(false);
-
-  // const getMyFeedsApi = async () => {
-  //   if (nickname !== undefined) {
-  //     const result = await ProfileApi.getMyFeeds(nickname);
-
-  //     if (result.status === 200) {
-  //       // setFeeds([...result.data]);
-  //       // setFeedsLoading(true);
-  //     } else {
-  //       navigate('/not-found');
-  //     }
-  //   }
-  // };
 
   const getProfileApi = async () => {
     if (nickname !== undefined) {

@@ -16,7 +16,6 @@ const CustomSpin = styled.div`
 function FeedDetail() {
   const [FeedDetails, setFeedDetails] = useState<any>();
   const { getFeedDetail } = FeedDetailApi;
-
   const { feedSeq } = useParams();
 
   const [loadingFinsh, setLoadingFinsh] = useState(false);
@@ -30,6 +29,7 @@ function FeedDetail() {
       // 여기 토스트 메세지 써줘야 할듯
     }
   }
+
   // 정리.. 신의 한수,,,
 
   // 요청 -> 밑에 return 아래 값없으면 에러! => 따라서 로딩으로 일단 막고! => 값 이제 들어오면
@@ -69,6 +69,7 @@ function FeedDetail() {
               createDate={FeedDetails.createDate}
               moods={FeedDetails.moods}
               feedSeq={FeedDetails.feedSeq}
+              placeSeq={FeedDetails.placeSeq}
             />
           </div>
           <div>
@@ -77,6 +78,7 @@ function FeedDetail() {
               likesCnt={FeedDetails.likesCnt}
               commentsCnt={FeedDetails.commentsCnt}
               feedSeq={FeedDetails.feedSeq}
+              placeSeq={FeedDetails.placeSeq}
             />
           </div>
         </div>

@@ -32,6 +32,7 @@ const ProfileUpdate = loadable(() => import('../features/Profile/profileUpdate')
 
 const Place = loadable(() => import('../features/Place'));
 const FeedDetail = loadable(() => import('../features/FeedDetail'));
+const Comment = loadable(() => import('../features/FeedDetail/Comment'));
 
 function App() {
   // 리프레시 토큰 사용하면
@@ -85,6 +86,7 @@ function App() {
             <Route path="/profile/:nickname/edit" element={<ProfileUpdate />} />
             <Route path="/place/:placeSeq" element={<Place />} />
             <Route path="/place/:placeSeq/feeds/:feedSeq" element={<FeedDetail />} />
+            <Route path="/place/:placeSeq/feeds/:feedSeq/comments" element={<Comment />} />
             <Route path="/not-found" element={<NotFound />} />
             <Route path="/report/*" element={<FeedAdd />} />
           </Route>

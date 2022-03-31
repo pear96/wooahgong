@@ -3,15 +3,22 @@ import { Input, Rate } from 'antd';
 
 // styled
 
-import { useAppSelector } from 'app/store';
+import { useAppDispatch, useAppSelector } from 'app/store';
 import FeedDetailApi from 'common/api/FeedDetailApi';
+import { useNavigate } from 'react-router-dom';
 import { ContentWrapper, RateWrapper, ContentText, CustomText, MoodContainer } from '../styles/styledFeedcontent';
 
-function Feedcontent({ ratings, content, createDate, moods, feedSeq }: any) {
+// aciotns
+
+import { setUpdate } from '../feedDetailSlice';
+
+function Feedcontent({ ratings, content, createDate, moods, feedSeq, placeSeq }: any) {
   const { isUpdate } = useAppSelector((state) => state.feeddetail);
   console.log('콘텐츠 컴포넌트인데', isUpdate);
 
-  const { patchFeedDetail } = FeedDetailApi;
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { patchFeedDetail, getFeedDetail } = FeedDetailApi;
 
   const [updateContent, setUpdateContent] = useState(content);
 
@@ -24,8 +31,11 @@ function Feedcontent({ ratings, content, createDate, moods, feedSeq }: any) {
     const data = { content: updateContent };
     console.log(data);
     console.log(feedSeq);
-    await patchFeedDetail(feedSeq, data);
-  }, []);
+    dispatch(setUpdate(false));
+    await patchFeedDetail(feedSeq, data).then(() => {
+      const result = getFeedDetail(feedSeq);
+    });
+  }, [updateContent]);
   const { TextArea } = Input;
   return (
     <>
@@ -42,7 +52,7 @@ function Feedcontent({ ratings, content, createDate, moods, feedSeq }: any) {
               </button>
             </>
           ) : (
-            <CustomText>{content}</CustomText>
+            <CustomText>{updateContent}</CustomText>
           )}
         </ContentText>
         <div style={{ marginLeft: '20px' }}>

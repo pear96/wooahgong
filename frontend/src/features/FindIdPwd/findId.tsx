@@ -137,8 +137,8 @@ function FindId() {
 
   const handleOnClickNextStep = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    dispatch(setEmail(email));
-    navigate('/find/email');
+    // dispatch(setEmail(email));
+    navigate('/find/email', { state: { email } });
   };
 
   return (

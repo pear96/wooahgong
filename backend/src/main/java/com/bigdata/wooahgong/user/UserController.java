@@ -105,17 +105,19 @@ public class UserController {
     @PatchMapping("/{nickname}")
     public ResponseEntity<String> updateProfile(@RequestHeader("Authorization") String token, @PathVariable String nickname,
                                                 @RequestBody UpdateProfileReq updateProfileReq) {
-        return new ResponseEntity<>(userService.updateProfile(token, nickname,updateProfileReq), HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateProfile(token, nickname, updateProfileReq), HttpStatus.OK);
     }
+
     // 프로필 수정하기 버튼 클릭
-    @PatchMapping("/{nickname}/profileimg")
+    @PatchMapping(value = "/{nickname}/profileimg", consumes = {"multipart/form-data", "application/json"})
     public ResponseEntity<String> updateProfileImg(@RequestHeader("Authorization") String token, @PathVariable String nickname,
                                                    @RequestPart(value = "image") MultipartFile image) {
-        return new ResponseEntity<>(userService.updateProfileImg(token, nickname,image), HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateProfileImg(token, nickname, image), HttpStatus.OK);
     }
+
     // 회원 탈퇴
     @DeleteMapping("/{nickname}")
     public ResponseEntity<String> deleteUser(@RequestHeader("Authorization") String token, @PathVariable String nickname) {
-        return new ResponseEntity<>(userService.deleteUser(token,nickname), HttpStatus.OK);
+        return new ResponseEntity<>(userService.deleteUser(token, nickname), HttpStatus.OK);
     }
 }

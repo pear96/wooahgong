@@ -16,6 +16,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReducerType } from 'app/rootReducer';
+import { setProfileImg } from 'features/Auth/authSlice';
 import { setImage, setOriginalImg } from 'features/Profile/reducers/profileImageReducer';
 import styled from 'styled-components';
 import LeaveModal from 'features/Profile/components/update/LeaveModal';
@@ -96,10 +97,11 @@ function ProfileUpdateBody({
 }: any) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const { nickname, profileImg } = useSelector((state: ReducerType) => state.login);
+  const { nickname, profileImg } = useSelector((state: ReducerType) => state.login);
   // 위에 만들어야함 리덕스
 
-  const { file, image, originalImg } = useSelector((state: ReducerType) => state.profileImage);
+  // const { file, image, originalImg } = useSelector((state: ReducerType) => state.profileImage);
+  const image = useSelector((state: ReducerType) => state.profileImage.image);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -115,21 +117,23 @@ function ProfileUpdateBody({
 
   const [showLeaveModal, setShowLeaveModal] = useState<boolean>(false);
 
+  const [tempImg, setTempImg] = useState<string>();
+
   const handleUploadChange = (info: any) => {
-    setLoading(true);
     console.log(info.file.status);
     info.file.status = 'done';
     if (info.file.status === 'uploading') {
-      setLoading(false);
+      setLoading(true);
       return;
     }
+    console.log(info.file.originFileObj);
     if (info.file.status === 'done') {
       getBase64(info.file.originFileObj, (imageUrl: any) => {
         dispatch(setImage(imageUrl));
+        // setPic(imageUrl);
         setLoading(false);
       });
     }
-    setLoading(false);
   };
   // const getProfileForUpdateApi = async () => {
   //   if (nickname !== undefined) {
@@ -164,17 +168,60 @@ function ProfileUpdateBody({
   //   return () => setDataLoading(false);
   // }, [isProvider]);
 
+  const updateProfileImageApi = async (data: FormData) => {
+    const result = await ProfileApi.updateProfileImage(nickname, data);
+    if (result.status === 200 && tempImg !== undefined) {
+      message.success('프로필 이미지를 변경하였습니다.');
+    } else {
+      message.error('프로필 이미지를 변경하지 못하였습니다.');
+    }
+  };
+
+  const imageHandler = (e: any) => {
+    const reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.readyState === 2 && typeof reader.result === 'string') {
+        const formData = new FormData();
+        formData.append('image', reader.result);
+        // setTempImg(reader.result);
+        const result = await ProfileApi.updateProfileImage(nickname, formData);
+        if (result.status === 200) {
+          dispatch(setProfileImg(reader.result));
+          message.success('프로필 이미지를 변경하였습니다.');
+        } else {
+          message.error('프로필 이미지를 변경하지 못하였습니다.');
+        }
+
+        // updateProfileImageApi(formData);
+      }
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
+  const imageHandler1 = async (e : React.ChangeEvent<HTMLInputElement>) => {
+    const formData = new FormData();
+    if(e.currentTarget.files){
+      formData.append('image', e.currentTarget.files[0]);
+    // setTempImg(reader.result);
+      const result = await ProfileApi.updateProfileImage(nickname, formData);
+      if (result.status === 200) {
+        console.log(result.data);
+        // dispatch(setProfileImg(reader.result));
+        message.success('프로필 이미지를 변경하였습니다.');
+      } else {
+        message.error('프로필 이미지를 변경하지 못하였습니다.');
+      }
+    }
+    
+  };
+
   return (
     <>
-      <div>
-        {userId} {oldNickname} {oldMbti} {oldMoods}
-      </div>
       <StyledUpdateBody>
         <CenterAlignedSpace direction="vertical">
-          {loading && <Spin size="large" tip="로딩 중..." />}
-          {image ? <Avatar size={80} src={image} /> : <Avatar size={80} icon={<UserOutlined />} />}
+          {/* {loading && <Spin size="large" tip="로딩 중..." />} */}
+          {loading ? <Avatar size={80} icon={<UserOutlined />} /> : <Avatar size={80} src={profileImg} />}
           {/* <Avatar size={80} src={image} /> */}
-          <Upload
+          {/* <Upload
             name="file"
             maxCount={1}
             showUploadList={false}
@@ -182,7 +229,18 @@ function ProfileUpdateBody({
             onChange={handleUploadChange}
           >
             <UploadButton>프로필 사진 변경</UploadButton>
-          </Upload>
+          </Upload> */}
+          <input
+            type="file"
+            name="image-upload"
+            id="input"
+            accept="image/*"
+            onChange={imageHandler}
+            style={{ display: 'none' }}
+          />
+          <label htmlFor="input">
+            <div style={{ cursor: 'pointer' }}>프로필 사진 변경</div>
+          </label>
         </CenterAlignedSpace>
       </StyledUpdateBody>
       <StyledUpdateInfo>
@@ -283,14 +341,14 @@ function ProfileUpdateBody({
                 bordered={false}
               >
                 {moodOpts.map((mood) => (
-                  <Option value={mood} key={mood} disabled={moods.length > 1 ? !moods.includes(mood) : false}>
+                  <Option value={mood} key={mood} disabled={oldMoods.length > 1 ? !oldMoods.includes(mood) : false}>
                     #{mood}
                   </Option>
                 ))}
               </Select>
             </UnderlinedDiv>
           </Col>
-          {(moods.length > 2 || moods.length === 0) && (
+          {(oldMoods.length > 2 || oldMoods.length === 0) && (
             <Warning>관심 분위기는 최소 1개 최대 2개 선택해야 합니다.</Warning>
           )}
         </StyledInfoRow>

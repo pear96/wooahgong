@@ -6,6 +6,7 @@ import profilePlaceReducer from 'features/Profile/reducers/profilePlaceReducer';
 import profileImageReducer from 'features/Profile/reducers/profileImageReducer';
 import feedReducer from 'features/Feed/feedReducer';
 import searchReducer from 'features/Search/searchSlice';
+import feedDeatilReducer from 'features/FeedDetail/feedDetailSlice';
 import registerReducer from '../features/Regist/registerReducer';
 import authSlice from '../features/Auth/authSlice';
 
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   profilePlace: profilePlaceReducer,
   profileImage: profileImageReducer,
   search: searchReducer,
+  feeddetail: feedDeatilReducer,
 });
 
 // React에서 사용할 수 있도록 타입을 만들어 export 해준다.

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import ProfileApi from 'common/api/ProfileApi';
 import {
   ProfileFeedsOrPlacesGrid,
@@ -9,42 +10,44 @@ import {
 } from 'features/Profile/styles/StyledFeedsAndPlaces';
 import { useNavigate, useParams } from 'react-router-dom';
 
-function ProfilePlaces() {
-  // const { places } = useSelector((state: ReducerType) => state.profilePlace);
+function ProfileLikeFeeds() {
+  // const { feeds } = useSelector((state: ReducerType) => state.profileFeed);
   const { nickname } = useParams<string>();
-  const [places, setPlaces] = useState<{ placeSeq: number; thumbnail: string }[]>();
+  const [feeds, setFeeds] = useState<{ feedSeq: number; imageUrl: string }[]>();
   const navigate = useNavigate();
-  const getWishedFeedsApi = async () => {
-    if (nickname !== undefined) {
-      const result = await ProfileApi.getWishedFeeds(nickname);
 
+  const getLikedFeedsApi = async () => {
+    if (nickname !== undefined) {
+      const result = await ProfileApi.getLikedFeeds(nickname);
       if (result.status === 200) {
-        setPlaces([...result.data]);
+        setFeeds([...result.data]);
       } else {
         navigate('/not-found');
       }
     }
   };
   useEffect(()=>{
-    getWishedFeedsApi();
-  }, [])
-  
+    getLikedFeedsApi();
+  },[])
+
+
   return (
     <ProfileFeedsOrPlacesGrid>
-      {places !== undefined ? (
-        places.map((place) => (
+      {feeds !== undefined ? (
+        feeds.map((feed) => (
           <FeedOrPlaceWrapper>
             <FeedOrPlaceTwoModes>
               <FeedOrPlaceImageWrapper>
-                <img src={place.thumbnail} alt="" style={{ width: '100%', height: '100%' }} />
+                <img src={feed.imageUrl} alt="" style={{ width: '100%', height: '100%' }} />
               </FeedOrPlaceImageWrapper>
               <HoveredFeedOrPlaceWrapper>something</HoveredFeedOrPlaceWrapper>
             </FeedOrPlaceTwoModes>
           </FeedOrPlaceWrapper>
         ))
-      ): (<>loading</>)}
+      ) : (<>loading</>)}
+      
     </ProfileFeedsOrPlacesGrid>
   );
 }
 
-export default ProfilePlaces;
+export default ProfileLikeFeeds;

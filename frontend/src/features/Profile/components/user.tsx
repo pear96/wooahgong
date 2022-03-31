@@ -18,17 +18,23 @@ import {
 import ProfileStats from './ProfileStats';
 
 const picture = 'https://joeschmoe.io/api/v1/random';
-const mbti = 'ISFJ';
+// const mbti = 'ISFJ';
 
-interface UserPropsTypes {
-  owner: boolean;
-  feedsCnt: number;
-  likedCnt: number;
-  bookmarkedCnt: number;
-  moods: string[];
+
+type MyProps = {
+  nickname : string,
+  userProps : {
+    bookmarkedCnt: number ,
+    feedsCnt: number ,
+    image : string,
+    likedCnt: number ,
+    mbti : string ,
+    moods: string[],
+    owner: boolean,
+  }
 }
 
-function UserProfile({ nickname, userProps }: any) {
+function UserProfile({ nickname, userProps }: MyProps) {
   const navigate = useNavigate();
   // const [userProps, setUserProps] = useState<UserPropsTypes>();
 
@@ -37,7 +43,7 @@ function UserProfile({ nickname, userProps }: any) {
     <>
       <UserProfileWrapper>
         <ProfilePictureWrapper>
-          {nickname && <ProfilePicture alt={`${nickname} profile picture`} src={picture} />}
+          {nickname && <ProfilePicture alt={`${nickname} profile picture`} src={userProps.image === 'default' ? picture : userProps.image} />}
         </ProfilePictureWrapper>
         <ProfileRightWrapper>
           <ProfileRight>
@@ -48,7 +54,7 @@ function UserProfile({ nickname, userProps }: any) {
       </UserProfileWrapper>
       <ProfileBottomWrapper>
         <ProfileMBTI>
-          <strong>{mbti}</strong>
+          <strong>{userProps.mbti}</strong>
         </ProfileMBTI>
         {userProps !== undefined && userProps.moods.length > 0 && (
           <ProfileMoods>{userProps.moods.map((mood: string) => `#${mood} `)}</ProfileMoods>
@@ -60,13 +66,6 @@ function UserProfile({ nickname, userProps }: any) {
         </ProfileEditButtonWrapper>
       )}
     </>
-
-    // <Row align="middle" style={{ height: '200px' }}>
-    //   <Col xs={8}>
-    //     <img src={picture} alt="profile" width="60" height="60" style={{ borderRadius: '100%', marginLeft: '25%' }} />
-    //   </Col>
-    //   <Col xs={16}>hi</Col>
-    // </Row>
   );
 }
 

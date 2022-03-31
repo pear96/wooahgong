@@ -55,30 +55,22 @@ function ProfileUpdate() {
         setNewMoods(result.data.moods);
         setProvider(result.data.provider);
         console.log(newNickname, newMbti, newMoods);
+        setMounted(true);
       } else {
         navigate('/not-found');
       }
     }
   };
-  if (!mounted) {
-    getProfileForUpdateApi();
-  }
 
   useEffect(() => {
-    setMounted(true);
+    getProfileForUpdateApi();
   }, []);
 
   return (
     <div style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '1024px' }}>
       {mounted ? (
         <>
-          {/* <ProfileUpdateHeader
-            newPassword={newPassword}
-            newPasswordCheck={newPasswordCheck}
-            newNickname={newNickname}
-            newMbti={newMbti}
-            newMoods={newMoods}
-          /> */}
+          <ProfileUpdateHeader newNickname={newNickname} newMbti={newMbti} newMoods={newMoods} />
           <ProfileUpdateBody
             userId={userId}
             oldNickname={newNickname}

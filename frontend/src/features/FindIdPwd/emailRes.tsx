@@ -102,16 +102,13 @@ const Desc = styled.span`
 // type MyProps = {
 //   progress: number;
 // };
-function FindId() {
+function EmailRes() {
   const [isOk, setIsOk] = useState<boolean>(false);
   const [nickName, setStatenickName] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [isnickName, setIsnickName] = useState<boolean>(false);
   const navigate = useNavigate();
-
-
-  const { getNickDuplicateCheck } = UserApi
 
   // const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
   const dispatch = useDispatch();
@@ -137,7 +134,7 @@ function FindId() {
 
   const handleOnClickNextStep = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    dispatch(setEmail(email));
+    // dispatch(setNick(nickName));
     navigate('/find/email');
   };
 
@@ -148,7 +145,7 @@ function FindId() {
           <div>
             <Img src={Logo} alt="Logo" />
           </div>
-          <Title>아이디 찾기</Title>
+          <Title>이메일 검사</Title>
           <Desc>가입 이메일을 입력하세요.</Desc>
           <Input onChange={handleInputEmail} placeholder="이메일을 입력하세요." />
           <ErrorMsg>{errorMsg}</ErrorMsg>
@@ -172,4 +169,4 @@ function FindId() {
   );
 }
 
-export default FindId;
+export default EmailRes;

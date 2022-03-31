@@ -22,11 +22,8 @@ const getRecentSearchs = async () => {
 // 최근 검색어 하나 삭제
 
 const deleteSeacrhHistory = async (historyId: string) => {
-  await axios({
-    method: 'DELETE',
-    url: `${BASE_URL}/${historyId}`,
-    headers: { Authorization: `Bearer ${token}` },
-  })
+  const result = await axios
+    .delete(`${BASE_URL}/${historyId}`, { headers: { Authorization: `Bearer ${token}` } })
     .then((res) => {
       console.log(res);
       return res;
@@ -35,16 +32,15 @@ const deleteSeacrhHistory = async (historyId: string) => {
       console.dir(err);
       return err;
     });
+
+  return result;
 };
 
 // 최근 검색어 전체 삭제
 
 const deleteAllSeacrhHistory = async () => {
-  await axios({
-    method: 'DELETE',
-    url: `${BASE_URL}`,
-    headers: { Authorization: `Bearer ${token}` },
-  })
+  const result = await axios
+    .delete(`${BASE_URL}`, { headers: { Authorization: `Bearer ${token}` } })
     .then((res) => {
       console.log(res);
       return res;
@@ -53,6 +49,8 @@ const deleteAllSeacrhHistory = async () => {
       console.dir(err);
       return err;
     });
+
+  return result;
 };
 
 // 검색 결과 조회 장소 (자동완성)

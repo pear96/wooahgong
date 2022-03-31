@@ -7,10 +7,12 @@ import lombok.Data;
 public class GetMyFeedsRes {
     private Long feedSeq;
     private String imageUrl;
+    private Long placeSeq;
 
     @Builder
-    public GetMyFeedsRes(Long feedSeq, String imageUrl) {
+    public GetMyFeedsRes(Long feedSeq, String imageUrl, Long placeSeq) {
         this.feedSeq = feedSeq;
         this.imageUrl = imageUrl;
+        this.placeSeq = placeSeq;
     }
 }

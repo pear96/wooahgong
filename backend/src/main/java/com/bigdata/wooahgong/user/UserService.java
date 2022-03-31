@@ -197,7 +197,9 @@ public class UserService {
         // 토큰으로 유저 찾기
         User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_OUR_USER));
-        Page<Feed> pages = feedRepository.findByUserOrderByModifiedDateDesc(user, pageable);
+        User Owner = userRepository.findByNickname(nickname).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+        Page<Feed> pages = feedRepository.findByUserOrderByModifiedDateDesc(Owner, pageable);
         List<GetMyFeedsRes> getMyFeedsResList = new ArrayList<>();
         for (Feed feed : pages) {
             String image = null;
@@ -205,7 +207,10 @@ public class UserService {
                 image = feed.getFeedImages().get(0).getImageUrl();
             }
             getMyFeedsResList.add(GetMyFeedsRes.builder()
-                    .feedSeq(feed.getFeedSeq()).imageUrl(image).build());
+                    .feedSeq(feed.getFeedSeq())
+                    .imageUrl(image)
+                    .placeSeq(feed.getPlace().getPlaceSeq())
+                    .build());
         }
         return getMyFeedsResList;
     }
@@ -214,7 +219,9 @@ public class UserService {
         // 토큰으로 유저 찾기
         User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_OUR_USER));
-        Page<FeedLike> pages = feedLikeRepository.findByUserOrderByModifiedDateDesc(user, pageable);
+        User Owner = userRepository.findByNickname(nickname).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+        Page<FeedLike> pages = feedLikeRepository.findByUserOrderByModifiedDateDesc(Owner, pageable);
         List<GetMyFeedsRes> getMyFeedsResList = new ArrayList<>();
         for (FeedLike feedLike : pages) {
             Feed feed = feedLike.getFeed();
@@ -223,7 +230,10 @@ public class UserService {
                 image = feed.getFeedImages().get(0).getImageUrl();
             }
             getMyFeedsResList.add(GetMyFeedsRes.builder()
-                    .feedSeq(feed.getFeedSeq()).imageUrl(image).build());
+                    .feedSeq(feed.getFeedSeq())
+                    .imageUrl(image)
+                    .placeSeq(feed.getPlace().getPlaceSeq())
+                    .build());
         }
         return getMyFeedsResList;
     }
@@ -233,7 +243,9 @@ public class UserService {
         // 토큰으로 유저 찾기
         User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_OUR_USER));
-        Page<PlaceWish> pages = placeWishRepository.findByUserOrderByModifiedDateDesc(user, pageable);
+        User Owner = userRepository.findByNickname(nickname).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+        Page<PlaceWish> pages = placeWishRepository.findByUserOrderByModifiedDateDesc(Owner, pageable);
         List<GetMyPlacesRes> getMyPlacesResList = new ArrayList<>();
         for (PlaceWish placeWish : pages) {
             Place place = placeWish.getPlace();

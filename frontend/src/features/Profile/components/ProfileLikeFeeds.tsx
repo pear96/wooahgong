@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import styled from 'styled-components';
 import ProfileApi from 'common/api/ProfileApi';
 import {
   ProfileFeedsOrPlacesGrid,
@@ -7,42 +8,43 @@ import {
 import { Spin } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 
-function ProfilePlaces() {
-  // const { places } = useSelector((state: ReducerType) => state.profilePlace);
-  console.log("??????????");
+function ProfileLikeFeeds() {
+  // const { feeds } = useSelector((state: ReducerType) => state.profileFeed);
   const { nickname } = useParams<string>();
-  const [places, setPlaces] = useState<{ placeSeq: number; thumbnail: string }[]>([]);
+  const [feeds, setFeeds] = useState<{ feedSeq: number; imageUrl: string, placeSeq : number }[]>([]);
   const [target, setTarget] = useState<any>(null);
   const [page, setPage] = useState<number>(0);
   const [end, setEnd] = useState<boolean>(false);
-  const placesRef = useRef(places);
-  placesRef.current = places;
+  const feedsRef = useRef(feeds);
+  feedsRef.current = feeds;
   const endRef = useRef(end);
   endRef.current = end;
   const pageRef = useRef(page);
   pageRef.current = page;
-  
+
   const navigate = useNavigate();
-  
-  
-  const getWishedFeedsApi = async () => {
+
+  const getLikedFeedsApi = async () => {
     if (nickname !== undefined && !endRef.current) {
       const value = {
         nickname,
         page : pageRef.current
       }
-      const result = await ProfileApi.getWishedFeeds(value);
+      console.log(feedsRef.current);
+      const result = await ProfileApi.getLikedFeeds(value);
 
       if (result.status === 200) {
+        console.log("?!?!?!?!?!");
+        console.log(result.data);
         if(result.data.length === 0){
           setEnd(true);
         }
-        else if(placesRef.current.length > 0) {
-          setPlaces([...placesRef.current, ...result.data]);
+        else if(feedsRef.current.length > 0) {
+          setFeeds([...feedsRef.current, ...result.data]);
           setPage(pageRef.current+1);
         }
         else{
-          setPlaces([...result.data]);
+          setFeeds([...result.data]);
           setPage(pageRef.current+1);
         }
       } else {
@@ -53,43 +55,45 @@ function ProfilePlaces() {
   const onIntersect = async ([entry] : any, observer : any) => {
     if (entry.isIntersecting) {
       observer.unobserve(entry.target);
-      await getWishedFeedsApi();
+      await getLikedFeedsApi();
       observer.observe(entry.target);
     }
   };
-  const handleClickPlace = (placeSeq : number) => {
-    navigate(`/place/${placeSeq}`);
+  const handleClickFeed = (value : {feedSeq : number, placeSeq : number}) => {
+    navigate(`/place/${value.placeSeq}/feeds/${value.feedSeq}`);
   }
 
   useEffect(()=>{
-    let observer;
+    let observer : any;
     if(target){
       observer = new IntersectionObserver(onIntersect, {
         threshold : 0.2,
       });
       observer.observe(target);
     }
+    return () => observer && observer.disconnect();
   }, [target]);
   
+
   return (
     <div>
-    {places !== undefined ? (
-      <ProfileFeedsOrPlacesGrid>
-        {places.map((place, i) => {
-            const idx = i;
-            return (
-                <FeedOrPlaceImageWrapper key = {idx} onClick={()=>handleClickPlace(place.placeSeq)}>
-                  <img src={place.thumbnail} alt="" style={{ width: '100%', height: '100%' }} />
-                </FeedOrPlaceImageWrapper>
-            )
-          })}
-        <div
-            ref={setTarget}
-            style={{
-              height: "15px",
-            }}
-        />
-      </ProfileFeedsOrPlacesGrid>
+      {feeds !== undefined ? (
+        <ProfileFeedsOrPlacesGrid>
+          {feeds.map((feed, i) => { 
+              const idx = i   
+              return (
+                  <FeedOrPlaceImageWrapper key={idx} onClick={() => handleClickFeed({feedSeq : feed.feedSeq, placeSeq : feed.placeSeq})}>
+                    <img src={feed.imageUrl} alt="" style={{ width: '100%', height: '100%' }} />
+                  </FeedOrPlaceImageWrapper>
+              )})
+          }
+          <div
+              ref={setTarget}
+              style={{
+                height: "15px",
+          }}
+          />
+        </ProfileFeedsOrPlacesGrid>
       ): (
         <div style={{
           height : 380,
@@ -98,10 +102,11 @@ function ProfilePlaces() {
           justifyContent : "center"
         }}>
           <Spin size='large'/>
-        </div> 
+        </div>
       )}
+      
     </div>
   );
 }
 
-export default ProfilePlaces;
+export default ProfileLikeFeeds;

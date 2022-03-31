@@ -1,54 +1,29 @@
 import React, { useEffect, useState } from 'react';
+import { Spin } from 'antd';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import Navbar from 'common/Navbar';
-import { Col, Row } from 'antd';
 import ProfileApi from 'common/api/ProfileApi';
-import { setImage, setOriginalImg } from 'features/Profile/reducers/profileImageReducer';
 import ProfileUpdateHeader from './components/update/ProfileUpdateHeader';
 import ProfileUpdateBody from './components/update/ProfileUpdateBody';
 
-const dummyLoggedInUserFromRedux = {
-  userSeq: 2,
-  userId: 'qweadzs',
-  nickname: 'nicknick',
-  password: 'passpass',
-  profileImg: 'https://picsum.photos/640/360',
-  mbti: 'ISTJ',
-  moods: ['낭만적인', '이국적인'],
-  provider: false,
-};
-
-interface InfoPropTypes {
-  newNickname: string;
-  newPassword: string;
-  newPasswordCheck: string;
-  newMbti: string;
-  newMoods: string[];
-}
-
 function ProfileUpdate() {
-  const [newPassword, setNewPassword] = useState<string>(dummyLoggedInUserFromRedux.password);
-  const [newPasswordCheck, setNewPasswordCheck] = useState<string>(dummyLoggedInUserFromRedux.password);
-
-  const [userId, setUserId] = useState<string>();
-  const [newNickname, setNewNickname] = useState<string>();
-  const [newMbti, setNewMbti] = useState<string>();
-  const [newMoods, setNewMoods] = useState<string[]>();
+  
+  const [userId, setUserId] = useState<string>("");
+  const [newNickname, setNewNickname] = useState<string>("");
+  const [newMbti, setNewMbti] = useState<string>("");
+  const [newMoods, setNewMoods] = useState<string[]>([]);
   const [isProvider, setProvider] = useState<boolean>();
-  // const props = {newPassword,newPasswordCheck,newNickname,newMbti,newMoods};
+  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [isNick,setIsnickName] = useState<boolean>(true);
   const [mounted, setMounted] = useState<boolean>(false);
 
   const { nickname } = useParams<string>();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const getProfileForUpdateApi = async () => {
     if (nickname !== undefined) {
       const result = await ProfileApi.getProfileForUpdate(nickname);
-      // console.log('gpfua', result);
-
+  
       if (result.status === 200) {
-        dispatch(setImage(result.data.profileImg));
         setUserId(result.data.userId);
         setNewNickname(result.data.nickname);
         setNewMbti(result.data.mbti);
@@ -61,6 +36,30 @@ function ProfileUpdate() {
       }
     }
   };
+  const handleCheckNickname = (e : React.ChangeEvent<HTMLInputElement>)=>{
+    // e.preventDefault()
+    const alphaRegex = /[a-zA-Z]/;
+    const hanRegex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+    const specialRegex =  /[!?@#$%^&*():;+=~{}<>\\-]|[|\\"',/`₩]/;
+    const numberRegex = /[0-9]/;
+
+    const curWord = e.currentTarget.value;
+    console.log(curWord);
+    if ((curWord.length < 5 || curWord.length > 8) && 
+              (hanRegex.test(curWord) || alphaRegex.test(curWord))) {
+      setErrorMsg("5글자 이상 8글자 이하, 한글 영문 숫자만 사용가능합니다");
+      setIsnickName(false);
+
+    } else if(specialRegex.test(curWord)) {
+      console.log("???")
+      setErrorMsg("특수 문자는 . _ 만 사용가능합니다");
+      setIsnickName(false);
+    } else{
+      setErrorMsg("");
+      setIsnickName(true);
+    }
+    setNewNickname(curWord);
+  }
 
   useEffect(() => {
     getProfileForUpdateApi();
@@ -70,22 +69,28 @@ function ProfileUpdate() {
     <div style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '1024px' }}>
       {mounted ? (
         <>
-          <ProfileUpdateHeader newNickname={newNickname} newMbti={newMbti} newMoods={newMoods} />
+          <ProfileUpdateHeader newNickname={newNickname} newMbti={newMbti} newMoods={newMoods} isNick = {isNick} />
           <ProfileUpdateBody
             userId={userId}
             oldNickname={newNickname}
             oldMbti={newMbti}
             oldMoods={newMoods}
             isProvider={isProvider}
-            changePassword={(password: string) => setNewPassword(password)}
-            changePasswordCheck={(passwordCheck: string) => setNewPasswordCheck(passwordCheck)}
-            changeNickname={(nnickname: string) => setNewNickname(nnickname)}
+            changeNickname={handleCheckNickname}
+            error={errorMsg}
             changeMbti={(mbti: string) => setNewMbti(mbti)}
             changeMoods={(moods: string[]) => setNewMoods(moods)}
           />
         </>
       ) : (
-        <p>Loading..</p>
+        <div style={{
+          height : 720,
+          display : "flex",
+          alignItems : "center",
+          justifyContent : "center"
+        }}>
+          <Spin size='large'/>
+        </div>
       )}
     </div>
   );

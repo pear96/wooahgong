@@ -8,14 +8,8 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import 'antd/dist/antd.min.css';
 import NotFound from 'not-found';
 import Navbar from '../common/Navbar';
-import Regist from '../features/Regist/regist';
-import Map from '../features/Map/Map';
-import FeedAdd from '../features/Feed/Feedadd';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-
-const SocialLogin = loadable(() => import('../features/Auth/kakaosocialLogin/socialLogin'));
-const MainLogin = loadable(() => import('../features/Auth/mainLogin'));
 
 // const Login = loadable(() => import('../features/Login'));
 declare global {
@@ -24,13 +18,21 @@ declare global {
   }
 }
 
+const Regist = loadable(() => import('../features/Regist/regist'));
+const SocialLogin = loadable(() => import('../features/Auth/kakaosocialLogin/socialLogin'));
+const MainLogin = loadable(() => import('../features/Auth/mainLogin'));
+
 const RediretHandler = loadable(() => import('../features/Auth/kakaosocialLogin/OAuth2RedirectHandler'));
+const Map = loadable(() => import('../features/Map/Map'));
+
 const Search = loadable(() => import('../features/Search/searh'));
 
-const Profile = loadable(() => import('../features/Profile'));
+const Profile = loadable(() => import('../features/Profile/Profile'));
 const ProfileUpdate = loadable(() => import('../features/Profile/profileUpdate'));
 
-const Place = loadable(() => import('../features/Place'));
+const Place = loadable(() => import('../features/Place/Place'));
+
+const FeedAdd = loadable(() => import('../features/Feed/Feedadd'));
 const FeedDetail = loadable(() => import('../features/FeedDetail'));
 const Comment = loadable(() => import('../features/FeedDetail/Comment'));
 

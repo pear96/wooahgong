@@ -14,16 +14,10 @@ function FeedsAndPlaces() {
   const setFeedsOrPlaces = (key: string) => {
     switch (key) {
       case '1':
-        // getMyFeedsApi();
-        // dispatch(setFeeds(dummyFeeds));
         break;
       case '2':
-        // getLikedFeedsApi();
-        // dispatch(setFeeds(dummyFeeds));
         break;
       case '3':
-        // getWishedFeedsApi();
-        // dispatch(setPlaces(dummyPlaces));
         break;
       default:
         break;

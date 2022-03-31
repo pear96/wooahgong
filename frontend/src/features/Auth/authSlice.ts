@@ -46,6 +46,9 @@ const authSlice = createSlice({
     setProfileImg: (state, action: PayloadAction<string>) => {
       state.profileImg = action.payload;
     },
+    setProfileNick : (state, action: PayloadAction<string>) => {
+      state.nickname = action.payload;
+    }
   },
   // extraReducers: (builder) => {
   //   builder
@@ -78,6 +81,6 @@ const authSlice = createSlice({
   // },
 });
 
-export const { setUser, testNum, setProfileImg } = authSlice.actions;
+export const { setUser, testNum, setProfileImg, setProfileNick } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -1,8 +1,19 @@
 import React from 'react';
 import { ProfileStatsWrapper, ProfileStat } from 'features/Profile/styles/StyledProfileStats';
 
+type MyProps = {
+  stats : {
+    bookmarkedCnt: number ,
+    feedsCnt: number ,
+    image : string,
+    likedCnt: number ,
+    mbti : string ,
+    moods: string[],
+    owner: boolean,
+  }
+}
 
-function ProfileStats({ stats }: any) {
+function ProfileStats({ stats }: MyProps) {
 
   return (
     <ProfileStatsWrapper>

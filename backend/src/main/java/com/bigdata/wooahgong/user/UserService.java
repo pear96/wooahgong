@@ -58,7 +58,7 @@ public class UserService {
 
     public String getEmailByToken(String token) {
         JWTVerifier verifier = JwtTokenUtil.getVerifier();
-        if("".equals(token)) {
+        if ("".equals(token)) {
             throw new CustomException(ErrorCode.NOT_OUR_USER);
         }
         JwtTokenUtil.handleError(token);
@@ -242,9 +242,7 @@ public class UserService {
             if (place.getFeeds().size() != 0) {
                 Feed feed = place.getFeeds().get(0);
                 // 피드에 사진이 있을 경우에만
-                if (feed.getFeedImages().size() != 0) {
-                    image = feed.getFeedImages().get(0).getImageUrl();
-                }
+                image = feed.getThumbnail();
             }
             getMyPlacesResList.add(GetMyPlacesRes.builder()
                     .placeSeq(place.getPlaceSeq()).thumbnail(image).build());
@@ -260,14 +258,14 @@ public class UserService {
         if (!user.getNickname().equals(updateProfileReq.getNickname())) {
             user.setNickname(updateProfileReq.getNickname());
         }
-        if(!user.getMbti().equals(updateProfileReq.getMbti())){
+        if (!user.getMbti().equals(updateProfileReq.getMbti())) {
             user.setMbti(updateProfileReq.getMbti());
         }
         // UserMood 지우기
         userMoodRepository.deleteAllByUser(user);
         // 다시 삽입
-        for(String s : updateProfileReq.getMoods()){
-            Mood mood = moodRepository.findByMoodContaining(s).orElseThrow(()->
+        for (String s : updateProfileReq.getMoods()) {
+            Mood mood = moodRepository.findByMoodContaining(s).orElseThrow(() ->
                     new CustomException(ErrorCode.MOOD_NOT_FOUND));
             userMoodRepository.save(UserMood.builder().mood(mood).user(user).build());
         }

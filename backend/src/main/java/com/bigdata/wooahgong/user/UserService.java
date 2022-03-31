@@ -202,7 +202,7 @@ public class UserService {
         for (Feed feed : pages) {
             String image = null;
             if (feed.getFeedImages().size() != 0) {
-                image = feed.getFeedImages().get(feed.getFeedImages().size() - 1).getImageUrl();
+                image = feed.getFeedImages().get(0).getImageUrl();
             }
             getMyFeedsResList.add(GetMyFeedsRes.builder()
                     .feedSeq(feed.getFeedSeq()).imageUrl(image).build());
@@ -220,7 +220,7 @@ public class UserService {
             Feed feed = feedLike.getFeed();
             String image = null;
             if (feed.getFeedImages().size() != 0) {
-                image = feed.getFeedImages().get(feed.getFeedImages().size() - 1).getImageUrl();
+                image = feed.getFeedImages().get(0).getImageUrl();
             }
             getMyFeedsResList.add(GetMyFeedsRes.builder()
                     .feedSeq(feed.getFeedSeq()).imageUrl(image).build());
@@ -240,10 +240,10 @@ public class UserService {
             String image = null;
             // 피드가 존재할때만
             if (place.getFeeds().size() != 0) {
-                Feed feed = place.getFeeds().get(place.getFeeds().size() - 1);
+                Feed feed = place.getFeeds().get(0);
                 // 피드에 사진이 있을 경우에만
                 if (feed.getFeedImages().size() != 0) {
-                    image = feed.getFeedImages().get(feed.getFeedImages().size() - 1).getImageUrl();
+                    image = feed.getFeedImages().get(0).getImageUrl();
                 }
             }
             getMyPlacesResList.add(GetMyPlacesRes.builder()

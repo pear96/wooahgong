@@ -1,4 +1,3 @@
-from re import A
 from fastapi import APIRouter, Depends, HTTPException, status
 from jose import jwt, JWTError
 from sqlalchemy.orm import Session
@@ -35,8 +34,3 @@ async def forme(request: Request, searchRadius: int, lat: float, lng: float, ses
     user = session.query(User).filter(User.email == user_email).all()
     print("사용자 : ", user)
     return user
-
-
-@router.get("/trend")
-async def trend(searchRadius: int, lat: float, lng: float, session: Session = Depends(db.session)):
-    return Response({"message": "트렌드"})

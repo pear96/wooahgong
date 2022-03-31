@@ -33,8 +33,8 @@ function Feedfooter({ amILike, likesCnt, commentsCnt, feedSeq, placeSeq }: any) 
   }, []);
 
   const onClickgotoComment = useCallback(() => {
-    naviate('/');
-  }, []);
+    naviate(`/place/${placeSeq}/feeds/${feedSeq}/comments`);
+  }, [placeSeq, feedSeq]);
 
   return (
     <div style={{ display: 'flex', marginLeft: '20px' }}>
@@ -49,7 +49,7 @@ function Feedfooter({ amILike, likesCnt, commentsCnt, feedSeq, placeSeq }: any) 
       )}
       <CustomText>{likesCnt + value}</CustomText>
       <div>
-        <CommentOutlined style={{ fontSize: '32px', marginLeft: '20px' }} />
+        <CommentOutlined onClick={onClickgotoComment} style={{ fontSize: '32px', marginLeft: '20px' }} />
       </div>
       <CustomText>{commentsCnt}</CustomText>
     </div>

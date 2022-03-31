@@ -164,7 +164,7 @@ public class UserService {
         User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_OUR_USER));
         // 닉네임으로 유저 찾기
-        User Owner = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
+        User Owner = userRepository.findByNickname(nickname).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_OUR_USER));
         boolean isOwner = user.getNickname().equals(nickname);
         int feedsCnt = Owner.getFeeds().size();

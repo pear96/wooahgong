@@ -2,10 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import ProfileApi from 'common/api/ProfileApi';
 import {
   ProfileFeedsOrPlacesGrid,
-  FeedOrPlaceWrapper,
-  FeedOrPlaceTwoModes,
   FeedOrPlaceImageWrapper,
-  HoveredFeedOrPlaceWrapper,
 } from 'features/Profile/styles/StyledFeedsAndPlaces';
 import { useNavigate, useParams } from 'react-router-dom';
 

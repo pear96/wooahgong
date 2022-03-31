@@ -1,30 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import Navbar from 'common/Navbar';
-import { Col, Row } from 'antd';
 import ProfileApi from 'common/api/ProfileApi';
 import ProfileUpdateHeader from './components/update/ProfileUpdateHeader';
 import ProfileUpdateBody from './components/update/ProfileUpdateBody';
-
-const dummyLoggedInUserFromRedux = {
-  userSeq: 2,
-  userId: 'qweadzs',
-  nickname: 'nicknick',
-  password: 'passpass',
-  profileImg: 'https://picsum.photos/640/360',
-  mbti: 'ISTJ',
-  moods: ['낭만적인', '이국적인'],
-  provider: false,
-};
-
-interface InfoPropTypes {
-  newNickname: string;
-  newPassword: string;
-  newPasswordCheck: string;
-  newMbti: string;
-  newMoods: string[];
-}
 
 function ProfileUpdate() {
   

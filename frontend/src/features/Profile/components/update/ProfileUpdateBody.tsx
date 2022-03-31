@@ -11,11 +11,10 @@ import {
   RePwdButton,
 } from 'features/Profile/styles/update/StyledUpdateBody';
 import { UserOutlined } from '@ant-design/icons';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReducerType } from 'app/rootReducer';
-import styled from 'styled-components';
 import LeaveModal from 'features/Profile/components/update/LeaveModal';
 import ProfileApi from 'common/api/ProfileApi';
 import PasswordChange from './PasswordChange';
@@ -53,6 +52,17 @@ const moodOpts = [
   '기타',
 ];
 
+type MyProps = {
+  userId : string,
+  oldNickname : string,
+  oldMbti : string,
+  oldMoods : string[],
+  isProvider : boolean | undefined,
+  changeNickname : (e : React.ChangeEvent<HTMLInputElement>) => void,
+  error : string,
+  changeMbti : (mbti : string) => void,
+  changeMoods : (moods : string[]) => void
+}
 
 function ProfileUpdateBody({
   userId,
@@ -64,7 +74,7 @@ function ProfileUpdateBody({
   changeNickname,
   error,
   changeMoods,
-}: any) {
+}: MyProps) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { nickname, profileImg } = useSelector((state: ReducerType) => state.login);

@@ -37,19 +37,6 @@ const Input = styled.input`
   border-right: none;
   border-bottom: #d7d7d7 1px solid;
 `;
-const ConfirmBtn = styled.button`
-  width: 80px;
-  height: 23px;
-  margin-left: 10px;
-  font-family: 'NotoSansKR';
-  font-size: 10px;
-  font-style: normal;
-  font-weight: 400;
-  background: #ffffff;
-  border: 0.7px solid #b0b0b0;
-  border-radius: 50px;
-  cursor: pointer;
-`;
 const DisableButton = styled.button`
     border-style: none;
     border-radius: 10px;

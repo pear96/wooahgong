@@ -16,6 +16,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReducerType } from 'app/rootReducer';
+import { setProfileImg } from 'features/Auth/authSlice';
 import { setImage, setOriginalImg } from 'features/Profile/reducers/profileImageReducer';
 import styled from 'styled-components';
 import LeaveModal from 'features/Profile/components/update/LeaveModal';
@@ -96,10 +97,11 @@ function ProfileUpdateBody({
 }: any) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const { nickname, profileImg } = useSelector((state: ReducerType) => state.login);
+  const { nickname, profileImg } = useSelector((state: ReducerType) => state.login);
   // 위에 만들어야함 리덕스
 
-  const { file, image, originalImg } = useSelector((state: ReducerType) => state.profileImage);
+  // const { file, image, originalImg } = useSelector((state: ReducerType) => state.profileImage);
+  const image = useSelector((state: ReducerType) => state.profileImage.image);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -115,7 +117,7 @@ function ProfileUpdateBody({
 
   const [showLeaveModal, setShowLeaveModal] = useState<boolean>(false);
 
-  const [pic, setPic] = useState<any>();
+  const [tempImg, setTempImg] = useState<string>();
 
   const handleUploadChange = (info: any) => {
     console.log(info.file.status);
@@ -166,11 +168,31 @@ function ProfileUpdateBody({
   //   return () => setDataLoading(false);
   // }, [isProvider]);
 
+  const updateProfileImageApi = async (data: FormData) => {
+    const result = await ProfileApi.updateProfileImage(nickname, data);
+    if (result.status === 200 && tempImg !== undefined) {
+      message.success('프로필 이미지를 변경하였습니다.');
+    } else {
+      message.error('프로필 이미지를 변경하지 못하였습니다.');
+    }
+  };
+
   const imageHandler = (e: any) => {
     const reader = new FileReader();
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        dispatch(setImage(reader.result));
+    reader.onload = async () => {
+      if (reader.readyState === 2 && typeof reader.result === 'string') {
+        const formData = new FormData();
+        formData.append('image', reader.result);
+        // setTempImg(reader.result);
+        const result = await ProfileApi.updateProfileImage(nickname, formData);
+        if (result.status === 200) {
+          dispatch(setProfileImg(reader.result));
+          message.success('프로필 이미지를 변경하였습니다.');
+        } else {
+          message.error('프로필 이미지를 변경하지 못하였습니다.');
+        }
+
+        // updateProfileImageApi(formData);
       }
     };
     reader.readAsDataURL(e.target.files[0]);
@@ -181,7 +203,7 @@ function ProfileUpdateBody({
       <StyledUpdateBody>
         <CenterAlignedSpace direction="vertical">
           {/* {loading && <Spin size="large" tip="로딩 중..." />} */}
-          {loading ? <Avatar size={80} icon={<UserOutlined />} /> : <Avatar size={80} src={image} />}
+          {loading ? <Avatar size={80} icon={<UserOutlined />} /> : <Avatar size={80} src={profileImg} />}
           {/* <Avatar size={80} src={image} /> */}
           {/* <Upload
             name="file"

@@ -177,7 +177,7 @@ public class UserService {
         return GetUserInfoRes.builder()
                 .isOwner(isOwner).feedsCnt(feedsCnt)
                 .likedCnt(likedCnt).bookmarkedCnt(bookmark)
-                .moods(moods).build();
+                .moods(moods).mbti(Owner.getMbti()).image(Owner.getImageUrl()).build();
     }
 
     public GetMyInfoRes getMyInfo(String token, String nickname) {

@@ -8,12 +8,8 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import 'antd/dist/antd.min.css';
 import NotFound from 'not-found';
 import Navbar from '../common/Navbar';
-import Regist from '../features/Regist/regist';
-import Map from '../features/Map/Map';
-import 'antd/dist/antd.css';
-
-const SocialLogin = loadable(() => import('../features/Auth/kakaosocialLogin/socialLogin'));
-const MainLogin = loadable(() => import('../features/Auth/mainLogin'));
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 // const Login = loadable(() => import('../features/Login'));
 declare global {
@@ -22,13 +18,23 @@ declare global {
   }
 }
 
+const Regist = loadable(() => import('../features/Regist/regist'));
+const SocialLogin = loadable(() => import('../features/Auth/kakaosocialLogin/socialLogin'));
+const MainLogin = loadable(() => import('../features/Auth/mainLogin'));
+
 const RediretHandler = loadable(() => import('../features/Auth/kakaosocialLogin/OAuth2RedirectHandler'));
+const Map = loadable(() => import('../features/Map/Map'));
+
 const Search = loadable(() => import('../features/Search/searh'));
 
-const Profile = loadable(() => import('../features/Profile'));
+const Profile = loadable(() => import('../features/Profile/Profile'));
 const ProfileUpdate = loadable(() => import('../features/Profile/profileUpdate'));
 
-const Place = loadable(() => import('../features/Place'));
+const Place = loadable(() => import('../features/Place/Place'));
+
+const FeedAdd = loadable(() => import('../features/Feed/Feedadd'));
+const FeedDetail = loadable(() => import('../features/FeedDetail'));
+const Comment = loadable(() => import('../features/FeedDetail/Comment'));
 
 function App() {
   // 리프레시 토큰 사용하면
@@ -81,7 +87,10 @@ function App() {
             <Route path="/profile/:nickname" element={<Profile />} />
             <Route path="/profile/:nickname/edit" element={<ProfileUpdate />} />
             <Route path="/place/:placeSeq" element={<Place />} />
+            <Route path="/place/:placeSeq/feeds/:feedSeq" element={<FeedDetail />} />
+            <Route path="/place/:placeSeq/feeds/:feedSeq/comments" element={<Comment />} />
             <Route path="/not-found" element={<NotFound />} />
+            <Route path="/report/*" element={<FeedAdd />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -1,114 +1,175 @@
 import axios from 'axios';
 import { getToken } from './JTW-Token';
 
-const BASE_URL = 'http://j6a505.p.ssafy.io:8080/api/users';
+const BASE_URL = 'https://j6a505.p.ssafy.io/api/users';
 const token = getToken();
 
 const getProfile = async (nickname: string) => {
-  await axios({
-    method: 'GET',
-    url: `${BASE_URL}/${nickname}`,
-    headers: { Authorization: `Bearer ${token}` },
-  })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    });
+  console.log('nickname', nickname);
+
+  console.log('this is get profile');
+
+  const result = await axios.get(`${BASE_URL}/${nickname}`, {headers : { Authorization: `${token}` } })
+                        .then((response) => {
+                          const value = {
+                            status : response.status,
+                            data : response.data
+                          }
+                          return value;
+                        })
+                        .catch((e)=>{
+                          const value = {
+                            status : 401,
+                            data : null
+                          }
+                          return value;
+                        })
+  return result;
 };
 
 const getProfileForUpdate = async (nickname: string) => {
-  await axios({
-    method: 'GET',
-    url: `${BASE_URL}/${nickname}/update`,
-    headers: { Authorization: `Bearer ${token}` },
-  })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    });
+  console.log('nickname', nickname);
+  console.log('this is get profile for update');
+  
+  const result = await axios.get(`${BASE_URL}/${nickname}/update`, {headers: { Authorization: `Bearer ${token}` }})
+                          .then((response) => {
+                            const value = {
+                              status : response.status,
+                              data : response.data
+                            }
+                            return value;
+                          })
+                          .catch((e)=>{
+                            const value = {
+                              status : 401,
+                              data : null
+                            }
+                            return value;
+                          })
+  return result;
 };
 
-const getMyFeeds = async (nickname: string) => {
-  await axios({
-    method: 'GET',
-    url: `${BASE_URL}/${nickname}/feeds`,
-    headers: { Authorization: `Bearer ${token}` },
-  })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    });
+const getMyFeeds = async (data : {nickname : string, page : number}) => {
+  console.log(data);
+  const result = await axios.get(`${BASE_URL}/${data.nickname}/feeds?page=${data.page}`,
+                                  {headers : { Authorization: `${token}` }})
+                            .then((response)=>{
+                              const value = {
+                                status : response.status,
+                                data : response.data
+                              }
+                              return value;
+                            }).catch((e)=>{
+                              const value = {
+                                status : 401,
+                                data : null
+                              }
+                              return value;
+                            })
+  console.log(result);
+  return result;
 };
 
-const getLikedFeeds = async (nickname: string) => {
-  await axios({
-    method: 'GET',
-    url: `${BASE_URL}/${nickname}/liked`,
-    headers: { Authorization: `Bearer ${token}` },
-  })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    });
+const getLikedFeeds = async (data : {nickname : string, page : number}) => {
+  const result = await axios.get(`${BASE_URL}/${data.nickname}/liked?page=${data.page}`,
+                            {headers : { Authorization: `${token}` }})
+                          .then((response)=>{
+                          const value = {
+                          status : response.status,
+                          data : response.data
+                          }
+                          return value;
+                          }).catch((e)=>{
+                          const value = {
+                          status : 401,
+                          data : null
+                          }
+                          return value;
+                          });
+  console.log(result);
+  return result;
 };
 
-const getWishedFeeds = async (nickname: string) => {
-  await axios({
-    method: 'GET',
-    url: `${BASE_URL}/${nickname}/wished`,
-    headers: { Authorization: `Bearer ${token}` },
-  })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    });
+const getWishedFeeds = async (data : {nickname : string, page : number}) => {
+  console.log(data);
+  const result = await axios.get(`${BASE_URL}/${data.nickname}/wished?page=${data.page}`,
+                                  {headers : { Authorization: `${token}` }})
+                            .then((response)=>{
+                              const value = {
+                                status : response.status,
+                                data : response.data
+                              }
+                              return value;
+                            }).catch((e)=>{
+                              const value = {
+                                status : 401,
+                                data : null
+                              }
+                              return value;
+                            })
+  console.log(result);
+  return result;
 };
 
-const updateProfile = async (
-  nickname: string,
-  data: { password: string; nickname: string; mbti: string; moods: string[] },
-) => {
-  await axios({
-    method: 'PATCH',
-    url: `${BASE_URL}/${nickname}`,
-    headers: { Authorization: `Bearer ${token}` },
-    data,
-  })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    });
+const updateProfile = async (nickname: string, data: { nickname: string; mbti: string; moods: string[] }) => {
+  
+  const result = await axios.patch(`${BASE_URL}/${nickname}`, data,{headers: { Authorization: `${token}`}})
+                          .then((response)=>{
+                            const value = {
+                              status : response.status
+                            }
+                            return value;
+                          })
+                          .catch((e)=>{
+                            const value = {
+                              status : 403
+                            }
+                            return value;
+                          })
+  return result;                    
 };
 
-const updateProfileImage = async (nickname: string, data: { image: string }) => {
-  await axios({
-    method: 'PATCH',
-    url: `${BASE_URL}/${nickname}/profileimg`,
-    headers: { Authorization: `Bearer ${token}` },
-    data,
-  })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    });
+const updateProfileImage = async (nickname: string, data: FormData) => {
+  if(token){
+    const result = await axios.patch(`${BASE_URL}/${nickname}/profileimg`, data, {headers : {Authorization: token, 'Content-type' : "multipart/form-data"}})
+                            .then((response)=>{
+                                const value = {
+                                  status : response.status,
+                                  data : response.data
+                                }
+                                return value;
+                            })
+                            .catch((e)=>{
+                              const value = {
+                                status : 403,
+                                data : null
+                              }
+                              return value;
+                            })
+    return result;
+  }
+  return {status : 400, data : null};
 };
+const getPwdChangeResult = async (body : {userId : string, password : string}) => {
+  const result = await axios.patch(`https://j6a505.p.ssafy.io/api/users/repwd`, body)
+                          .then((response)=>{
+                            const value = {
+                              status : response.status
+                            }
+                            return value;
+                          })
+                          .catch((e)=>{
+                            const value = {
+                              status : 400
+                            }
+                            return value;
+                          })
+  return result;
+}         
 
-const resign = async (nickname: string) => {
-  await axios({
+
+const resign = (nickname: string) => {
+  return axios({
     method: 'DELETE',
     url: `${BASE_URL}/${nickname}`,
     headers: { Authorization: `Bearer ${token}` },
@@ -130,6 +191,7 @@ const ProfileApi = {
   updateProfile,
   updateProfileImage,
   resign,
+  getPwdChangeResult
 };
 
 export default ProfileApi;

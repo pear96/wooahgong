@@ -1,23 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useLocation, useNavigate } from 'react-router-dom';
 import My from '../../assets/MyPosition.png';
 import Marker from '../../assets/Marker.png';
 import Eximage from '../../assets/eximage.jpg';
 import Myhome from '../../assets/myhome.jpg';
 import SummarySpot from './SummarySpot';
 
+interface Location {
+    placeSeq : number,
+    address : string, 
+    avgRatings : number, 
+    feeds : {
+      feedSeq : number, 
+      thumbnail : string
+    }, 
+    isWished : boolean, 
+    latitude : number, 
+    longitude : number, 
+    name : string, 
+    placeImageUrl : string
+}
+
+
 function Map() {
+  
+  
   const [myPosition, setMyPosition] = useState<{ lat: number; lng: number }>({ lat: 0, lng: 0 });
   const [map, setMap] = useState<any>(null);
   const [spot, setSpot] = useState<{
+    seq : number,
     img: string;
     name: string;
-    like: number;
-    comment: number;
+    avgRating: number;
     lat: number;
     lng: number;
-    isSearch: boolean;
-  }>({ img: '', name: '', like: 0, comment: 0, lat: 0, lng: 0, isSearch: false });
+  }>({ seq : -1 , img: '', name: '', avgRating: 0, lat: 0, lng: 0 });
   const [isSearch, setIsSearch] = useState<boolean>(false);
   const [total, setTotal] = useState<{ tDistance: number; tTime: number }>({
     tDistance: 0,
@@ -29,11 +47,14 @@ function Map() {
   const [markerlist, setMarkerList] = useState<any[]>([]);
   const [routelist, setRouteList] = useState<any[]>([]);
   const [chktraffic, setChktraffic] = useState<any[]>([]);
-  const [point, setPoint] = useState<any[]>([
-    { img: Eximage, name: '선릉', like: 2000, comment: 300, lat: 37.50764, lng: 127.052186 },
-    { img: Myhome, name: '우리집', like: 500, comment: 250, lat: 37.50335, lng: 127.051982 },
-  ]);
+  // const [point, setPoint] = useState<any[]>([
+  //   { img: Eximage, name: '선릉', like: 2000, comment: 300, lat: 37.50764, lng: 127.052186 },
+  //   { img: Myhome, name: '우리집', like: 500, comment: 250, lat: 37.50335, lng: 127.051982 },
+  // ]);
 
+  // const propState = useNavigate().state;
+  const location = useLocation();
+  const state = location.state as Location;
   // 경로탐색후 초기화 하는 함수
   const handleClearRoute = () => {
     // 경로가 존재하면
@@ -283,24 +304,41 @@ function Map() {
       resultdrawArr.setMap(null);
       setResultDrawArr(null);
     }
+    // if (state.placeInfo.)
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
         lat = position.coords.latitude;
         lng = position.coords.longitude;
-
-        setMap(
-          new window.Tmapv2.Map('TMapContainer', {
-            center: new window.Tmapv2.LatLng(lat, lng),
-            width: '100%',
-            height: '720px',
-            zoom: 17,
-            draggable: true,
-            https: true,
-          }),
-        );
-
-        console.log('???실행');
-        setMyPosition({ lat, lng });
+        if (state !== null){
+          setMap(
+            new window.Tmapv2.Map('TMapContainer', {
+              center: new window.Tmapv2.LatLng(state.latitude, state.longitude),
+              width: '100%',
+              height: '720px',
+              zoom: 17,
+              draggable: true,
+              https: true,
+            }),
+          );
+  
+          console.log('???실행');
+          setMyPosition({ lat, lng });
+        }
+        else{
+          setMap(
+            new window.Tmapv2.Map('TMapContainer', {
+              center: new window.Tmapv2.LatLng(lat, lng),
+              width: '100%',
+              height: '720px',
+              zoom: 17,
+              draggable: true,
+              https: true,
+            }),
+          );
+  
+          console.log('???실행');
+          setMyPosition({ lat, lng });
+        }
       });
     }
   };
@@ -310,6 +348,7 @@ function Map() {
   };
   // 처음 실행시 map이 null이면 map 생성, 반대 경우 return
   useEffect(() => {
+    console.log(state);
     if (map !== null) return;
     CreateMap();
   }, []);
@@ -325,20 +364,27 @@ function Map() {
       markerlist.map((v) => v.setMap(null));
       setMarkerList(markerlist.splice(0, markerlist.length));
     }
-
+    
     // point state 가 가지고 있는 값을 가지고 마커 생성
+    
     const markertemp = [];
-    for (let i = 0; i < point.length; i += 1) {
+    if(state !== null){
       const marker = new window.Tmapv2.Marker({
-        position: new window.Tmapv2.LatLng(point[i].lat, point[i].lng),
+        position: new window.Tmapv2.LatLng(state.latitude, state.longitude),
         icon: Marker,
         iconSize: new window.Tmapv2.Size(35, 35),
         map,
       });
-
-      // 마커에 클릭 이벤트 달아줌
+      const data = {
+        seq : state.placeSeq,
+        img : state.placeImageUrl,
+        name : state.name,
+        avgRating : state.avgRatings,
+        lat : state.latitude,
+        lng : state.longitude,
+      }
       marker.addListener('click', () => {
-        setSpot(point[i]);
+        setSpot(data);
         setisOpen(true);
         console.log('안녕');
       });
@@ -346,19 +392,32 @@ function Map() {
         console.log('???');
       });
       markertemp.push(marker);
+      const marker2 = new window.Tmapv2.Marker({
+        position: new window.Tmapv2.LatLng(myPosition.lat, myPosition.lng),
+        icon: My,
+        iconSize: new window.Tmapv2.Size(35, 35),
+        map,
+      });
+      markertemp.push(marker2);
+      setMarkerList([...markerlist, ...markertemp]);
+      setSpot(data);
+      setisOpen(true);
     }
-
-    // 내 위치에 마커 생성
-    const marker = new window.Tmapv2.Marker({
-      position: new window.Tmapv2.LatLng(myPosition.lat, myPosition.lng),
-      icon: My,
-      iconSize: new window.Tmapv2.Size(35, 35),
-      map,
-    });
-    markertemp.push(marker);
-
-    // 마커들을 state에 저장해줌
-    setMarkerList([...markerlist, ...markertemp]);
+    else{
+      // 거리로 찾는거 추가하면 작성 이어서 해야함
+  
+      // 내 위치에 마커 생성
+      const marker = new window.Tmapv2.Marker({
+        position: new window.Tmapv2.LatLng(myPosition.lat, myPosition.lng),
+        icon: My,
+        iconSize: new window.Tmapv2.Size(35, 35),
+        map,
+      });
+      markertemp.push(marker);
+  
+      // 마커들을 state에 저장해줌
+      setMarkerList([...markerlist, ...markertemp]); 
+    }
   }, [myPosition]);
   return (
     <div id="TMapContainer">

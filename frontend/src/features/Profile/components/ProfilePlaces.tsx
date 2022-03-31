@@ -1,32 +1,106 @@
-import { ReducerType } from 'app/rootReducer';
-import React from 'react';
-import { useSelector } from 'react-redux';
-import styled from 'styled-components';
+import React, { useEffect, useState, useRef } from 'react';
+import ProfileApi from 'common/api/ProfileApi';
 import {
   ProfileFeedsOrPlacesGrid,
-  FeedOrPlaceWrapper,
-  FeedOrPlaceTwoModes,
   FeedOrPlaceImageWrapper,
-  HoveredFeedOrPlaceWrapper,
 } from 'features/Profile/styles/StyledFeedsAndPlaces';
-import { profilePlaces } from '../reducers/profilePlaceReducer';
+import { Spin } from 'antd';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function ProfilePlaces() {
-  const { places } = useSelector((state: ReducerType) => state.profilePlace);
+  // const { places } = useSelector((state: ReducerType) => state.profilePlace);
+  console.log("??????????");
+  const { nickname } = useParams<string>();
+  const [places, setPlaces] = useState<{ placeSeq: number; thumbnail: string }[]>([]);
+  const [target, setTarget] = useState<any>(null);
+  const [page, setPage] = useState<number>(0);
+  const [end, setEnd] = useState<boolean>(false);
+  const placesRef = useRef(places);
+  placesRef.current = places;
+  const endRef = useRef(end);
+  endRef.current = end;
+  const pageRef = useRef(page);
+  pageRef.current = page;
+  
+  const navigate = useNavigate();
+  
+  
+  const getWishedFeedsApi = async () => {
+    if (nickname !== undefined && !endRef.current) {
+      const value = {
+        nickname,
+        page : pageRef.current
+      }
+      const result = await ProfileApi.getWishedFeeds(value);
 
+      if (result.status === 200) {
+        if(result.data.length === 0){
+          setEnd(true);
+        }
+        else if(placesRef.current.length > 0) {
+          setPlaces([...placesRef.current, ...result.data]);
+          setPage(pageRef.current+1);
+        }
+        else{
+          setPlaces([...result.data]);
+          setPage(pageRef.current+1);
+        }
+      } else {
+        navigate('/not-found');
+      }
+    }
+  };
+  const onIntersect = async ([entry] : any, observer : any) => {
+    if (entry.isIntersecting) {
+      observer.unobserve(entry.target);
+      await getWishedFeedsApi();
+      observer.observe(entry.target);
+    }
+  };
+  const handleClickPlace = (placeSeq : number) => {
+    navigate(`/place/${placeSeq}`);
+  }
+
+  useEffect(()=>{
+    let observer;
+    if(target){
+      observer = new IntersectionObserver(onIntersect, {
+        threshold : 0.2,
+      });
+      observer.observe(target);
+    }
+  }, [target]);
+  
   return (
-    <ProfileFeedsOrPlacesGrid>
-      {places.map((place) => (
-        <FeedOrPlaceWrapper>
-          <FeedOrPlaceTwoModes>
-            <FeedOrPlaceImageWrapper>
-              <img src={place.thumbnail} alt="" style={{ width: '100%', height: '100%' }} />
-            </FeedOrPlaceImageWrapper>
-            <HoveredFeedOrPlaceWrapper>something</HoveredFeedOrPlaceWrapper>
-          </FeedOrPlaceTwoModes>
-        </FeedOrPlaceWrapper>
-      ))}
-    </ProfileFeedsOrPlacesGrid>
+    <div>
+    {places !== undefined ? (
+      <ProfileFeedsOrPlacesGrid>
+        {places.map((place, i) => {
+            const idx = i;
+            return (
+                <FeedOrPlaceImageWrapper key = {idx} onClick={()=>handleClickPlace(place.placeSeq)}>
+                  <img src={place.thumbnail} alt="" style={{ width: '100%', height: '100%' }} />
+                </FeedOrPlaceImageWrapper>
+            )
+          })}
+        <div
+            ref={setTarget}
+            style={{
+              height: "15px",
+            }}
+        />
+      </ProfileFeedsOrPlacesGrid>
+      ): (
+        <div style={{
+          height : 380,
+          display : "flex",
+          alignItems : "center",
+          justifyContent : "center"
+        }}>
+          <Spin size='large'/>
+        </div> 
+      )}
+    </div>
   );
 }
 

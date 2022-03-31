@@ -4,8 +4,6 @@ import { toast } from 'react-toastify';
 import UserApi from 'common/api/UserApi';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { ReducerType } from 'app/rootReducer';
 import { useAppDispatch } from '../../app/store';
 import useInput from '../../common/hooks/useInput';
 
@@ -20,7 +18,6 @@ import { setUser } from './authSlice';
 // logo
 import Logo from '../../assets/Logo.png';
 import { ReactComponent as Title } from '../../assets/main/Title.svg';
-
 
 const TitleContainer = styled.div`
   margin-top: 22px;
@@ -37,7 +34,6 @@ const Img = styled.img`
   // filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 `;
 
-
 const Input = styled.input`
   font-family: 'NotoSansKR';
   font-size: 18px;
@@ -47,28 +43,28 @@ const Input = styled.input`
   margin-bottom: 20px;
   padding-left: 3px;
   padding-bottom: 0px;
-  border : 2px solid;
+  border: 2px solid;
   border-left: none;
   border-top: none;
   border-right: none;
-  border-image : linear-gradient(to right, #C09FDC 20.46%, #34B1FF 80.57%);
-  border-image-slice : 1;
-  text-align : center;
+  border-image: linear-gradient(to right, #c09fdc 20.46%, #34b1ff 80.57%);
+  border-image-slice: 1;
+  text-align: center;
   &::placeholder {
-    color : rgba(0,0,0,0.3);
+    color: rgba(0, 0, 0, 0.3);
   }
-  &:focus::-webkit-input-placeholder, textarea:focus::-webkit-input-placeholder{
+  &:focus::-webkit-input-placeholder,
+  textarea:focus::-webkit-input-placeholder {
     color: transparent;
   }
 
   &:focus + .underline {
     transform: scale(1);
-  } 
+  }
 `;
 
-
 const ActiveButton = styled.button`
-  background: linear-gradient(90deg, #C09FDD -3.15%, #86A6EB 100%);
+  background: linear-gradient(90deg, #c09fdd -3.15%, #86a6eb 100%);
   font-family: 'NotoSansKR';
   border-style: none;
   border-radius: 10px;
@@ -94,20 +90,18 @@ export const Form = styled.form`
 const mainLogin = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { test } = useSelector((state: ReducerType) => state.login);
-  console.log(test);
-  const {getCommonLoginResult} = UserApi
+
+  const { getCommonLoginResult } = UserApi;
 
   const [id, onChangeId] = useInput('');
   const [password, onChangePassword] = useInput('');
 
   const idRef = useRef<any>();
-  const handleLogin = async () =>{
-
+  const handleLogin = async () => {
     // console.log(result);
-  }
+  };
   const onSubmit = useCallback(
-  async (e) => {
+    async (e) => {
       e.preventDefault();
       console.log(e.target[0].value, e.target[1].value);
       if (!id || !id.trim()) {
@@ -132,9 +126,9 @@ const mainLogin = () => {
           },
         );
       }
-      const data = { userId : id, password };
+      const data = { userId: id, password };
       const result = await getCommonLoginResult(data);
-      if(result.status === 200){
+      if (result.status === 200) {
         toast.success(
           <div style={{ width: 'inherit', fontSize: '10px' }}>
             <div>로그인 성공!</div>
@@ -145,9 +139,8 @@ const mainLogin = () => {
           },
         );
         dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg }));
-        navigate("/map");
-      }
-      else{
+        navigate('/map');
+      } else {
         toast.error(
           <div style={{ width: 'inherit', fontSize: '10px' }}>
             <div>아이디와 비밀번호를 확인해주세요</div>
@@ -171,16 +164,18 @@ const mainLogin = () => {
   }, []);
 
   return (
-    <div style={{
-      position : "relative",
-      width : "360px",
-      height : "800px",
-      background : "none",
-      margin : "0 auto"
-    }}>
+    <div
+      style={{
+        position: 'relative',
+        width: '360px',
+        height: '800px',
+        background: 'none',
+        margin: '0 auto',
+      }}
+    >
       <Img src={Logo} alt="Logo" />
       <TitleContainer>
-        <Title width="222px"/>
+        <Title width="222px" />
       </TitleContainer>
       <Form onSubmit={onSubmit}>
         <div style={{ marginTop: 40 }}>
@@ -195,19 +190,28 @@ const mainLogin = () => {
             onChange={onChangePassword}
           />
         </div>
-        <div style={{
-          width : 360,
-          marginTop : 36
-        }}>
-          <ActiveButton style={{
-            marginLeft : 69
+        <div
+          style={{
+            width: 360,
+            marginTop: 36,
           }}
-          onClick={handleLogin}>로그인</ActiveButton>
-          <ActiveButton type="button" style={{
-            marginLeft : 18,
-            background : "linear-gradient(270deg, #34B1FF 0%, #67A0E4 100%)"
-          }}
-          onClick={onClickGotoSignupPage}>
+        >
+          <ActiveButton
+            style={{
+              marginLeft: 69,
+            }}
+            onClick={handleLogin}
+          >
+            로그인
+          </ActiveButton>
+          <ActiveButton
+            type="button"
+            style={{
+              marginLeft: 18,
+              background: 'linear-gradient(270deg, #34B1FF 0%, #67A0E4 100%)',
+            }}
+            onClick={onClickGotoSignupPage}
+          >
             회원가입
           </ActiveButton>
         </div>

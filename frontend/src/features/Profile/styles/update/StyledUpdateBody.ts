@@ -22,6 +22,12 @@ export const UploadButton = styled(Button)`
   }
 `;
 
+export const RePwdButton = styled(Button)`
+  background-color: lightgray;
+  color: white;
+  border-radius: 0.25rem;
+`;
+
 export const StyledUpdateInfo = styled.div`
   margin: 2rem 2rem 0 2rem;
 `;

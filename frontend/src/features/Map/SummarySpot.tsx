@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
-import Comment from '../../assets/imageComment.png';
+import { useNavigate } from 'react-router-dom';
 import Heart from '../../assets/heart.png';
 import SearchType from './modal/SearchType';
+
 
 const Summary = styled.div`
     position : absolute;
@@ -70,10 +71,10 @@ const SearchPath = styled.button`
 // map.tsx의 경로 탐색 초기화 함수 clearRoute
 type MyProps = {
     spot : {
+        seq : number,
         img : string,
         name : string,
-        like : number,
-        comment : number,
+        avgRating : number,
         lat : number,
         lng : number,
     };
@@ -88,8 +89,10 @@ type MyProps = {
 
 
 function SummarySpot({spot, isSearch, total,searchWay, clearRoute} : MyProps){
+    
     const [open, setIsOpen] = useState<boolean>(false);
-    // console.log(spot);
+    const navigate = useNavigate();
+    console.log(spot);
 
     const handleOpenModal = (e : React.MouseEvent<HTMLButtonElement>) =>{
         e.stopPropagation();
@@ -99,7 +102,14 @@ function SummarySpot({spot, isSearch, total,searchWay, clearRoute} : MyProps){
         e.stopPropagation();
         setIsOpen(false);
     }
-
+    const handleClickSpot = (e : React.MouseEvent<HTMLDivElement>) => {
+        e.stopPropagation();
+        navigate(`/place/${spot.seq}`);
+    }
+    const handleClickReset = (e : React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+        clearRoute();
+    }
     // 하위 컴포넌트 (SearchType.tsx)에서 type을 전달 받고 map.tsx의 searchWay 함수 호출
     const sendData = (type : boolean) => {
         // 도착 지점 정보
@@ -109,7 +119,7 @@ function SummarySpot({spot, isSearch, total,searchWay, clearRoute} : MyProps){
         searchWay(type, end);
     }
     return (
-        <Summary>
+        <Summary onClick={handleClickSpot}>
             <img style={{
                 width : 103,
                 height : 103,
@@ -121,7 +131,7 @@ function SummarySpot({spot, isSearch, total,searchWay, clearRoute} : MyProps){
                 <>
                     <SearchPath
                         type='button'
-                        onClick={clearRoute}>
+                        onClick={handleClickReset}>
                             돌아가기
                     </SearchPath>
                     <Sub>
@@ -130,13 +140,13 @@ function SummarySpot({spot, isSearch, total,searchWay, clearRoute} : MyProps){
                             height : 14
                         }}
                         src={Heart} alt="img"/>
-                        <SubText>{spot.like}</SubText>
-                        <img style={{
+                        <SubText>{spot.avgRating.toFixed(1)}</SubText>
+                        {/* <img style={{
                             width : 18,
                             height : 14
                         }}
                         src={Comment} alt="img"/>
-                        <SubText>{spot.comment}</SubText>
+                        <SubText>{spot.comment}</SubText> */}
                     </Sub>
                     <Total>
                         <div>거리 : {total.tDistance}km</div>
@@ -156,13 +166,13 @@ function SummarySpot({spot, isSearch, total,searchWay, clearRoute} : MyProps){
                             height : 14
                         }}
                         src={Heart} alt="img"/>
-                        <SubText>{spot.like}</SubText>
-                        <img style={{
+                        <SubText>{spot.avgRating.toFixed(1)}</SubText>
+                        {/* <img style={{
                             width : 18,
                             height : 14
                         }}
                         src={Comment} alt="img"/>
-                        <SubText>{spot.comment}</SubText>
+                        <SubText>{spot.comment}</SubText> */}
                     </Sub>
                 </>
             )}

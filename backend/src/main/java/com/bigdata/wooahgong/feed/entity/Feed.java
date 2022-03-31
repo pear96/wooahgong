@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor
 @Getter
+@NoArgsConstructor
 public class Feed extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,3 +64,4 @@ public class Feed extends BaseTimeEntity {
         this.place = place;
     }
 }
+

@@ -79,9 +79,9 @@ public class UserService {
     @Transactional
     public void signUp(SignUpReq commonSignUpReq) {
         commonSignUpReq.setPassword(passwordEncoder.encode(commonSignUpReq.getPassword()));
-        User user = userRepository.findByEmail(commonSignUpReq.getEmail()).orElse(null);
+        User user = userRepository.findByEmail(commonSignUpReq.getEmail()).orElseGet(User::new);
         // 에러 핸들링
-        if (user != null) {
+        if (user.getUserSeq() != null) {
             throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
         }
         if ("".equals(commonSignUpReq.getEmail()) || commonSignUpReq.getEmail() == null) {
@@ -155,7 +155,7 @@ public class UserService {
         String password = resetPwdReq.getPassword();
         User user = userRepository.findByUserId(userId).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_OUR_USER));
-        user.resetPwd(password);
+        user.resetPwd(passwordEncoder.encode(password));
         userRepository.save(user);
     }
 

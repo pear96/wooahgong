@@ -79,7 +79,7 @@ function socialLogin() {
   }, []);
 
   const onClickGotoSearcPassword = useCallback(() => {
-    navigate('/searchPassword');
+    navigate('/find/pwd');
   }, []);
 
   return (

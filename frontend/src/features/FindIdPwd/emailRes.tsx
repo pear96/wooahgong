@@ -180,7 +180,7 @@ function EmailRes() {
     navigate('/login');
   }
   const onClickGotoFindPwd = () => {
-    navigate('./pwd');
+    navigate('/find/pwd');
   }
 
   return (

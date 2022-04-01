@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import ProgressBar from '@ramonak/react-progress-bar';
 import { toast } from 'react-toastify';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 import UserApi from 'common/api/UserApi';
 import FindApi from 'common/api/FindApi';
 import { useNavigate } from 'react-router-dom';
@@ -24,7 +26,7 @@ const Progress = styled.div`
 `;
 const Title = styled.h3`
   text-align: left;
-  margin-left: 58px;
+  margin-left: 75px;
   margin-top: 35px;
   margin-bottom: 2px;
   font-family: 'NotoSansKR';
@@ -35,7 +37,7 @@ const Input = styled.input`
   font-size: 11px;
   width: 200px;
   height: 31px;
-  margin-left: 58px;
+  margin-left: 75px;
   margin-bottom: 20px;
   padding-left: 3px;
   padding-bottom: 0px;
@@ -56,6 +58,7 @@ const ConfirmBtn = styled.button`
   border-radius: 50px;
   cursor: pointer;
 `;
+
 const DisableButton = styled.button`
   border-style: none;
   border-radius: 10px;
@@ -96,7 +99,7 @@ const ErrorMsg = styled.span`
 const Desc = styled.span`
   display: block;
   text-align: left;
-  margin-left: 60px;
+  margin-left: 75px;
   margin-bottom: 18px;
   font-family: 'NotoSansKR';
   font-size: 11px;

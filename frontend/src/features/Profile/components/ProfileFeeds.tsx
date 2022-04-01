@@ -1,86 +1,97 @@
-import { ReducerType } from 'app/rootReducer';
-import React from 'react';
-import { useSelector } from 'react-redux';
-import styled from 'styled-components';
+import React, { useEffect, useRef, useState } from 'react';
+import ProfileApi from 'common/api/ProfileApi';
 import {
   ProfileFeedsOrPlacesGrid,
-  FeedOrPlaceWrapper,
-  FeedOrPlaceTwoModes,
   FeedOrPlaceImageWrapper,
-  HoveredFeedOrPlaceWrapper,
 } from 'features/Profile/styles/StyledFeedsAndPlaces';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function ProfileFeeds() {
-  const { feeds } = useSelector((state: ReducerType) => state.profileFeed);
+  // const { feeds } = useSelector((state: ReducerType) => state.profileFeed);
+  const { nickname } = useParams<string>();
+  const [feeds, setFeeds] = useState<{ feedSeq: number, imageUrl: string, placeSeq : number }[]>([]);
+  const [target, setTarget] = useState<any>(null);
+  const [page, setPage] = useState<number>(0);
+  const [end, setEnd] = useState<boolean>(false);
+  const feedsRef = useRef(feeds);
+  feedsRef.current = feeds;
+  const endRef = useRef(end);
+  endRef.current = end;
+  const pageRef = useRef(page);
+  pageRef.current = page;
+
+  const navigate = useNavigate();
+
+  const getMyFeedsApi = async () => {
+    if (nickname !== undefined && !endRef.current) {
+      const value = {
+        nickname,
+        page : pageRef.current
+      }
+      console.log(feedsRef.current);
+      const result = await ProfileApi.getMyFeeds(value);
+
+      if (result.status === 200) {
+        console.log("?!?!?!?!?!");
+        console.log(result.data);
+        if(result.data.length === 0){
+          setEnd(true);
+        }
+        else if(feedsRef.current.length > 0) {
+          setFeeds([...feedsRef.current, ...result.data]);
+          setPage(pageRef.current+1);
+        }
+        else{
+          setFeeds([...result.data]);
+          setPage(pageRef.current+1);
+        }
+      } else {
+        navigate('/not-found');
+      }
+    }
+  };
+  const onIntersect = async ([entry] : any, observer : any) => {
+    if (entry.isIntersecting) {
+      observer.unobserve(entry.target);
+      await getMyFeedsApi();
+      observer.observe(entry.target);
+    }
+  };
+
+  const handleClickFeed = (value : {feedSeq : number, placeSeq : number}) => {
+    navigate(`/place/${value.placeSeq}/feeds/${value.feedSeq}`);
+  }
+  
+  useEffect(()=>{
+    let observer : any;
+    if(target){
+      observer = new IntersectionObserver(onIntersect, {
+        threshold : 0.2,
+      });
+      observer.observe(target);
+    }
+    return () => observer && observer.disconnect();
+  }, [target]);
 
   return (
-    // <ProfileFeedsWrapper>
-    //   <ProfileFeedsGrid>
-    //     {feeds.length > 0
-    //       ? feeds.map((feed) => (
-    //           <FeedWrapper key={feed.feedSeq}>
-    //             <img src={feed.imageUrl} alt="feed caption" />
-    //             {/* <HoveredFeedWrapper>
-    //             <p>33</p>
-    //           </HoveredFeedWrapper> */}
-    //           </FeedWrapper>
-    //         ))
-    //       : null}
-    //   </ProfileFeedsGrid>
-    // </ProfileFeedsWrapper>
-
     <ProfileFeedsOrPlacesGrid>
-      {feeds.map((feed) => (
-        <FeedOrPlaceWrapper>
-          <FeedOrPlaceTwoModes>
-            <FeedOrPlaceImageWrapper>
-              <img src={feed.imageUrl} alt="" style={{ width: '100%', height: '100%' }} />
-            </FeedOrPlaceImageWrapper>
-            <HoveredFeedOrPlaceWrapper>something</HoveredFeedOrPlaceWrapper>
-          </FeedOrPlaceTwoModes>
-        </FeedOrPlaceWrapper>
-      ))}
+      {feeds !== undefined ? (
+        feeds.map((feed, i) => {
+          const idx = i;
+          return (
+              <FeedOrPlaceImageWrapper key = {idx} onClick={() => handleClickFeed({feedSeq : feed.feedSeq, placeSeq : feed.placeSeq})} >
+                <img src={feed.imageUrl} alt="" style={{ width: '100%', height: '100%' }} />
+              </FeedOrPlaceImageWrapper>
+          )})
+      ) : (<>loading</>)}
+      <div
+          ref={setTarget}
+          style={{
+            height: "15px",
+          }}
+      />
     </ProfileFeedsOrPlacesGrid>
   );
 }
-
-// const ProfileFeedsWrapper = styled.div`
-//   padding-top: 1rem;
-//   margin-top: 3rem;
-//   /* height: 4rem; */
-//   border-top-width: 1px;
-// `;
-// const ProfileFeedsGrid = styled.div`
-//   display: grid;
-//   margin-top: 1rem;
-//   margin-bottom: 3rem;
-//   grid-template-columns: repeat(3, minmax(0, 1fr));
-//   gap: 2rem;
-
-//   /* display: grid;
-//   grid-template-columns: repeat(3, minmax(0, 1fr));
-//   gap: 1.25rem; */
-// `;
-// const FeedWrapper = styled.div`
-//   position: relative;
-
-//   /* overflow: hidden;
-//   height: 16rem; */
-// `;
-// const HoveredFeedWrapper = styled.div`
-//   position: absolute;
-//   bottom: 0;
-//   left: 0;
-//   z-index: 10;
-//   background-color: #e5e7eb;
-//   justify-content: space-evenly;
-//   align-items: center;
-//   width: 100%;
-//   height: 100%;
-
-//   &:hover {
-//     display: flex;
-//   }
-// `;
 
 export default ProfileFeeds;

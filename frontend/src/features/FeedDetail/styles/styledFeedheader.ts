@@ -11,11 +11,11 @@ export const NicknameContainer = styled.p`
   font-weight: bold;
   width: 100px;
   margin-top: 20px;
-  margin-right: 40px;
+  margin-right: 30px;
   text-align: center;
   justify-content: start;
   align-items: center;
-  padding: 8px 0px 8px 16px;
+  padding: 8px 0px 8px 22px;
 `;
 
 export const HamburgerContainer = styled.div`

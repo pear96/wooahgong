@@ -153,7 +153,7 @@ function FindPwd() {
           <div>
             <Img src={Logo} alt="Logo" />
           </div>
-          <Title>아이디 찾기</Title>
+          <Title>비밀번호 찾기</Title>
           <Input onChange={handleInputEmail} placeholder="아이디를 입력하세요." />
           <Input onChange={handleInputEmail} placeholder="이메일을 입력하세요." />
           <ErrorMsg>{errorMsg}</ErrorMsg>

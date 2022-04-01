@@ -1,9 +1,6 @@
 package com.bigdata.wooahgong.user;
 
-import com.bigdata.wooahgong.user.dtos.request.FindPwSendEmailReq;
-import com.bigdata.wooahgong.user.dtos.request.ResetPwdReq;
-import com.bigdata.wooahgong.user.dtos.request.SignUpReq;
-import com.bigdata.wooahgong.user.dtos.request.UpdateProfileReq;
+import com.bigdata.wooahgong.user.dtos.request.*;
 import com.bigdata.wooahgong.user.dtos.response.*;
 import com.bigdata.wooahgong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -56,9 +53,9 @@ public class UserController {
     }
 
     // 비밀번호 찾기2 인증코드 확인
-    @GetMapping("/pwd")
-    public ResponseEntity<String> findPwInsertCode(@RequestParam("userId") String userId, String authCode) {
-        return userService.findPwInsertCode(userId, authCode);
+    @PostMapping("/pwd")
+    public ResponseEntity<String> findPwInsertCode(@RequestBody FindPwInsertCodeReq findPwInsertCodeReq) {
+        return userService.findPwInsertCode(findPwInsertCodeReq);
     }
 
     // 비밀번호 찾기3 비밀번호 재설정
@@ -102,7 +99,7 @@ public class UserController {
     @PatchMapping("/{nickname}")
     public ResponseEntity<String> updateProfile(@RequestHeader("Authorization") String token, @PathVariable String nickname,
                                                 @RequestBody UpdateProfileReq updateProfileReq) {
-        return new ResponseEntity<>(userService.updateProfile(token, nickname, updateProfileReq), HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateProfile(token, updateProfileReq), HttpStatus.OK);
     }
 
     // 프로필 수정하기 버튼 클릭

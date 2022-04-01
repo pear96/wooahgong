@@ -56,8 +56,8 @@ public class FeedController {
     // 댓글 작성
     @PostMapping("/{feed_seq}/comments")
     public ResponseEntity<String> createComment(@RequestHeader("Authorization") String token,@PathVariable("feed_seq") Long feedSeq,
-                                                @RequestParam String content) {
-        return new ResponseEntity<String>(feedService.createComment(token,feedSeq,content), HttpStatus.OK);
+                                                @RequestBody Map<String,String> content) {
+        return new ResponseEntity<String>(feedService.createComment(token,feedSeq,content.get("content")), HttpStatus.OK);
     }
     // 댓글 삭제
     @DeleteMapping("/{feed_seq}/comments/{comment_seq}")

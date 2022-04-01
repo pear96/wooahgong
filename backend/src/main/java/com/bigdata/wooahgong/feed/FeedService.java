@@ -51,13 +51,6 @@ public class FeedService {
     private final FeedLikeRepository feedLikeRepository;
     private final MoodRepository moodRepository;
 
-    // 일단 모든 피드들 리턴
-    // 추후에 어떤 정렬 방식을 이용할지 결정.
-//    public List<Feed> getFeedsTrend(String token) {
-//        List<Feed> feedList = feedRepository.findAll();
-//        return feedList;
-//    }
-
     @Transactional
     public Map<String, Long> createFeed(String token, List<MultipartFile> images, CreateFeedReq createFeedReq) {
         for (MultipartFile multipartFile : images) {

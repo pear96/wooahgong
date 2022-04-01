@@ -21,11 +21,11 @@ class SQLAlchemy:
         """
         database_url = kwargs.get("DB_URL")
         pool_recycle = kwargs.setdefault("DB_POOL_RECYCLE", 900)
-        echo = kwargs.setdefault("DB_ECHO", True)
+        # echo = kwargs.setdefault("DB_ECHO", False)
 
         self._engine = create_engine(
             database_url,
-            echo=echo,
+            # echo=echo,
             pool_recycle=pool_recycle,
             pool_pre_ping=True,
             encoding='utf-8'
@@ -35,13 +35,13 @@ class SQLAlchemy:
         @app.on_event("startup")
         def startup():
             self._engine.connect()
-            logging.info("DB connected.")
+            # logging.info("DB connected.")
 
         @app.on_event("shutdown")
         def shutdown():
             self._session.close_all()
             self._engine.dispose()
-            logging.info("DB disconnected")
+            # logging.info("DB disconnected")
 
     def get_db(self):
         """

@@ -1,5 +1,6 @@
 package com.bigdata.wooahgong.mainpage;
 
+import com.bigdata.wooahgong.feed.entity.Feed;
 import com.bigdata.wooahgong.mainpage.dtos.request.GetMapReq;
 import com.bigdata.wooahgong.place.entity.Place;
 import com.bigdata.wooahgong.place.repository.PlaceRepository;
@@ -27,10 +28,18 @@ public class MainService {
             double distanceKiloMeter =
                     distance(lat, lng, place.getLatitude(), place.getLongitude(), "meter");
             if (distanceKiloMeter < radius) {
+                // 모든 피드 평점 계산
+                double ratings = 0;
+                for (Feed feed : place.getFeeds()) {
+                    ratings += feed.getRatings();
+                }
+                ratings = ratings / place.getFeeds().size();
+                ratings = Math.round(ratings * 10) / 10.0;
                 // 피드 맨 최근꺼 사진 첫번째꺼 가져오기
-                String url = place.getFeeds().get(place.getFeeds().size() - 1).getThumbnail();
+                String url = place.getFeeds().get(0).getThumbnail();
                 answers.add(SearchPlaceDto.builder()
-                        .address(place.getAddress()).placeSeq(place.getPlaceSeq())
+                        .address(place.getAddress()).placeSeq(place.getPlaceSeq()).ratings(ratings).lat(place.getLatitude())
+                                .lng(place.getLongitude())
                         .name(place.getName()).imageUrl(url).build());
             }
         }

@@ -13,7 +13,6 @@ public class Application {
             + "classpath:application-social.properties,"
             + "classpath:application-aws.properties,"
             + "classpath:application-email.properties";
-            // + "classpath:application-ssl.properties";
 
     public static void main(String[] args) {
         new SpringApplicationBuilder(Application.class)

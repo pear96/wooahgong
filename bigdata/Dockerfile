@@ -1,4 +1,4 @@
-FROM python:3.9.7-alpine
+FROM python:3.9.7
 WORKDIR /homepage
 COPY ./requirements.txt /homepage/
 RUN pip install --no-cache-dir --upgrade -r /homepage/requirements.txt

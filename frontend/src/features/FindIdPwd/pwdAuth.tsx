@@ -5,7 +5,7 @@ import ProgressBar from '@ramonak/react-progress-bar';
 import { toast } from 'react-toastify';
 import UserApi from 'common/api/UserApi';
 import FindApi from 'common/api/FindApi';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Logo from '../../assets/Logo.png';
 import { ReducerType } from '../../app/rootReducer';
 import useInput from '../../common/hooks/useInput';
@@ -108,25 +108,31 @@ const Desc = styled.span`
 // type MyProps = {
 //   progress: number;
 // };
+interface Location {
+  userId: string,
+  email: string
+}
 function FindPwd() {
+  const location = useLocation();
   const [isOk, setIsOk] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [email, setEmail] = useState<string>('');
-  const [id, onChangeId] = useInput('');
+  const [authcode, onChangeAuthcode] = useInput('');
   const [inputEmail, onChangeEmail] = useInput('');
   const navigate = useNavigate();
+  const state = location.state as Location;
 
   // APIs.
-  const { findPwSendEmail } = FindApi
+  const { findPwInsertCode } = FindApi
 
   const onSubmit = useCallback(
     async (e) => {
       e.preventDefault();
-      console.log(e.target[0].value, e.target[1].value);
-      if (!id || !id.trim()) {
+      // 인증코드가 비어있을때
+      if (!authcode || !authcode.trim()) {
         return toast.info(
           <div style={{ width: 'inherit', fontSize: '10px' }}>
-            <div>아이디를 입력해주세요.</div>
+            <div>인증코드를 입력해주세요.</div>
           </div>,
           {
             position: toast.POSITION.TOP_CENTER,
@@ -134,36 +140,26 @@ function FindPwd() {
           },
         );
       }
-      if (!inputEmail || !inputEmail.trim()) {
-        return toast.info(
-          <div style={{ width: 'inherit', fontSize: '10px' }}>
-            <div>이메일을 입력해주세요.</div>
-          </div>,
-          {
-            position: toast.POSITION.TOP_CENTER,
-            role: 'alert',
-          },
-        );
-      }
-      const data = { userId: id, email: inputEmail };
-      const result = await findPwSendEmail(data);
+      const data = { userId: state.userId, authCode: authcode }
+      const result = await findPwInsertCode(data);
+      // 인증코드 성공
       if (result.status === 200) {
-        toast.info(
+        return toast.info(
           <div style={{ width: 'inherit', fontSize: '10px' }}>
-            <div>이메일을 보냈습니다. 인증코드를 입력하세요.</div>
+            <div>인증코드가 일치합니다.</div>
           </div>,
           {
             position: toast.POSITION.TOP_CENTER,
             role: 'alert',
           },
         );
-        navigate('/find/pwdAuth', { state: { userId: id, email: inputEmail } });
+        // navigate('/find/email', { state: { email, userId } });
         // dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg }));
         // navigate("/map");
       }
       toast.error(
         <div style={{ width: 'inherit', fontSize: '10px' }}>
-          <div>아이디와 이메일을 확인해주세요</div>
+          <div>인증코드가 올바르지 않습니다.</div>
         </div>,
         {
           position: toast.POSITION.TOP_CENTER,
@@ -172,33 +168,10 @@ function FindPwd() {
       );
       return null;
     },
-    [id, inputEmail],
+    [],
   );
 
   // const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
-  const dispatch = useDispatch();
-
-  const handleInputEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-
-    const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
-
-    const curWord = e.currentTarget.value;
-
-    // 이메일 형식 검사
-    if (regEmail.test(curWord) === true) {
-      setIsOk(true);
-      setErrorMsg("");
-    } else {
-      setIsOk(false);
-      setErrorMsg("이메일 형식을 맞춰주세요");
-    }
-    setEmail(curWord);
-  };
-  const handleInputId = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-  }
-
 
   const handleOnClickNextStep = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -219,8 +192,7 @@ function FindPwd() {
           </div>
           <Title>비밀번호 찾기</Title>
           <Form onSubmit={onSubmit}>
-            <Input name="id" onChange={onChangeId} placeholder="아이디를 입력하세요." />
-            <Input name="inputEmail" onChange={handleInputEmail} placeholder="이메일을 입력하세요." />
+            <Input name="authcode" onChange={onChangeAuthcode} placeholder="인증코드를 입력하세요." />
             <ErrorMsg>{errorMsg}</ErrorMsg>
 
             <div

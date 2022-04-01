@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import FeedDetailApi from 'common/api/FeedDetailApi';
 import { Spin } from 'antd';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
+import { useAppDispatch } from 'app/store';
+import FeedDetailApi from 'common/api/FeedDetailApi';
+import { setUserImage, setUesrNickname, setCreateDate } from '../FeedDetail/feedDetailSlice';
+
+// Componetets
 import Feedcontent from './components/Feedcontent';
 import Feedfooter from './components/Feedfooter';
 import Feedimages from './components/Feedimages';
@@ -18,6 +22,8 @@ function FeedDetail() {
   const { getFeedDetail } = FeedDetailApi;
   const { feedSeq } = useParams();
 
+  const dispatch = useAppDispatch();
+
   const [loadingFinsh, setLoadingFinsh] = useState(false);
   async function getAndFeedDetail() {
     if (feedSeq !== undefined) {
@@ -26,7 +32,7 @@ function FeedDetail() {
       setFeedDetails(result.data);
     } else {
       console.log('error');
-      // 여기 토스트 메세지 써줘야 할듯
+      // 여기 토스트 메세지 써줘야 할듯 => ok
     }
   }
 
@@ -41,6 +47,13 @@ function FeedDetail() {
       setLoadingFinsh(true);
     });
   }, [loadingFinsh]);
+
+  // 프로필 이미지, 닉네임 전역처리
+  useEffect(() => {
+    dispatch(setUserImage(FeedDetails?.userImage));
+    dispatch(setUesrNickname(FeedDetails?.nickname));
+    dispatch(setCreateDate(FeedDetails?.createDate));
+  }, [FeedDetails]);
 
   console.log(feedSeq);
   console.log(FeedDetails);
@@ -57,6 +70,7 @@ function FeedDetail() {
               placeName={FeedDetails.placeName}
               address={FeedDetails.address}
               amIOwner={FeedDetails.amIOwner}
+              placeSeq={FeedDetails.placeSeq}
             />
           </div>
           <div>

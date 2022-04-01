@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import React, { useCallback, useState } from 'react';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { StyledNavbar, Menubars, NavMenu, NavMenuItems, NavbarToggle, NavText } from 'common/styles/StyledNavbar';
 import { FaBars } from 'react-icons/fa';
 import { AiOutlineClose, AiOutlineSearch } from 'react-icons/ai';
@@ -15,6 +15,10 @@ function Navbar() {
   const user = useSelector((state: ReducerType) => state.login);
   const showSidebar = () => setSidebar(!sidebar);
   const profileLink = `/profile/${user.nickname}`;
+  const navigate = useNavigate();
+  const onClickToSeacrh = useCallback(() => {
+    navigate('/search');
+  }, []);
 
   return (
     <>
@@ -23,7 +27,7 @@ function Navbar() {
           <FaBars style={{ color: '#000' }} onClick={showSidebar} />
         </Menubars>
         <img src={mainLogo} alt="mainLogo" width={50} height={50} />
-        <AiOutlineSearch style={{ width: '40px', height: '40px', marginRight: '1rem' }} />
+        <AiOutlineSearch onClick={onClickToSeacrh} style={{ width: '40px', height: '40px', marginRight: '1rem' }} />
       </StyledNavbar>
       <NavMenu style={sidebar ? { left: '0', transition: '350ms' } : {}}>
         <NavMenuItems onClick={showSidebar}>

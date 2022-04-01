@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import FindId from './findId';
 import Pwd from './pwd';
+import PwdAuth from './pwdAuth';
 import EmailRes from './emailRes';
 import { ReducerType } from '../../app/rootReducer';
 
@@ -30,6 +31,7 @@ function Find() {
         <Route path="/" element={<FindId />} />
         <Route path="/email" element={<EmailRes />} />
         <Route path="/pwd" element={<Pwd />} />
+        <Route path="/pwdAuth" element={<PwdAuth />} />
 
       </Routes>
     </Container>

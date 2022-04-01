@@ -26,8 +26,52 @@ const findIdByEmail = async (email: string) => {
   })
   return res;
 };
+// 이메일, 아이디로 회원 아이디 찾기
+const findPwSendEmail = async (body: { userId: string, email: string }) => {
+  const res = await axios.patch(`${BASE_URL}/pwd`, body
+    // headers: { Authorization: `${token}` },
+  ).then((response) => {
+    console.log("성공")
+    const value = {
+      data: response.data,
+      status: response.status
+    }
+    return value;
+  }).catch((e) => {
+    console.log("실패")
+    const value = {
+      data: null,
+      status: 404
+    }
+    return value;
+  })
+  return res;
+};
+// 인증코드 확인
+const findPwInsertCode = async (body: { userId: string, authCode: string }) => {
+  const res = await axios.post(`${BASE_URL}/pwd`, body
+    // headers: { Authorization: `${token}` },
+  ).then((response) => {
+    console.log("성공")
+    const value = {
+      data: response.data,
+      status: response.status
+    }
+    return value;
+  }).catch((e) => {
+    console.log("실패")
+    const value = {
+      data: null,
+      status: 404
+    }
+    return value;
+  })
+  return res;
+};
 
 const FindApi = {
-  findIdByEmail
+  findIdByEmail,
+  findPwSendEmail,
+  findPwInsertCode
 }
 export default FindApi;

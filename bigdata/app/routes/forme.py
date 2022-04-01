@@ -32,17 +32,10 @@ CONN = Config.DB_URL
 # Header로 Authorization 받음
 @router.post("/forme")
 async def forme(request: Request, for_me_request : ForMeReq, session: Session = Depends(db.session)):
-    all_users = session.query(User).all()
-    
-    all_feeds = session.query(Feed).all()
-
-    df_places = pd.read_sql_table('place', CONN)
     df_feeds = pd.read_sql_table('feed', CONN)
-    df_users = pd.read_sql_table('user', CONN)
 
     user = find_user(request, session)
     user_seq = user.user_seq
-    # near_places = find_near_places(session, for_me_request)
 
     # 해당 장소에 작성한 피드의 '평균' 평점으로 구성
     rating_matrix = df_feeds.pivot_table(index='user_seq', columns='place_seq', values='ratings', aggfunc=np.mean)
@@ -71,63 +64,84 @@ async def forme(request: Request, for_me_request : ForMeReq, session: Session = 
     MIN_RATINGS = 2
 
     # 사용자가 이미 방문한 장소는 추천에서 제외
-    user_places = rating_matrix.loc[user_seq].copy()
+    # 사용자가 신규 가입해서 평점이 없을 경우 Key Error 발생
+    if user_seq in rating_matrix.columns:
+        user_places = rating_matrix.loc[user_seq].copy()
 
-
-    # 장소를 하나씩 보면서 예상 평점을 계산해야해
-    for place_seq in rating_bias.columns:
-        if pd.notnull(user_places.loc[place_seq]):
-            user_places.loc[place_seq] = 0
-        else:
-            # 유사도 평가, 장소 평점
-            similar_scores = user_similarity[user_seq].copy()
-            place_ratings = rating_bias[place_seq].copy()
-
-            # 공통으로 평가한 개수 [2. 3. 3. 2.]
-            common_counts = count[user_seq]
-            
-            # 원하는 개수보다 적은 사람들은 false
-            low_significance = common_counts < MIN_COMMON
-
-            # null 값들 제거하기, 평가를 안했거나 개수가 적은 사람들의 index 제거
-            none_rating_idx = place_ratings[place_ratings.isnull() | low_significance].index
-            
-            # 원하지 않는 index drop
-            place_ratings = place_ratings.drop(none_rating_idx)
-            similar_scores = similar_scores.drop(none_rating_idx)
-
-            if len(similar_scores) > MIN_RATINGS:
-                neighbors_size = min(neighbors_size, len(similar_scores))
-
-                # numpy로 계산하려고 준비함
-                similar_scores = np.array(similar_scores)
-                place_ratings = np.array(place_ratings)
-
-                user_index = np.argsort(similar_scores)
-
-                similar_scores = similar_scores[user_index][-neighbors_size:]
-                place_ratings = similar_scores[user_index][-neighbors_size:]
-
-                prediction = np.dot(similar_scores, place_ratings) / similar_scores.sum()
+        # 장소를 하나씩 보면서 예상 평점을 계산해야해
+        for place_seq in rating_bias.columns:
+            if pd.notnull(user_places.loc[place_seq]):
+                user_places.loc[place_seq] = 0
             else:
-                prediction = rating_mean[user_seq]
-            
-            user_places.loc[place_seq] = prediction
-    sorted_places = user_places.sort_values(ascending=False).index
-    sorted_places_idx = list(sorted_places)
+                # 유사도 평가, 장소 평점
+                similar_scores = user_similarity[user_seq].copy()
+                place_ratings = rating_bias[place_seq].copy()
+
+                # 공통으로 평가한 개수 [2. 3. 3. 2.]
+                common_counts = count[user_seq]
+                
+                # 원하는 개수보다 적은 사람들은 false
+                low_significance = common_counts < MIN_COMMON
+
+                # null 값들 제거하기, 평가를 안했거나 개수가 적은 사람들의 index 제거
+                none_rating_idx = place_ratings[place_ratings.isnull() | low_significance].index
+                
+                # 원하지 않는 index drop
+                place_ratings = place_ratings.drop(none_rating_idx)
+                similar_scores = similar_scores.drop(none_rating_idx)
+
+                if len(similar_scores) > MIN_RATINGS:
+                    neighbors_size = min(neighbors_size, len(similar_scores))
+
+                    # numpy로 계산하려고 준비함
+                    similar_scores = np.array(similar_scores)
+                    place_ratings = np.array(place_ratings)
+
+                    user_index = np.argsort(similar_scores)
+
+                    similar_scores = similar_scores[user_index][-neighbors_size:]
+                    place_ratings = similar_scores[user_index][-neighbors_size:]
+
+                    prediction = np.dot(similar_scores, place_ratings) / similar_scores.sum()
+                else:
+                    prediction = rating_mean[user_seq]
+                
+                user_places.loc[place_seq] = prediction
+        # 예측 평점이 높은 순으로 place seq 정렬
+        sorted_places = user_places.sort_values(ascending=False).index
+        sorted_places_idx = list(sorted_places)
+    else:
+        # 신규 유저라서 CF 적용 불가! 사용자의 취향과 상관없이 제일 평점이 높은 것 반환(근데 이거 트렌드랑 똑같아지는딩~~~~ 함수를 따로 파야하는건가~~~)
+        # 단순히 평점이 높으면 안된다. 1개라서 5점인거랑 10개라서 4점인건 다른거니까
+        # 이거 어떻게 계산하지???
+        print(rating_matrix_no_null)
+        sorted_places_idx = [0, 1]
+        return 1
 
     recommend_places = []
 
-
+    # 예측 평점 몇 점 이하 제거하기
+    # 거리 범위 적용하기
+    user_position = (for_me_request.lat, for_me_request.lng)
+    search_radius = for_me_request.searchRadius
+    
     for place_seq in sorted_places_idx:
+        # 어차피 seq니까 한개임(one)
         place = session.query(Place).filter(Place.place_seq == place_seq).one()
-        place_dto = {
-            "placeSeq" : place.place_seq,
-            "placeImageUrl" : place.feeds[0].thumbnail
-        }
-        recommend_places.append(place_dto)
+        place_position = (place.latitude, place.longitude)
+        # 0점인건 추천 목록에 넣지 않는다. -> 추후 최소 예상 평점 값을 정해서 필터링 가능
+        if user_places[place_seq]:
+            distance = haversine(user_position, place_position, unit='m')
+            # 거리 내에 있는 경우에만 추가
+            if distance <= search_radius:
+                place_dto = {
+                    "placeSeq" : place.place_seq,
+                    "placeImageUrl" : place.feeds[0].thumbnail
+                }
+                recommend_places.append(place_dto)
         data = {"places" : recommend_places}
         print("걸린 시간 : ", time.process_time())
+
     return data
 
 
@@ -148,23 +162,3 @@ def find_user(request, session):
     # 해당 email로 user를 찾음
     user = session.query(User).filter(User.email == user_email).one()
     return user
-
-
-# 범위 내의 장소 반환하기
-def find_near_places(session, for_me_request):
-    places = session.query(Place).all()
-    search_radius = for_me_request.searchRadius
-    lat = for_me_request.lat
-    lng = for_me_request.lng
-
-    near_places = []
-    user_position = (lat, lng)
-
-    for place in places:
-        place_position = (place.latitude, place.longitude)
-        distance = haversine(user_position, place_position, unit='m')
-        # print("장소이름 " , place.name, "계산된 거리 ", distance)
-        if distance < search_radius:
-            near_places.append(place)
-    
-    return near_places

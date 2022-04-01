@@ -14,10 +14,7 @@ import com.bigdata.wooahgong.mood.repository.MoodRepository;
 import com.bigdata.wooahgong.place.entity.Place;
 import com.bigdata.wooahgong.place.entity.PlaceWish;
 import com.bigdata.wooahgong.place.repository.PlaceWishRepository;
-import com.bigdata.wooahgong.user.dtos.request.FindPwSendEmailReq;
-import com.bigdata.wooahgong.user.dtos.request.ResetPwdReq;
-import com.bigdata.wooahgong.user.dtos.request.SignUpReq;
-import com.bigdata.wooahgong.user.dtos.request.UpdateProfileReq;
+import com.bigdata.wooahgong.user.dtos.request.*;
 import com.bigdata.wooahgong.user.dtos.response.*;
 import com.bigdata.wooahgong.user.entity.FeedLike;
 import com.bigdata.wooahgong.user.entity.User;
@@ -142,7 +139,9 @@ public class UserService {
     }
 
     // 비밀번호 찾기2 인증코드 확인
-    public ResponseEntity findPwInsertCode(String userId, String authCode) {
+    public ResponseEntity findPwInsertCode(FindPwInsertCodeReq findPwInsertCodeReq) {
+        String userId = findPwInsertCodeReq.getUserId();
+        String authCode = findPwInsertCodeReq.getAuthCode();
         User user = userRepository.findByUserId(userId).orElseThrow(() ->
                 new CustomException(ErrorCode.USER_NOT_FOUND));
         return emailService.checkEmailAuthCodeForPassword(user, authCode);

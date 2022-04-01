@@ -51,6 +51,7 @@ const Input = styled.input`
   background-color: #fff;
   font-weight: 700;
   font-size: 15px;
+  font-family: 'NotoSansKR';
   padding: 0;
   border-width: 0;
   border: none;

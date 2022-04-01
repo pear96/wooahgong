@@ -12,9 +12,12 @@ export const HeaderContainer = styled.div`
 
 export const NicknameContainer = styled.p`
   font-weight: bold;
+  font-family: 'NotoSansKR';
   width: 100px;
-  padding-left: 20px;
+  /* padding-left: 20px; */
   height: 10px;
+  margin-left: 20px;
+  padding: 8px -20px 8px 22px;
 `;
 
 export const ContentText = styled.div`
@@ -23,6 +26,7 @@ export const ContentText = styled.div`
 `;
 
 export const CustomText = styled.p`
+  font-family: 'NotoSansKR';
   text-align: justify;
   font-weight: bold;
 `;

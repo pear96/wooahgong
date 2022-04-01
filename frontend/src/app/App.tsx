@@ -80,7 +80,7 @@ function App() {
           <Route path="/login" element={<MainLogin />} />
           <Route path="/oauth/callback/kakao" element={<RediretHandler />} />
           <Route path="/regist/*" element={<Regist />} />
-          <Route path="/find/*" element={<Find />} />
+          {/* <Route path="/find/*" element={<Find />} /> */}
 
           <Route element={<Navbar />}>
             <Route path="/map" element={<Map />} />

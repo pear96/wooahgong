@@ -5,7 +5,14 @@ import { Input, Rate } from 'antd';
 
 import { useAppDispatch, useAppSelector } from 'app/store';
 import FeedDetailApi from 'common/api/FeedDetailApi';
-import { ContentWrapper, RateWrapper, ContentText, CustomText, MoodContainer } from '../styles/styledFeedcontent';
+import {
+  ContentWrapper,
+  RateWrapper,
+  ContentText,
+  CustomText,
+  MoodContainer,
+  CustomButtom,
+} from '../styles/styledFeedcontent';
 
 // aciotns
 
@@ -48,16 +55,21 @@ function Feedcontent({ ratings, content, createDate, moods, feedSeq, placeSeq }:
         <ContentText>
           {isUpdate ? (
             <>
-              <TextArea onChange={onChangeTextArea} value={updateContent} rows={4} />
-              <button type="submit" onClick={onClickUpdate}>
+              <TextArea
+                style={{ resize: 'none', fontFamily: 'NotoSansKR', height: '150px', borderRadius: '10px' }}
+                onChange={onChangeTextArea}
+                value={updateContent}
+                rows={4}
+              />
+              <CustomButtom type="submit" onClick={onClickUpdate}>
                 수정
-              </button>
+              </CustomButtom>
             </>
           ) : (
             <CustomText>{updateContent}</CustomText>
           )}
         </ContentText>
-        <div style={{ marginLeft: '20px' }}>
+        <div style={{ marginLeft: '20px', fontFamily: 'NotoSansKR' }}>
           <p>{createDate}</p>
         </div>
       </ContentWrapper>

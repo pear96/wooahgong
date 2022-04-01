@@ -30,13 +30,13 @@ PREFIX = "Bearer "
 CONN = Config.DB_URL
 
 # Header로 Authorization 받음
-@router.post("/forme")
+@router.post("")
 async def forme(request: Request, for_me_request : ForMeReq, session: Session = Depends(db.session)):
     df_feeds = pd.read_sql_table('feed', CONN)
 
     user = find_user(request, session)
     user_seq = user.user_seq
-
+    print("추천해주는 사용자 : ", user.nickname)
     # 해당 장소에 작성한 피드의 '평균' 평점으로 구성
     rating_matrix = df_feeds.pivot_table(index='user_seq', columns='place_seq', values='ratings', aggfunc=np.mean)
 
@@ -63,6 +63,8 @@ async def forme(request: Request, for_me_request : ForMeReq, session: Session = 
     neighbors_size = 3
     MIN_COMMON = 0
     MIN_RATINGS = 1
+
+    new_user = False
 
     # 사용자가 이미 방문한 장소는 추천에서 제외
     # 사용자가 신규 가입해서 평점이 없을 경우 Key Error 발생
@@ -102,7 +104,7 @@ async def forme(request: Request, for_me_request : ForMeReq, session: Session = 
                     user_index = np.argsort(similar_scores)
 
                     similar_scores = similar_scores[user_index][-neighbors_size:]
-                    place_ratings = similar_scores[user_index][-neighbors_size:]
+                    place_ratings = place_ratings[user_index][-neighbors_size:]
                     # 사용자의 평점 평균에 추가적인 예상 점수를 더해줘야한다.
                     prediction = np.dot(similar_scores, place_ratings) / similar_scores.sum() + rating_mean[user_seq]
                 else:
@@ -115,9 +117,10 @@ async def forme(request: Request, for_me_request : ForMeReq, session: Session = 
     else:
         # 신규 유저라서 CF 적용 불가! 사용자의 취향과 상관없이 제일 평점이 높은 것 반환(근데 이거 트렌드랑 똑같아지는딩~~~~ 함수를 따로 파야하는건가~~~)
         # 단순히 평점이 높으면 안된다. 1개라서 5점인거랑 10개라서 4점인건 다른거니까
-        # 이거 어떻게 계산하지???
-        sorted_places_idx = [0, 1]
-        return 1
+        # 피드가 많은 순으로 반환해주도록 하자...
+        new_user = True
+        sorted_places = pd.read_sql_table('feed', CONN).groupby('place_seq').count()['feed_seq'].sort_values(ascending=False)
+        sorted_places_idx = list(sorted_places.index)
 
     recommend_places = []
 
@@ -125,6 +128,9 @@ async def forme(request: Request, for_me_request : ForMeReq, session: Session = 
     # 거리 범위 적용하기
     user_position = (for_me_request.lat, for_me_request.lng)
     search_radius = for_me_request.searchRadius
+
+    if new_user:
+        user_places = sorted_places
     
     for place_seq in sorted_places_idx:
         # 어차피 seq니까 한개임(one)

@@ -1,5 +1,6 @@
 import SearchApi from 'common/api/SearchApi';
 import React, { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const HistoryContainer = styled.div`
@@ -64,10 +65,12 @@ const Keyword = styled.span`
 const searchHistory = () => {
   const { getRecentSearchs, deleteSeacrhHistory, deleteAllSeacrhHistory } = SearchApi;
   const [recentSearches, setRecentSearches] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function getAndRecentSearches() {
       const result = await getRecentSearchs();
+      console.log(result);
       setRecentSearches(result.data.recentSearches);
     }
 
@@ -90,6 +93,19 @@ const searchHistory = () => {
     console.log(result);
   }, [recentSearches]);
 
+  // 장소랑, 사용자 별로 분기해서 라우팅해야 된다
+  const onClickgoToRecentSearch = useCallback(
+    (props) => () => {
+      console.log(props.type);
+      if (props.type === 'place') {
+        navigate(`/place/${props.placeSeq}`);
+      } else {
+        navigate(`/profile/${props.searchWord}`);
+      }
+    },
+    [],
+  );
+
   console.log(recentSearches);
   return (
     <HistoryContainer>
@@ -102,7 +118,7 @@ const searchHistory = () => {
         {recentSearches.length !== 0
           ? recentSearches.map((props: any) => {
               return (
-                <KeywordContainer key={props.historySeq}>
+                <KeywordContainer onClick={onClickgoToRecentSearch(props)} key={props.historySeq}>
                   <img src={props.imageUrl} alt="img" style={{ width: 30, height: 30, marginRight: 15 }} />
                   <Keyword>{props.searchWord}</Keyword>
                   <RemoveButton onClick={onClickDelete(props.historySeq)} role="button">

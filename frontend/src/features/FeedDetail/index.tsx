@@ -70,6 +70,7 @@ function FeedDetail() {
               placeName={FeedDetails.placeName}
               address={FeedDetails.address}
               amIOwner={FeedDetails.amIOwner}
+              placeSeq={FeedDetails.placeSeq}
             />
           </div>
           <div>

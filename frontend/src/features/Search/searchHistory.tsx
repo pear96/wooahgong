@@ -16,6 +16,7 @@ const HeaderContainer = styled.div`
   overflow: hidden;
 `;
 const Title = styled.span`
+  font-family: 'NotoSansKR';
   float: left;
   font-weight: bold;
   color: #000000;
@@ -23,6 +24,7 @@ const Title = styled.span`
   margin-top: 20px;
 `;
 const RemoveText = styled.span`
+  font-family: 'NotoSansKR';
   float: right;
   margin-top: 60px;
   font-weight: 900;
@@ -58,6 +60,7 @@ const RemoveButton = styled.div`
 `;
 
 const Keyword = styled.span`
+  font-family: 'NotoSansKR';
   font-size: 18px;
   font-weight: bold;
 `;

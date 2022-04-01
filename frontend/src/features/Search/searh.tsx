@@ -175,8 +175,8 @@ const search = () => {
         aria-label="nav tabs"
         TabIndicatorProps={{ style: { backgroundColor: '#9088F3' } }}
       >
-        <LinkTab label="장소" pathname="/search/places" {...a11yProps(0)} />
-        <LinkTab label="사용자" pathname="/search/nicknames" {...a11yProps(1)} />
+        <LinkTab style={{ fontFamily: 'NotoSansKR' }} label="장소" pathname="/search/places" {...a11yProps(0)} />
+        <LinkTab style={{ fontFamily: 'NotoSansKR' }} label="사용자" pathname="/search/nicknames" {...a11yProps(1)} />
       </Tabs>
 
       <div style={{ position: 'relative', zIndex: 1 }}>

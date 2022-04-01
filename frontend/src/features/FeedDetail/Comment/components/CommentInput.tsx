@@ -23,7 +23,7 @@ function CommentInput({ setIsWrite }: any) {
 
         return toast.info(
           <div style={{ width: 'inherit', fontSize: '10px' }}>
-            <div>댓글을 입력해주세요.</div>
+            <div style={{ fontFamily: 'NotoSansKR' }}>댓글을 입력해주세요.</div>
           </div>,
           {
             position: toast.POSITION.TOP_CENTER,
@@ -43,7 +43,7 @@ function CommentInput({ setIsWrite }: any) {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h3 style={{ fontWeight: 'bold' }}>댓글</h3>
+      <h3 style={{ fontWeight: 'bold', fontFamily: 'NotoSansKR' }}>댓글</h3>
       <CustomForm onSubmit={onSubmit}>
         <InputWrapper>
           <CustomInput value={comment} onChange={onChangeComment} placeholder="댓글을 입력해주세요." type="text" />

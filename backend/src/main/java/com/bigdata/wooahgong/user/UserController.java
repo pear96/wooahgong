@@ -4,10 +4,7 @@ import com.bigdata.wooahgong.user.dtos.request.FindPwSendEmailReq;
 import com.bigdata.wooahgong.user.dtos.request.ResetPwdReq;
 import com.bigdata.wooahgong.user.dtos.request.SignUpReq;
 import com.bigdata.wooahgong.user.dtos.request.UpdateProfileReq;
-import com.bigdata.wooahgong.user.dtos.response.GetMyFeedsRes;
-import com.bigdata.wooahgong.user.dtos.response.GetMyInfoRes;
-import com.bigdata.wooahgong.user.dtos.response.GetMyPlacesRes;
-import com.bigdata.wooahgong.user.dtos.response.GetUserInfoRes;
+import com.bigdata.wooahgong.user.dtos.response.*;
 import com.bigdata.wooahgong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
@@ -46,7 +44,7 @@ public class UserController {
 
     // 아이디 찾기
     @GetMapping("/id")
-    public ResponseEntity<String> findId(@RequestParam("email") String email) {
+    public ResponseEntity<FindIdRes> findId(@RequestParam("email") String email) {
         return new ResponseEntity<>(userService.findId(email), HttpStatus.OK);
     }
 

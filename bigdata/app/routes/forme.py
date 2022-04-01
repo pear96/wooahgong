@@ -65,7 +65,7 @@ async def forme(request: Request, for_me_request : ForMeReq, session: Session = 
 
     # 사용자가 이미 방문한 장소는 추천에서 제외
     # 사용자가 신규 가입해서 평점이 없을 경우 Key Error 발생
-    if user_seq in rating_matrix.columns:
+    if user_seq in rating_matrix.index:
         user_places = rating_matrix.loc[user_seq].copy()
 
         # 장소를 하나씩 보면서 예상 평점을 계산해야해
@@ -140,7 +140,7 @@ async def forme(request: Request, for_me_request : ForMeReq, session: Session = 
                 }
                 recommend_places.append(place_dto)
         data = {"places" : recommend_places}
-        print("걸린 시간 : ", time.process_time())
+        # print("걸린 시간 : ", time.process_time())
 
     return data
 

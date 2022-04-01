@@ -56,10 +56,12 @@ class Place(Base, BaseTime):
     place_seq = Column(Integer, primary_key=True, nullable=False, index=True)
     address = Column(VARCHAR(255), nullable=False)
     name = Column(VARCHAR(255), nullable=False)
-    latitue = Column(DOUBLE, nullable=False)
+    latitude = Column(DOUBLE, nullable=False)
     longitude = Column(DOUBLE, nullable=False)
 
     user_seq = Column(Integer, ForeignKey("user.user_seq"))
+
+    feeds = relationship("Feed")
 
 
 # 장소 찜 Entity
@@ -74,7 +76,7 @@ class Feed(Base, BaseTime):
     __tablename__ = "feed"
     feed_seq = Column(Integer, primary_key=True, nullable=False, index=True)
     content = Column(VARCHAR(255), nullable=False)
-    ratigns = Column(Integer, nullable=False)
+    ratings = Column(Integer, nullable=False)
     thumbnail = Column(VARCHAR(255), nullable=False)
     user_seq = Column(Integer, ForeignKey("user.user_seq"))
     place_seq = Column(Integer, ForeignKey("place.place_seq"))

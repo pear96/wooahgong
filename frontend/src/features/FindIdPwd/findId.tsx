@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import ProgressBar from '@ramonak/react-progress-bar';
 import { toast } from 'react-toastify';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 import UserApi from 'common/api/UserApi';
 import FindApi from 'common/api/FindApi';
 import { useNavigate } from 'react-router-dom';
@@ -24,26 +26,26 @@ const Progress = styled.div`
 `;
 const Title = styled.h3`
   text-align: left;
-  margin-left: 58px;
+  margin-left: 75px;
   margin-top: 35px;
   margin-bottom: 2px;
   font-family: 'NotoSansKR';
   font-size: 22px;
 `;
-const Input = styled.input`
-  font-family: 'NotoSansKR';
-  font-size: 11px;
-  width: 200px;
-  height: 31px;
-  margin-left: 58px;
-  margin-bottom: 20px;
-  padding-left: 3px;
-  padding-bottom: 0px;
-  border-left: none;
-  border-top: none;
-  border-right: none;
-  border-bottom: #d7d7d7 1px solid;
-`;
+// const Input = styled.input`
+//   font-family: 'NotoSansKR';
+//   font-size: 11px;
+//   width: 200px;
+//   height: 31px;
+//   margin-left: 75px;
+//   margin-bottom: 20px;
+//   padding-left: 3px;
+//   padding-bottom: 0px;
+//   border-left: none;
+//   border-top: none;
+//   border-right: none;
+//   border-bottom: #d7d7d7 1px solid;
+// `;
 const ConfirmBtn = styled.button`
   width: 80px;
   height: 23px;
@@ -55,6 +57,20 @@ const ConfirmBtn = styled.button`
   border: 0.7px solid #b0b0b0;
   border-radius: 50px;
   cursor: pointer;
+`;
+const Input = styled(TextField)`
+  font-family: 'NotoSansKR';
+  font-size: 11px;
+  width: 200px;
+  height: 31px;
+  margin-left: 75px;
+  margin-bottom: 20px;
+  padding-left: 3px;
+  padding-bottom: 0px;
+  border-left: none;
+  border-top: none;
+  border-right: none;
+  border-bottom: #d7d7d7 1px solid;
 `;
 const DisableButton = styled.button`
   border-style: none;
@@ -96,7 +112,7 @@ const ErrorMsg = styled.span`
 const Desc = styled.span`
   display: block;
   text-align: left;
-  margin-left: 60px;
+  margin-left: 75px;
   margin-bottom: 18px;
   font-family: 'NotoSansKR';
   font-size: 11px;
@@ -165,7 +181,13 @@ function FindId() {
           </div>
           <Title>아이디 찾기</Title>
           <Desc>가입 이메일을 입력하세요.</Desc>
-          <Input onKeyDown={pressEnter} onChange={handleInputEmail} placeholder="이메일을 입력하세요." />
+          <Input
+            id="outlined-error"
+            label="이메일"
+            onKeyDown={pressEnter} onChange={handleInputEmail}
+            placeholder="이메일을 입력하세요."
+          />
+          {/* <Input onKeyDown={pressEnter} onChange={handleInputEmail} placeholder="이메일을 입력하세요." /> */}
           <ErrorMsg>{errorMsg}</ErrorMsg>
 
           <div

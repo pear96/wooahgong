@@ -103,7 +103,7 @@ const Desc = styled.span`
 // type MyProps = {
 //   progress: number;
 // };
-function FindId() {
+function FindPwd() {
   const [isOk, setIsOk] = useState<boolean>(false);
   const [nickName, setStatenickName] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState<string>('');
@@ -153,8 +153,8 @@ function FindId() {
           <div>
             <Img src={Logo} alt="Logo" />
           </div>
-          <Title>아이디 찾기</Title>
-          <Desc>가입 이메일을 입력하세요.</Desc>
+          <Title>비밀번호 찾기</Title>
+          <Input onChange={handleInputEmail} placeholder="아이디를 입력하세요." />
           <Input onChange={handleInputEmail} placeholder="이메일을 입력하세요." />
           <ErrorMsg>{errorMsg}</ErrorMsg>
 
@@ -177,4 +177,4 @@ function FindId() {
   );
 }
 
-export default FindId;
+export default FindPwd;

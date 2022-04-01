@@ -38,7 +38,8 @@ public class MainService {
                 // 피드 맨 최근꺼 사진 첫번째꺼 가져오기
                 String url = place.getFeeds().get(0).getThumbnail();
                 answers.add(SearchPlaceDto.builder()
-                        .address(place.getAddress()).placeSeq(place.getPlaceSeq()).ratings(ratings)
+                        .address(place.getAddress()).placeSeq(place.getPlaceSeq()).ratings(ratings).lat(place.getLatitude())
+                                .lng(place.getLongitude())
                         .name(place.getName()).imageUrl(url).build());
             }
         }

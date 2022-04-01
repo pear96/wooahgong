@@ -8,7 +8,12 @@ import FindApi from 'common/api/FindApi';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../assets/Logo.png';
 import { ReducerType } from '../../app/rootReducer';
+import useInput from '../../common/hooks/useInput';
 
+export const Form = styled.form`
+  margin: 0 auto;
+  max-width: 400px;
+`;
 const Img = styled.img`
   width: 65px;
   height: 65px;
@@ -105,14 +110,46 @@ const Desc = styled.span`
 // };
 function FindPwd() {
   const [isOk, setIsOk] = useState<boolean>(false);
-  const [nickName, setStatenickName] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [email, setEmail] = useState<string>('');
-  const [isnickName, setIsnickName] = useState<boolean>(false);
+  const [id, onChangeId] = useInput('');
+  const [inputEmail, onChangeEmail] = useInput('');
   const navigate = useNavigate();
 
-
+  // APIs.
   const { getNickDuplicateCheck } = UserApi
+
+  const onSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      console.log(e.target[0].value, e.target[1].value);
+      if (!id || !id.trim()) {
+        return toast.info(
+          <div style={{ width: 'inherit', fontSize: '10px' }}>
+            <div>아이디를 입력해주세요.</div>
+          </div>,
+          {
+            position: toast.POSITION.TOP_CENTER,
+            role: 'alert',
+          },
+        );
+      }
+      if (!inputEmail || !inputEmail.trim()) {
+        return toast.info(
+          <div style={{ width: 'inherit', fontSize: '10px' }}>
+            <div>이메일을 입력해주세요.</div>
+          </div>,
+          {
+            position: toast.POSITION.TOP_CENTER,
+            role: 'alert',
+          },
+        );
+      }
+      const data = { id, email };
+      const result = await getCommonLoginResult(data);
+    },
+    [id, inputEmail],
+  );
 
   // const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
   const dispatch = useDispatch();
@@ -154,23 +191,25 @@ function FindPwd() {
             <Img src={Logo} alt="Logo" />
           </div>
           <Title>비밀번호 찾기</Title>
-          <Input onChange={handleInputEmail} placeholder="아이디를 입력하세요." />
-          <Input onChange={handleInputEmail} placeholder="이메일을 입력하세요." />
-          <ErrorMsg>{errorMsg}</ErrorMsg>
+          <Form onSubmit={onSubmit}>
+            <Input placeholder="아이디를 입력하세요." />
+            <Input onChange={handleInputEmail} placeholder="이메일을 입력하세요." />
+            <ErrorMsg>{errorMsg}</ErrorMsg>
 
-          <div
-            style={{
-              position: 'absolute',
-              marginLeft: '80px',
-              top: '523px',
-            }}
-          >
-            {isOk ? (
-              <ActiveButton onClick={handleOnClickNextStep}>다 음</ActiveButton>
-            ) : (
-              <DisableButton>다 음</DisableButton>
-            )}
-          </div>
+            <div
+              style={{
+                position: 'absolute',
+                marginLeft: '80px',
+                top: '523px',
+              }}
+            >
+              {isOk ? (
+                <ActiveButton onClick={handleOnClickNextStep}>다 음</ActiveButton>
+              ) : (
+                <DisableButton>다 음</DisableButton>
+              )}
+            </div>
+          </Form>
         </div>
       </article>
     </main>

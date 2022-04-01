@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import UserApi from 'common/api/UserApi';
 import FindApi from 'common/api/FindApi';
 import { useNavigate } from 'react-router-dom';
+import { ConsoleSqlOutlined } from '@ant-design/icons';
 import Logo from '../../assets/Logo.png';
 import { ReducerType } from '../../app/rootReducer';
 
@@ -118,7 +119,6 @@ function FindId() {
   const dispatch = useDispatch();
 
   const handleInputEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
 
     const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
 
@@ -138,8 +138,18 @@ function FindId() {
 
   const handleOnClickNextStep = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const userId = await findIdByEmail();
-    navigate('/find/email', { state: { email, userId } });
+    e.stopPropagation();
+    const result = await findIdByEmail();
+    console.log(result);
+    navigate('/find/email', { state: { email, userId: result.userId, provider: result.provider } });
+  };
+  const pressEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === `Enter`) {
+      const result = await findIdByEmail();
+      console.log(result);
+      navigate('/find/email', { state: { email, userId: result.userId, provider: result.provider } });
+    }
+
   };
   const findIdByEmail = async () => {
     const result = await FindApi.findIdByEmail(email);
@@ -155,7 +165,7 @@ function FindId() {
           </div>
           <Title>아이디 찾기</Title>
           <Desc>가입 이메일을 입력하세요.</Desc>
-          <Input onChange={handleInputEmail} placeholder="이메일을 입력하세요." />
+          <Input onKeyDown={pressEnter} onChange={handleInputEmail} placeholder="이메일을 입력하세요." />
           <ErrorMsg>{errorMsg}</ErrorMsg>
 
           <div

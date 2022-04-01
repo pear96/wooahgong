@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import ProgressBar from '@ramonak/react-progress-bar';
 import { toast } from 'react-toastify';
 import UserApi from 'common/api/UserApi';
-import { Button } from 'antd';
-import { useLocation, useNavigate } from 'react-router-dom';
+import FindApi from 'common/api/FindApi';
+import { useNavigate } from 'react-router-dom';
 import Logo from '../../assets/Logo.png';
 import { ReducerType } from '../../app/rootReducer';
 
@@ -70,14 +70,12 @@ const ActiveButton = styled.button`
   background: #80b2fe;
   border-style: none;
   border-radius: 10px;
-  width: 240px;
+  width: 200px;
   height: 40px;
   font-family: 'NotoSansKR';
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
-  margin-left: 61px;
-  margin-top: 20px;
   color: rgba(255, 255, 255, 1);
   transition: all 0.3s ease 0s;
   &:hover {
@@ -94,93 +92,58 @@ const ErrorMsg = styled.span`
   left: 0px;
   margin-left: 61px;
 `;
-const KaKao = styled.button`
-  // color: rgba(255, 255, 255, 1);
-  transition: all 0.3s ease 0s;
-  position: absolute;
-  color: #3A1D1D;
-  background: #F7E600;
-  font-weight:700;
-  border: none;
-  border-radius: 5px;
-  font-family: 'NotoSansKR';
-  font-size: 3px;
-  top: 310px;
-  left: 0px;
-  margin-left: 61px;
-`;
-const Wooahgong = styled.button`
-  // color: rgba(255, 255, 255, 1);
-  transition: all 0.3s ease 0s;
-  position: absolute;
-  color: white;
-  background-color : rgba(144, 136, 243, 1);
-  font-weight:700;
-  border: none;
-  border-radius: 5px;
-  font-family: 'NotoSansKR';
-  font-size: 3px;
-  top: 310px;
-  left: 0px;
-  margin-left: 61px;
-`;
 const Desc = styled.span`
   display: block;
   text-align: left;
   margin-left: 60px;
-  margin-top: 10px;
   margin-bottom: 18px;
   font-family: 'NotoSansKR';
   font-size: 11px;
-`;
-const FindPwd = styled.a`
-  display: block;
-  text-align: left;
-  margin-left: 60px;
-  margin-top: 5px;
-  margin-bottom: 18px;
-  font-family: 'NotoSansKR';
-  font-size: 11px;
-`;
-const DescBold = styled.span`
-  display: block;
-  text-align: left;
-  margin-left: 60px;
-  margin-bottom: 18px;
-  font-family: 'NotoSansKR';
-  font-size: 15px;
 `;
 // type MyProps = {
 //   progress: number;
 // };
-interface Location {
-  email: string,
-  userId: string,
-  provider: boolean
-}
-
-function EmailRes() {
+function FindId() {
   const [isOk, setIsOk] = useState<boolean>(false);
-  const location = useLocation();
+  const [nickName, setStatenickName] = useState<string>('');
+  const [errorMsg, setErrorMsg] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [isnickName, setIsnickName] = useState<boolean>(false);
   const navigate = useNavigate();
+
+
+  const { getNickDuplicateCheck } = UserApi
+
   // const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
   const dispatch = useDispatch();
-  const state = location.state as Location;
-  console.log(state)
 
+  const handleInputEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
 
-  useEffect(() => {
-    // 카카오 로그인
-    if (state.provider === true) {
+    const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+
+    const curWord = e.currentTarget.value;
+
+    // 이메일 형식 검사
+    if (regEmail.test(curWord) === true) {
       setIsOk(true);
+      setErrorMsg("");
+    } else {
+      setIsOk(false);
+      setErrorMsg("이메일 형식을 맞춰주세요");
     }
-  }, [])
+    setEmail(curWord);
+  };
 
-  const onClickGotoLoginPage = () => {
-    navigate('/login');
-  }
-  const onClickGotoFindPwd = () => {
-    navigate('./pwd');
+
+  const handleOnClickNextStep = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const userId = await findIdByEmail();
+    navigate('/find/email', { state: { email, userId } });
+  };
+  const findIdByEmail = async () => {
+    const result = await FindApi.findIdByEmail(email);
+    return result.data
   }
 
   return (
@@ -191,20 +154,27 @@ function EmailRes() {
             <Img src={Logo} alt="Logo" />
           </div>
           <Title>아이디 찾기</Title>
-          <Desc>{state.email} 이메일로 가입된 아이디는</Desc>
-          {isOk ? (
-            <KaKao>카카오</KaKao>
-          ) : (
-            <Wooahgong>우아공</Wooahgong>
-          )}
-          <DescBold>{state.userId}입니다.</DescBold>
-          <ActiveButton onClick={onClickGotoLoginPage}>로그인</ActiveButton>
-          <FindPwd onClick={onClickGotoFindPwd}>비밀번호 찾기</FindPwd>
+          <Desc>가입 이메일을 입력하세요.</Desc>
+          <Input onChange={handleInputEmail} placeholder="이메일을 입력하세요." />
+          <ErrorMsg>{errorMsg}</ErrorMsg>
 
+          <div
+            style={{
+              position: 'absolute',
+              marginLeft: '80px',
+              top: '523px',
+            }}
+          >
+            {isOk ? (
+              <ActiveButton onClick={handleOnClickNextStep}>다 음</ActiveButton>
+            ) : (
+              <DisableButton>다 음</DisableButton>
+            )}
+          </div>
         </div>
       </article>
     </main>
   );
 }
 
-export default EmailRes;
+export default FindId;

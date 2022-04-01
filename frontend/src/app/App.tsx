@@ -8,6 +8,10 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import 'antd/dist/antd.min.css';
 import NotFound from 'not-found';
 import Navbar from '../common/Navbar';
+// import Regist from '../features/Regist/regist';
+// import Map from '../features/Map/Map';
+// import FeedAdd from '../features/Feed/Feedadd';
+import Find from '../features/FindIdPwd/find';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
@@ -80,6 +84,7 @@ function App() {
           <Route path="/login" element={<MainLogin />} />
           <Route path="/oauth/callback/kakao" element={<RediretHandler />} />
           <Route path="/regist/*" element={<Regist />} />
+          <Route path="/find/*" element={<Find />} />
 
           <Route element={<Navbar />}>
             <Route path="/map" element={<Map />} />

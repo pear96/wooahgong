@@ -32,33 +32,7 @@ const Title = styled.h3`
   font-family: 'NotoSansKR';
   font-size: 22px;
 `;
-// const Input = styled.input`
-//   font-family: 'NotoSansKR';
-//   font-size: 11px;
-//   width: 200px;
-//   height: 31px;
-//   margin-left: 75px;
-//   margin-bottom: 20px;
-//   padding-left: 3px;
-//   padding-bottom: 0px;
-//   border-left: none;
-//   border-top: none;
-//   border-right: none;
-//   border-bottom: #d7d7d7 1px solid;
-// `;
-const ConfirmBtn = styled.button`
-  width: 80px;
-  height: 23px;
-  margin-left: 10px;
-  font-family: 'NotoSansKR';
-  font-size: 10px;
-  font-weight: 400;
-  background: #ffffff;
-  border: 0.7px solid #b0b0b0;
-  border-radius: 50px;
-  cursor: pointer;
-`;
-const Input = styled(TextField)`
+const Input = styled.input`
   font-family: 'NotoSansKR';
   font-size: 11px;
   width: 200px;
@@ -72,6 +46,19 @@ const Input = styled(TextField)`
   border-right: none;
   border-bottom: #d7d7d7 1px solid;
 `;
+const ConfirmBtn = styled.button`
+  width: 80px;
+  height: 23px;
+  margin-left: 10px;
+  font-family: 'NotoSansKR';
+  font-size: 10px;
+  font-weight: 400;
+  background: #ffffff;
+  border: 0.7px solid #b0b0b0;
+  border-radius: 50px;
+  cursor: pointer;
+`;
+
 const DisableButton = styled.button`
   border-style: none;
   border-radius: 10px;
@@ -181,13 +168,7 @@ function FindId() {
           </div>
           <Title>아이디 찾기</Title>
           <Desc>가입 이메일을 입력하세요.</Desc>
-          <Input
-            id="outlined-error"
-            label="이메일"
-            onKeyDown={pressEnter} onChange={handleInputEmail}
-            placeholder="이메일을 입력하세요."
-          />
-          {/* <Input onKeyDown={pressEnter} onChange={handleInputEmail} placeholder="이메일을 입력하세요." /> */}
+          <Input onKeyDown={pressEnter} onChange={handleInputEmail} placeholder="이메일을 입력하세요." />
           <ErrorMsg>{errorMsg}</ErrorMsg>
 
           <div

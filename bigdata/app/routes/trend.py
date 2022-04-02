@@ -31,8 +31,8 @@ CONN = Config.DB_URL
 @router.post("/trend")
 async def trend(request: Request, trend_request: TrendReq, session: Session = Depends(db.session)):
     data = {
-        "trendy_places": find_trendy_places(request, trend_request, session),
-        "recom": find_by_age_gender(request, trend_request, session)
+        "trendyPlaces": find_trendy_places(request, trend_request, session),
+        "recByAgeGender": find_by_age_gender(request, trend_request, session)
     }
 
     return data
@@ -93,7 +93,6 @@ def find_trendy_places(request, trend_request, session):
                 'placeImageUrl': place.feeds[0].thumbnail
             })
 
-
     return result_places
 
 # 연령대, 성별
@@ -102,6 +101,11 @@ def find_by_age_gender(request, trend_request, session):
     user_seq = user.user_seq
     user_birth_year = user.birth.year
 
+    df_users = pd.read_sql_table('user', CONN)
+    df_wishes = pd.read_sql_table('place_wish', CONN)
+
+    MAX_ELAPSED_DAYS = 90
+    MIN_WISHES_NUM = 3
     #################### ${20}대 ${남자}가 좋아하는 장소 ####################
     # 로그인한 유저와 연령대와 성별이 같은 유저들이
     # 최근 3개월간 찜 순으로 장소들을 추천(3개 이상)
@@ -110,8 +114,6 @@ def find_by_age_gender(request, trend_request, session):
     result_places = []
 
     # 연령대와 성별 같은 유저의 user_seq 찾기
-    df_users = pd.read_sql_table('user', CONN)
-   
     df_users['birth_year'] = df_users['birth'].dt.year
     df_users['age_group'] = np.floor((datetime.date.today().year - df_users['birth_year']) / 10) * 10
     
@@ -119,9 +121,46 @@ def find_by_age_gender(request, trend_request, session):
     df_users = df_users[(df_users.user_seq != user_seq) & (df_users.age_group == age_group) & (df_users.gender == gender)]
     similar_users_idx = list(df_users['user_seq'])
 
+    # df[~df['col_name'].isin(values_list)]
+    df_wishes = df_wishes[df_wishes.user_seq.isin(similar_users_idx)]
     
+    # 찜한지 90일이 지난 장소 제외
+    now = datetime.datetime.now(timezone('Asia/Seoul'))
+    current_time = now.strptime(now.strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')
+    
+    df_wishes['elapsed'] = current_time - df_wishes['created_date'];
+    df_wishes = df_wishes[df_wishes.elapsed <= datetime.timedelta(days=MAX_ELAPSED_DAYS)]
+    
+    # 해당하는 장소의 찜 수가 3개 미만이면 제외
+    df_wishes = df_wishes.groupby('place_seq').filter(lambda x : len(x) >= MIN_WISHES_NUM)
+    
+    # 최근 3개월의 찜 수 기준으로 내림차순으로 정렬
+    df_wishes['count'] = df_wishes.groupby(['place_seq'])['place_wish_seq'].transform('count')
+    df_wishes = df_wishes.sort_values(by=['count'], axis=0, ascending=False)
+    
+    # 중복되는 place_seq 삭제
+    df_wishes = df_wishes.drop_duplicates(['place_seq'], keep='first')
+    
+    sorted_places_idx = list(df_wishes['place_seq'])
+    
+    for place_seq in sorted_places_idx:
+        # 어차피 seq니까 한개임(one)
+        place = session.query(Place).filter(Place.place_seq == place_seq).one()
+        place_position = (place.latitude, place.longitude)
 
-    return user_birth_year
+        distance = haversine(user_position, place_position, unit='m')
+        # 거리 내에 있는 경우에만 추가
+        if distance <= search_radius:
+            result_places.append({
+                'placeSeq': place.place_seq,
+                'placeImageUrl': place.feeds[0].thumbnail
+            })
+
+    return {
+        "ageGroup": int(age_group),
+        "gender": gender,
+        "places": result_places
+    }
 
 # 사용자 찾기
 def find_user(request, session):

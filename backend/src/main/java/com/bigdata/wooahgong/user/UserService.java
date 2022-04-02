@@ -14,14 +14,8 @@ import com.bigdata.wooahgong.mood.repository.MoodRepository;
 import com.bigdata.wooahgong.place.entity.Place;
 import com.bigdata.wooahgong.place.entity.PlaceWish;
 import com.bigdata.wooahgong.place.repository.PlaceWishRepository;
-import com.bigdata.wooahgong.user.dtos.request.FindPwSendEmailReq;
-import com.bigdata.wooahgong.user.dtos.request.ResetPwdReq;
-import com.bigdata.wooahgong.user.dtos.request.SignUpReq;
-import com.bigdata.wooahgong.user.dtos.request.UpdateProfileReq;
-import com.bigdata.wooahgong.user.dtos.response.GetMyFeedsRes;
-import com.bigdata.wooahgong.user.dtos.response.GetMyInfoRes;
-import com.bigdata.wooahgong.user.dtos.response.GetMyPlacesRes;
-import com.bigdata.wooahgong.user.dtos.response.GetUserInfoRes;
+import com.bigdata.wooahgong.user.dtos.request.*;
+import com.bigdata.wooahgong.user.dtos.response.*;
 import com.bigdata.wooahgong.user.entity.FeedLike;
 import com.bigdata.wooahgong.user.entity.User;
 import com.bigdata.wooahgong.user.entity.UserMood;
@@ -120,12 +114,13 @@ public class UserService {
     }
 
     // 아이디 찾기
-    public String findId(String email) {
+    public FindIdRes findId(String email) {
         User user = userRepository.findByEmail(email).orElseGet(User::new);
         if (user.getUserSeq() == null) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
-        return user.getUserId();
+        return FindIdRes.builder()
+                .userId(user.getUserId()).provider(user.isProvider()).build();
     }
 
     // 비밀번호 찾기1 - 이메일 전송
@@ -144,7 +139,9 @@ public class UserService {
     }
 
     // 비밀번호 찾기2 인증코드 확인
-    public ResponseEntity findPwInsertCode(String userId, String authCode) {
+    public ResponseEntity findPwInsertCode(FindPwInsertCodeReq findPwInsertCodeReq) {
+        String userId = findPwInsertCodeReq.getUserId();
+        String authCode = findPwInsertCodeReq.getAuthCode();
         User user = userRepository.findByUserId(userId).orElseThrow(() ->
                 new CustomException(ErrorCode.USER_NOT_FOUND));
         return emailService.checkEmailAuthCodeForPassword(user, authCode);

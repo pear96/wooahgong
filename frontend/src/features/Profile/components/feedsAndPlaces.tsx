@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs } from 'antd';
 import { BsGrid3X3, BsHeart, BsBookmarkHeart } from 'react-icons/bs';
 import { FeedsAndPlacesWrapper } from '../styles/StyledFeedsAndPlaces';
@@ -10,7 +10,6 @@ import ProfilePlaces from './ProfilePlaces';
 const { TabPane } = Tabs;
 
 function FeedsAndPlaces() {
-
   const setFeedsOrPlaces = (key: string) => {
     switch (key) {
       case '1':
@@ -49,7 +48,7 @@ function FeedsAndPlaces() {
           }
           key="2"
         >
-          <ProfileLikeFeeds/>
+          <ProfileLikeFeeds />
         </TabPane>
         <TabPane
           tab={

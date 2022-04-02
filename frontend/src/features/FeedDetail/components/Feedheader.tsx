@@ -21,79 +21,85 @@ import {
   NicknameContainer,
   HamburgerContainer,
   HeaderBelowContainer,
+  Test,
 } from '../styles/styledFeedheader';
 
 // actions
 
 import { setUpdate } from '../feedDetailSlice';
 
-function Feedheader({ nickname, userImage, feedSeq, placeName, address }: any) {
+function Feedheader({ nickname, userImage, feedSeq, placeName, address, amIOwner, placeSeq }: any) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { deleteFeedDetail } = FeedDetailApi;
   const [isUpdate, setIsUpdate] = useState(false);
   console.log(feedSeq);
+  console.log(amIOwner);
 
   const onClickDeleteFeedDetail = useCallback(async () => {
     await deleteFeedDetail(feedSeq);
     navigate('/map');
+    // main만들어지면 main으로 가자
   }, []);
 
   const onClickUpdateFeedDetail = useCallback(() => {
+    dispatch(setUpdate(true));
     setIsUpdate((prev) => !prev);
-    dispatch(setUpdate(isUpdate));
   }, [isUpdate]);
 
-  const onClickConfirmUpdateFeedDetail = useCallback(() => {
-    setIsUpdate((prev) => !prev);
-    dispatch(setUpdate(isUpdate));
-  }, [isUpdate]);
+  const onClickgoToPlace = useCallback(() => {
+    navigate(`/place/${placeSeq}`);
+  }, []);
+
   const menu = (
-    <Menu>
-      <Menu.Item key="0" onClick={onClickUpdateFeedDetail}>
+    <Menu style={{ borderRadius: '10px' }}>
+      <Menu.Item key="0" onClick={onClickUpdateFeedDetail} style={{ fontFamily: 'NotoSansKR' }}>
         수정
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key="1" onClick={onClickDeleteFeedDetail}>
+      <Menu.Item key="1" onClick={onClickDeleteFeedDetail} style={{ fontFamily: 'NotoSansKR' }}>
         삭제
       </Menu.Item>
     </Menu>
   );
-  const confirmUpdatemenu = (
-    <Menu>
-      <Menu.Item key="0" onClick={onClickConfirmUpdateFeedDetail}>
-        확인
-      </Menu.Item>
-    </Menu>
-  );
+
   return (
     <>
       <HeaderContainer>
-        <div style={{ marginRight: '25px', width: '20px' }}>
-          <Avatar size={64} src={userImage} icon={<UserOutlined />} />
+        <div style={{ marginRight: '10px' }}>
+          <Avatar size={60} src={userImage} icon={<UserOutlined />} />
         </div>
         <NicknameContainer>{nickname}</NicknameContainer>
-        <HamburgerContainer>
-          {isUpdate ? (
+        {amIOwner ? (
+          <HamburgerContainer>
+            {/* {isUpdate ? (
+              <Dropdown overlay={menu} trigger={['click']}>
+                <a onClick={(e) => e.preventDefault()}>
+                  <Hamburger />
+                </a>
+              </Dropdown>
+            ) : (
+              <Dropdown overlay={menu} trigger={['click']}>
+                <a onClick={(e) => e.preventDefault()}>
+                  <Hamburger />
+                </a>
+              </Dropdown>
+            )} */}
             <Dropdown overlay={menu} trigger={['click']}>
               <a onClick={(e) => e.preventDefault()}>
                 <Hamburger />
               </a>
             </Dropdown>
-          ) : (
-            <Dropdown overlay={confirmUpdatemenu} trigger={['click']}>
-              <a onClick={(e) => e.preventDefault()}>
-                <Hamburger />
-              </a>
-            </Dropdown>
-          )}
-        </HamburgerContainer>
+          </HamburgerContainer>
+        ) : (
+          <Test />
+        )}
       </HeaderContainer>
-      <HeaderBelowContainer>
+      <HeaderBelowContainer onClick={onClickgoToPlace}>
         <img src={Mapmarker} alt="test" />
-        <Link to="/" style={{ color: '#8C8C8C' }}>
+        <span style={{ color: '#8C8C8C' }}>
           {placeName}, {address}
-        </Link>
+        </span>
       </HeaderBelowContainer>
     </>
   );

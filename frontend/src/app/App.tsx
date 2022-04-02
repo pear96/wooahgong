@@ -8,6 +8,10 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import 'antd/dist/antd.min.css';
 import NotFound from 'not-found';
 import Navbar from '../common/Navbar';
+// import Regist from '../features/Regist/regist';
+// import Map from '../features/Map/Map';
+// import FeedAdd from '../features/Feed/Feedadd';
+import Find from '../features/FindIdPwd/find';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
@@ -35,6 +39,7 @@ const Place = loadable(() => import('../features/Place/Place'));
 const FeedAdd = loadable(() => import('../features/Feed/Feedadd'));
 const FeedDetail = loadable(() => import('../features/FeedDetail'));
 const Comment = loadable(() => import('../features/FeedDetail/Comment'));
+const Main = loadable(() => import('../features/Main'));
 
 function App() {
   // 리프레시 토큰 사용하면
@@ -80,8 +85,10 @@ function App() {
           <Route path="/login" element={<MainLogin />} />
           <Route path="/oauth/callback/kakao" element={<RediretHandler />} />
           <Route path="/regist/*" element={<Regist />} />
+          <Route path="/find/*" element={<Find />} />
 
           <Route element={<Navbar />}>
+            <Route path="/main" element={<Main />} />
             <Route path="/map" element={<Map />} />
             <Route path="/search/*" element={<Search />} />
             <Route path="/profile/:nickname" element={<Profile />} />

@@ -1,5 +1,6 @@
 import SearchApi from 'common/api/SearchApi';
 import React, { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const HistoryContainer = styled.div`
@@ -15,6 +16,7 @@ const HeaderContainer = styled.div`
   overflow: hidden;
 `;
 const Title = styled.span`
+  font-family: 'NotoSansKR';
   float: left;
   font-weight: bold;
   color: #000000;
@@ -22,6 +24,7 @@ const Title = styled.span`
   margin-top: 20px;
 `;
 const RemoveText = styled.span`
+  font-family: 'NotoSansKR';
   float: right;
   margin-top: 60px;
   font-weight: 900;
@@ -57,6 +60,7 @@ const RemoveButton = styled.div`
 `;
 
 const Keyword = styled.span`
+  font-family: 'NotoSansKR';
   font-size: 18px;
   font-weight: bold;
 `;
@@ -64,10 +68,12 @@ const Keyword = styled.span`
 const searchHistory = () => {
   const { getRecentSearchs, deleteSeacrhHistory, deleteAllSeacrhHistory } = SearchApi;
   const [recentSearches, setRecentSearches] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function getAndRecentSearches() {
       const result = await getRecentSearchs();
+      console.log(result);
       setRecentSearches(result.data.recentSearches);
     }
 
@@ -75,16 +81,33 @@ const searchHistory = () => {
   }, []);
 
   const onClickDelete = useCallback(
-    (historySeq) => () => {
+    (historySeq) => async () => {
       console.log(historySeq);
-      deleteSeacrhHistory(historySeq);
+      const result = await deleteSeacrhHistory(historySeq);
+      console.log(result.data.recentSearches);
+      setRecentSearches(result.data.recentSearches);
     },
     [recentSearches],
   );
 
-  const onClickAllDelete = useCallback(() => {
-    deleteAllSeacrhHistory();
-  }, []);
+  const onClickAllDelete = useCallback(async () => {
+    const result = await deleteAllSeacrhHistory();
+    setRecentSearches([]);
+    console.log(result);
+  }, [recentSearches]);
+
+  // 장소랑, 사용자 별로 분기해서 라우팅해야 된다
+  const onClickgoToRecentSearch = useCallback(
+    (props) => () => {
+      console.log(props.type);
+      if (props.type === 'place') {
+        navigate(`/place/${props.placeSeq}`);
+      } else {
+        navigate(`/profile/${props.searchWord}`);
+      }
+    },
+    [],
+  );
 
   console.log(recentSearches);
   return (
@@ -98,7 +121,7 @@ const searchHistory = () => {
         {recentSearches.length !== 0
           ? recentSearches.map((props: any) => {
               return (
-                <KeywordContainer key={props.historySeq}>
+                <KeywordContainer onClick={onClickgoToRecentSearch(props)} key={props.historySeq}>
                   <img src={props.imageUrl} alt="img" style={{ width: 30, height: 30, marginRight: 15 }} />
                   <Keyword>{props.searchWord}</Keyword>
                   <RemoveButton onClick={onClickDelete(props.historySeq)} role="button">

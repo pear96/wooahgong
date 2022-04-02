@@ -1,5 +1,4 @@
-FROM python:3.9.7-alpine
-RUN apk update && apk add gcc libc-dev make git libffi-dev openssl-dev python3-dev libxml2-dev libxslt-dev
+FROM python:3.9.7
 WORKDIR /homepage
 COPY ./requirements.txt /homepage/
 RUN pip install --no-cache-dir --upgrade -r /homepage/requirements.txt

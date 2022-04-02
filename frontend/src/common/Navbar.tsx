@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import React, { useCallback, useState } from 'react';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { StyledNavbar, Menubars, NavMenu, NavMenuItems, NavbarToggle, NavText } from 'common/styles/StyledNavbar';
 import { FaBars } from 'react-icons/fa';
 import { AiOutlineClose, AiOutlineSearch } from 'react-icons/ai';
@@ -15,6 +15,10 @@ function Navbar() {
   const user = useSelector((state: ReducerType) => state.login);
   const showSidebar = () => setSidebar(!sidebar);
   const profileLink = `/profile/${user.nickname}`;
+  const navigate = useNavigate();
+  const onClickToSeacrh = useCallback(() => {
+    navigate('/search');
+  }, []);
 
   return (
     <>
@@ -23,7 +27,7 @@ function Navbar() {
           <FaBars style={{ color: '#000' }} onClick={showSidebar} />
         </Menubars>
         <img src={mainLogo} alt="mainLogo" width={50} height={50} />
-        <AiOutlineSearch style={{ width: '40px', height: '40px', marginRight: '1rem' }} />
+        <AiOutlineSearch onClick={onClickToSeacrh} style={{ width: '40px', height: '40px', marginRight: '1rem', cursor : "pointer" }} />
       </StyledNavbar>
       <NavMenu style={sidebar ? { left: '0', transition: '350ms' } : {}}>
         <NavMenuItems onClick={showSidebar}>
@@ -32,17 +36,27 @@ function Navbar() {
               <AiOutlineClose style={{ color: '#000' }} />
             </Menubars>
           </NavbarToggle>
-          <NavText>
-            <Link to={profileLink}>
+          <NavText style={{
+            marginLeft : 0
+          }}>
+            <Link style={{
+                    display : "flex",
+                    alignItems : "center",
+                    paddingLeft : 0
+                  }} to={profileLink}>
               <Avatar src={user.profileImg} style={{ marginRight: '6px' }} />
-              {user.nickname} 님
+              <span style={{marginLeft : 5}}>{user.nickname} 님</span>
             </Link>
           </NavText>
           {SidebarList.map((item) => {
             if (item.title === '로그아웃') {
               return (
-                <NavText key={item.title}>
-                  <Link to={item.path} onClick={deleteToken}>
+                <NavText
+                  key={item.title}>
+                  <Link style={{
+                    display : "flex",
+                    alignItems : "center"
+                  }} to={item.path} onClick={deleteToken}>
                     {item.icon}
                     <span style={{ marginLeft: '16px' }}>{item.title}</span>
                   </Link>
@@ -51,7 +65,10 @@ function Navbar() {
             }
             return (
               <NavText key={item.title}>
-                <Link to={item.title === '프로필' ? `${item.path}/${user.nickname}` : item.path}>
+                <Link style={{
+                    display : "flex",
+                    alignItems : "center"
+                  }} to={item.title === '프로필' ? `${item.path}/${user.nickname}` : item.path}>
                   {item.icon}
                   <span style={{ marginLeft: '16px' }}>{item.title}</span>
                 </Link>

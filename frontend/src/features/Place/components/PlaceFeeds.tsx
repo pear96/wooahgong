@@ -53,7 +53,7 @@ function PlaceFeeds({ placeFeeds }: MyProps) {
             const idx = i;
             return (
               <FeedImageWrapper key = {idx} onClick={() => handleClickFeed(feed.feedSeq)}>
-                <FeedImage src={feed.thumbnail} alt="" />
+                <FeedImage src={feed.thumbnail} alt="" style={{objectFit : "cover"}} />
               </FeedImageWrapper>
             )}
           )}

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState,  } from 'react';
 import ProfileApi from 'common/api/ProfileApi';
 import { ProfileFeedsOrPlacesGrid, FeedOrPlaceImageWrapper } from 'features/Profile/styles/StyledFeedsAndPlaces';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -69,6 +69,7 @@ function ProfileFeeds() {
   }, [target]);
 
   return (
+
     <ProfileFeedsOrPlacesGrid>
       {feeds !== undefined ? (
         feeds.map((feed, i) => {
@@ -78,7 +79,7 @@ function ProfileFeeds() {
               key={idx}
               onClick={() => handleClickFeed({ feedSeq: feed.feedSeq, placeSeq: feed.placeSeq })}
             >
-              <img src={feed.imageUrl} alt="" style={{ width: '100%', height: '100%' }} />
+              <img style={{objectFit : "cover", width : "100%", height : "100%"}} src={feed.imageUrl} alt="" />
             </FeedOrPlaceImageWrapper>
           );
         })

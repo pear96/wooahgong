@@ -1,0 +1,91 @@
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 99;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .modalForm {
+    padding: 20px 10px;
+    height: 200px;
+  }
+  
+  .modalForm .title {
+    /* margin : 0 auto; */
+    font-family: 'NotoSansKR';
+    margin-bottom: 53px;
+    font-size: 16px;
+    text-align: center;
+    
+  }
+  .modal button {
+    outline: none;
+    cursor: pointer;
+    border: 0;
+  }
+  .modal > section {
+    width: 340px;
+    height: 250px;
+    border-radius: 10px;
+    background-color: #ffff;
+    /* 팝업이 열릴때 스르륵 열리는 효과 */
+    animation: modal-show 0.3s;
+    overflow: hidden;
+  }
+  .configForm {
+    width: 100%;
+    text-align: center;
+    font-size: 11px;
+    position: relative;
+  }
+  label {
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .modal > section > footer {
+    text-align: right;
+  }
+  .modal > section > footer button {
+    width: 100px;
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+  }
+  
+  
+  .modal > section > footer .closeBtn {
+    background-color: #ff5722;
+    color: #fff;
+  }
+  
+  .modal.openModal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 팝업이 열릴때 스르륵 열리는 효과 */
+    animation: modal-bg-show 0.3s;
+  }
+  @keyframes modal-show {
+    from {
+      opacity: 0;
+      margin-top: -50px;
+    }
+    to {
+      opacity: 1;
+      margin-top: 0;
+    }
+  }
+  @keyframes modal-bg-show {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  

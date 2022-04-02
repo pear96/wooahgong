@@ -4,7 +4,7 @@ export const HeaderContainer = styled.div`
   margin-top: 20px;
   margin-left: 20px;
   display: flex;
-  justify-content: center;
+  margin-bottom : 10px;
 `;
 
 export const NicknameContainer = styled.p`
@@ -13,11 +13,6 @@ export const NicknameContainer = styled.p`
   font-size: 14px;
   width: 100px;
   margin-top: 20px;
-  margin-right: -20px;
-  text-align: center;
-  justify-content: start;
-  align-items: center;
-  padding: 8px -20px 8px 22px;
 `;
 
 export const HamburgerContainer = styled.div`
@@ -29,6 +24,8 @@ export const HamburgerContainer = styled.div`
 export const HeaderBelowContainer = styled.div`
   margin-left: 20px;
   font-family: 'NotoSansKR';
+  width : 300px;
+  margin : 0px auto;
 `;
 
 export const Test = styled.div`

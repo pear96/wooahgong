@@ -37,6 +37,7 @@ export const BelowContainer = styled.div`
 
 export const HeartContainer = styled.div`
   padding-top: 35px;
-  position: absolute;
-  right: 20px;
+  // position: absolute;
+  // right: 550px;
+  margin-left : 35px;
 `;

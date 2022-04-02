@@ -5,25 +5,27 @@ import { useAppDispatch } from '../../../app/store';
 import { setEmail } from '../../Regist/registerReducer';
 
 // reducers
-import {setUser} from '../authSlice';
+import { setUser } from '../authSlice';
 import { saveToken } from '../../../common/api/JTW-Token';
 
 function OAuth2RedirectHandler() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const {getKakaoLoginResult} = UserApi;
+  const { getKakaoLoginResult } = UserApi;
 
   const code = new URL(window.location.href).searchParams.get('code');
   console.log(code);
-  const apiResult = async () =>{
+  const apiResult = async () => {
     const result = await getKakaoLoginResult(code as string);
-    if(result.data.email){
+    if (result.data.email) {
       dispatch(setEmail(result.data.email));
       navigate('/regist/confirmetc');
-    }else{
+    } else {
       // console.log(result.data);
       saveToken(result.data.token);
+      // 추후 /main 으로 변경
+      dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg }));
       navigate('/map');
     }
     return result;

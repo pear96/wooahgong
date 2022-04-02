@@ -15,6 +15,8 @@ function Comment() {
   const [isWrite, setIsWrite] = useState(false);
 
   // 정리 진짜 중요!!,, state 끌어올리기,,자식 컴포넌트의 변화를 부모에서도 인지 with api연결
+  // 하위 컴포넌트에서 변화 하는 것을 부모 컴포넌트에서도 알 수 있도록!
+  // 보통 부모에서 프롭받아서 자식에서 쓰일때 이런 문제가 많이 발생
   async function getAndFeedComment() {
     if (feedSeq !== undefined) {
       const result = await getFeedComment(feedSeq);

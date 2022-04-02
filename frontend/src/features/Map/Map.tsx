@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
+import MapApi from 'common/api/MapApi';
 import My from '../../assets/MyPosition.png';
 import Marker from '../../assets/Marker.png';
 import Eximage from '../../assets/eximage.jpg';
 import Myhome from '../../assets/myhome.jpg';
 import SummarySpot from './SummarySpot';
+import Distance from './modal/Distance';
+
 
 interface Location {
     placeSeq : number,
@@ -36,6 +39,7 @@ function Map() {
     lat: number;
     lng: number;
   }>({ seq : -1 , img: '', name: '', avgRating: 0, lat: 0, lng: 0 });
+  const [point, setPoint] = useState<{seq : number, img : string, name : string, avgRating : number, lat : number, lng : number}[]>([]);
   const [isSearch, setIsSearch] = useState<boolean>(false);
   const [total, setTotal] = useState<{ tDistance: number; tTime: number }>({
     tDistance: 0,
@@ -47,12 +51,13 @@ function Map() {
   const [markerlist, setMarkerList] = useState<any[]>([]);
   const [routelist, setRouteList] = useState<any[]>([]);
   const [chktraffic, setChktraffic] = useState<any[]>([]);
-  // const [point, setPoint] = useState<any[]>([
-  //   { img: Eximage, name: '선릉', like: 2000, comment: 300, lat: 37.50764, lng: 127.052186 },
-  //   { img: Myhome, name: '우리집', like: 500, comment: 250, lat: 37.50335, lng: 127.051982 },
-  // ]);
+  const [distance, setDistance] = useState<number>(1500);
+  const [curCircle, setCurCircle] = useState<any>(null);
+  const [openDist, setOpenDist] = useState<boolean>(false);
 
-  // const propState = useNavigate().state;
+
+  const {getResultPlaceDistance} = MapApi;
+
   const location = useLocation();
   const state = location.state as Location;
   // 경로탐색후 초기화 하는 함수
@@ -306,7 +311,7 @@ function Map() {
     }
     // if (state.placeInfo.)
     if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
+      navigator.geolocation.getCurrentPosition(async (position) => {
         lat = position.coords.latitude;
         lng = position.coords.longitude;
         if (state !== null){
@@ -325,27 +330,119 @@ function Map() {
           setMyPosition({ lat, lng });
         }
         else{
-          setMap(
-            new window.Tmapv2.Map('TMapContainer', {
-              center: new window.Tmapv2.LatLng(lat, lng),
-              width: '100%',
-              height: '720px',
-              zoom: 17,
-              draggable: true,
-              https: true,
-            }),
-          );
-  
-          console.log('???실행');
-          setMyPosition({ lat, lng });
+          const data = {
+            radius : distance,
+            lat,
+            lng
+          }
+          console.log("???");
+          const result = await getResultPlaceDistance(data);
+          const value : {seq : number, img : string, name : string, avgRating : number, lat : number, lng : number}[]= [];
+          if(result.status === 200){
+            result.data.map((v : {placeSeq : number, address : string, name : string, imageUrl : string, lat : number, lng : number, ratings : number}, i : number) => {
+              return value.push({seq : v.placeSeq, img : v.imageUrl, name : v.name, avgRating : v.ratings, lat : v.lat, lng : v.lng});
+            })
+            setMap(
+              new window.Tmapv2.Map('TMapContainer', {
+                center: new window.Tmapv2.LatLng(lat, lng),
+                width: '100%',
+                height: '720px',
+                zoom: 17,
+                draggable: true,
+                https: true,
+              }),
+            );
+            console.log('???실행');
+            setPoint([...value]);
+            setMyPosition({ lat, lng });
+          }
         }
       });
     }
   };
+
+  const findSpotByDistance = async () => {
+    const data = {
+      radius : distance,
+      lat : myPosition.lat,
+      lng : myPosition.lng
+    }
+    const result = await getResultPlaceDistance(data);
+    const value : {seq : number, img : string, name : string, avgRating : number, lat : number, lng : number}[]= [];
+    if(result.status === 200){
+      console.log(result);
+      if (markerlist.length > 0) {
+        console.log('???????');
+        markerlist.map((v) => v.setMap(null));
+        setMarkerList(markerlist.splice(0, markerlist.length));
+      }
+      if(curCircle !== null){
+        curCircle.setMap(null);
+        setCurCircle(null);
+      }
+      
+      result.data.map((v : {placeSeq : number, address : string, name : string, imageUrl : string, lat : number, lng : number, ratings : number}, i : number) => {
+        return value.push({seq : v.placeSeq, img : v.imageUrl, name : v.name, avgRating : v.ratings, lat : v.lat, lng : v.lng});
+      })
+      console.log('???실행');
+      const bounds = new window.Tmapv2.LatLngBounds();
+      const markertemp = [];
+      for(let i = 0; i < value.length; i+=1){
+        const marker = new window.Tmapv2.Marker({
+          position: new window.Tmapv2.LatLng(value[i].lat, value[i].lng),
+          icon: Marker,
+          iconSize: new window.Tmapv2.Size(35, 35),
+          map,
+        });
+        bounds.extend( new window.Tmapv2.LatLng(value[i].lat, value[i].lng));
+        marker.addListener('click', () => {
+          setSpot(value[i]);
+          setisOpen(true);
+          console.log('안녕');
+        });
+        marker.addListener('touchstart', () => {
+          console.log('???');
+        });
+        markertemp.push(marker);
+      }
+      // 내 위치에 마커 생성
+      const marker = new window.Tmapv2.Marker({
+        position: new window.Tmapv2.LatLng(myPosition.lat, myPosition.lng),
+        icon: My,
+        iconSize: new window.Tmapv2.Size(35, 35),
+        map,
+      });
+      bounds.extend(new window.Tmapv2.LatLng(myPosition.lat, myPosition.lng));
+      markertemp.push(marker);
+      const circle = new window.Tmapv2.Circle({
+        center : new window.Tmapv2.LatLng(myPosition.lat, myPosition.lng),
+        radius : distance,
+        fillColor : "black",
+        strokeColor: "none",
+        fillOpacity : 0.1,
+        strokeOpacity : 0,
+        map
+      })
+      // 마커들을 state에 저장해줌
+      map.fitBounds(bounds);
+      setCurCircle(circle);
+      setMarkerList([...markertemp]);
+    }
+  }
+  const handleSetDist = (value : number) => {
+    setDistance(value);
+  }
   // 상세 모달 닫기
   const closeModal = () => {
     setisOpen(false);
   };
+  const handleOpenDist = () => {
+    setOpenDist(true);
+  }
+  const handleCloseDist = () => {
+    setOpenDist(false);
+  }
+
   // 처음 실행시 map이 null이면 map 생성, 반대 경우 return
   useEffect(() => {
     console.log(state);
@@ -363,6 +460,10 @@ function Map() {
       console.log('???????');
       markerlist.map((v) => v.setMap(null));
       setMarkerList(markerlist.splice(0, markerlist.length));
+    }
+    if(curCircle !== null){
+      curCircle.setMap(null);
+      setCurCircle(null);
     }
     
     // point state 가 가지고 있는 값을 가지고 마커 생성
@@ -405,7 +506,25 @@ function Map() {
     }
     else{
       // 거리로 찾는거 추가하면 작성 이어서 해야함
-  
+      const bounds = new window.Tmapv2.LatLngBounds();
+      for(let i = 0; i < point.length; i+=1){
+        const marker = new window.Tmapv2.Marker({
+          position: new window.Tmapv2.LatLng(point[i].lat, point[i].lng),
+          icon: Marker,
+          iconSize: new window.Tmapv2.Size(35, 35),
+          map,
+        });
+        bounds.extend( new window.Tmapv2.LatLng(point[i].lat, point[i].lng));
+        marker.addListener('click', () => {
+          setSpot(point[i]);
+          setisOpen(true);
+          console.log('안녕');
+        });
+        marker.addListener('touchstart', () => {
+          console.log('???');
+        });
+        markertemp.push(marker);
+      }
       // 내 위치에 마커 생성
       const marker = new window.Tmapv2.Marker({
         position: new window.Tmapv2.LatLng(myPosition.lat, myPosition.lng),
@@ -413,12 +532,29 @@ function Map() {
         iconSize: new window.Tmapv2.Size(35, 35),
         map,
       });
+      bounds.extend(new window.Tmapv2.LatLng(myPosition.lat, myPosition.lng));
       markertemp.push(marker);
-  
+      const circle = new window.Tmapv2.Circle({
+        center : new window.Tmapv2.LatLng(myPosition.lat, myPosition.lng),
+        radius : distance,
+        fillColor : "black",
+        strokeColor: "none",
+        fillOpacity : 0.1,
+        strokeOpacity : 0,
+        map
+      })
       // 마커들을 state에 저장해줌
+      map.fitBounds(bounds);
+      setCurCircle(circle);
       setMarkerList([...markerlist, ...markertemp]); 
     }
   }, [myPosition]);
+  useEffect(()=>{
+    if(map===null) return;
+    findSpotByDistance();
+  }, [distance])
+
+
   return (
     <div id="TMapContainer">
       {open || isSearch ? (
@@ -430,6 +566,25 @@ function Map() {
           clearRoute={handleClearRoute}
         />
       ) : null}
+      {openDist && state === null ? (
+        <Distance open={openDist} dist={distance} onClose ={handleCloseDist} setDist={handleSetDist}/>
+      ) : null}
+      {state === null ? (<button
+      style={{
+        zIndex : 2,
+        width : 90,
+        position : "absolute",
+        top : 100,
+        left : 10,
+        fontFamily : 'NotoSansKR',
+        fontWeight : 700,
+        border : "none",
+        borderRadius : 5,
+        color : "white",
+        background : "tomato",
+        cursor : "pointer"
+      }}
+      type='button' onClick={handleOpenDist}>범위 : {distance/1000}km</button>) : (null)}
     </div>
   );
 }

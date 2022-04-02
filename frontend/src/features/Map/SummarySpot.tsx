@@ -6,6 +6,7 @@ import SearchType from './modal/SearchType';
 
 
 const Summary = styled.div`
+    z-index : 2;
     position : absolute;
     width : 340px;
     height : 103px;

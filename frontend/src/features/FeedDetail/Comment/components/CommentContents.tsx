@@ -53,7 +53,7 @@ function CommentContents({
           <CustomText>{content}</CustomText>
         </ContentText>
         <BelowContainer style={{ marginLeft: '20px' }}>
-          <p>
+          <p style={{ fontFamily: 'NotoSansKR' }}>
             {createDate} 좋아요 {likeCnt}개
             {amIOwner && <CloseOutlined onClick={onClickDelete} style={{ marginLeft: '15px' }} />}
           </p>

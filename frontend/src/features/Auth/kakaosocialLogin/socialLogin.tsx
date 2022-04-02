@@ -74,25 +74,25 @@ function socialLogin() {
     navigate('/regist');
   }, []);
 
-  const onClickGotoSearchId = useCallback(() => {
-    navigate('/searchId');
+  const onClickGotoFindId = useCallback(() => {
+    navigate('/find');
   }, []);
 
   const onClickGotoSearcPassword = useCallback(() => {
-    navigate('/searchPassword');
+    navigate('/find/pwd');
   }, []);
 
   return (
     <div style={{
-      position : "relative",
-      width : "360px",
-      height : "800px",
-      background : "none",
-      margin : "0 auto"
+      position: "relative",
+      width: "360px",
+      height: "800px",
+      background: "none",
+      margin: "0 auto"
     }}>
       <Img src={Logo} alt="Logo" />
       <TitleContainer>
-        <Title width="222px"/>
+        <Title width="222px" />
       </TitleContainer>
       <ActiveButton onClick={onClickGotoLoginPage}>로그인</ActiveButton>
       <Button
@@ -115,7 +115,7 @@ function socialLogin() {
           <SmallMenu role="button" onClick={onClickGotoSignupPage}>
             회원가입
           </SmallMenu>
-          <SmallMenu role="button" onClick={onClickGotoSearchId}>
+          <SmallMenu role="button" onClick={onClickGotoFindId}>
             아이디 찾기
           </SmallMenu>
           <SmallMenu role="button" onClick={onClickGotoSearcPassword}>

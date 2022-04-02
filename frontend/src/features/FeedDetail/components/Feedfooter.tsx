@@ -1,34 +1,32 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HeartOutlined, HeartTwoTone, CommentOutlined } from '@ant-design/icons';
 import FeedDetailApi from 'common/api/FeedDetailApi';
 import { CustomText } from '../styles/styledFeedfooter';
 
-let value = 0;
 function Feedfooter({ amILike, likesCnt, commentsCnt, feedSeq, placeSeq }: any) {
   const [islike, setLike] = useState(amILike);
+  const [cnt, setCnt] = useState<number>(likesCnt);
   // const [value, setValue] = useState(0);
 
   const naviate = useNavigate();
   const { postFeedLike } = FeedDetailApi;
   console.log('렌더링 확인용');
 
-  console.log('장소번호', placeSeq);
-  console.log('피드번호', feedSeq);
-
   const onClickLike = useCallback(async () => {
     const result = await postFeedLike(feedSeq);
     console.log(result.data);
-    value = 1;
+
+    setCnt((prev) => prev + 1);
     setLike(result.data);
   }, []);
 
   const onClickDisLike = useCallback(async () => {
     const result = await postFeedLike(feedSeq);
     console.log(result.data);
-    value = -1;
+    setCnt((prev) => prev - 1);
     setLike(result.data);
   }, []);
 
@@ -47,7 +45,7 @@ function Feedfooter({ amILike, likesCnt, commentsCnt, feedSeq, placeSeq }: any) 
           <HeartOutlined style={{ fontSize: '32px' }} />
         </div>
       )}
-      <CustomText>{likesCnt + value}</CustomText>
+      <CustomText>{cnt}</CustomText>
       <div>
         <CommentOutlined onClick={onClickgotoComment} style={{ fontSize: '32px', marginLeft: '20px' }} />
       </div>

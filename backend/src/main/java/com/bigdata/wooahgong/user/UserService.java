@@ -14,14 +14,8 @@ import com.bigdata.wooahgong.mood.repository.MoodRepository;
 import com.bigdata.wooahgong.place.entity.Place;
 import com.bigdata.wooahgong.place.entity.PlaceWish;
 import com.bigdata.wooahgong.place.repository.PlaceWishRepository;
-import com.bigdata.wooahgong.user.dtos.request.FindPwSendEmailReq;
-import com.bigdata.wooahgong.user.dtos.request.ResetPwdReq;
-import com.bigdata.wooahgong.user.dtos.request.SignUpReq;
-import com.bigdata.wooahgong.user.dtos.request.UpdateProfileReq;
-import com.bigdata.wooahgong.user.dtos.response.GetMyFeedsRes;
-import com.bigdata.wooahgong.user.dtos.response.GetMyInfoRes;
-import com.bigdata.wooahgong.user.dtos.response.GetMyPlacesRes;
-import com.bigdata.wooahgong.user.dtos.response.GetUserInfoRes;
+import com.bigdata.wooahgong.user.dtos.request.*;
+import com.bigdata.wooahgong.user.dtos.response.*;
 import com.bigdata.wooahgong.user.entity.FeedLike;
 import com.bigdata.wooahgong.user.entity.User;
 import com.bigdata.wooahgong.user.entity.UserMood;
@@ -58,7 +52,7 @@ public class UserService {
 
     public String getEmailByToken(String token) {
         JWTVerifier verifier = JwtTokenUtil.getVerifier();
-        if("".equals(token)) {
+        if ("".equals(token)) {
             throw new CustomException(ErrorCode.NOT_OUR_USER);
         }
         JwtTokenUtil.handleError(token);
@@ -79,9 +73,9 @@ public class UserService {
     @Transactional
     public void signUp(SignUpReq commonSignUpReq) {
         commonSignUpReq.setPassword(passwordEncoder.encode(commonSignUpReq.getPassword()));
-        User user = userRepository.findByEmail(commonSignUpReq.getEmail()).orElse(null);
+        User user = userRepository.findByEmail(commonSignUpReq.getEmail()).orElseGet(User::new);
         // 에러 핸들링
-        if (user != null) {
+        if (user.getUserSeq() != null) {
             throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
         }
         if ("".equals(commonSignUpReq.getEmail()) || commonSignUpReq.getEmail() == null) {
@@ -105,27 +99,28 @@ public class UserService {
 
     // 아이디 중복 체크
     public void dupCheckUserId(String userId) {
-        User user = userRepository.findByUserId(userId).orElse(null);
-        if (user != null) {
+        User user = userRepository.findByUserId(userId).orElseGet(User::new);
+        if (user.getUserSeq() != null) {
             throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
         }
     }
 
     // 닉네임 중복 체크
     public void dupCheckNickname(String nickname) {
-        User user = userRepository.findByNickname(nickname).orElse(null);
-        if (user != null) {
+        User user = userRepository.findByNickname(nickname).orElseGet(User::new);
+        if (user.getUserSeq() != null) {
             throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
         }
     }
 
     // 아이디 찾기
-    public String findId(String email) {
-        User user = userRepository.findByEmail(email).orElse(null);
-        if (user == null) {
+    public FindIdRes findId(String email) {
+        User user = userRepository.findByEmail(email).orElseGet(User::new);
+        if (user.getUserSeq() == null) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
-        return user.getUserId();
+        return FindIdRes.builder()
+                .userId(user.getUserId()).provider(user.isProvider()).build();
     }
 
     // 비밀번호 찾기1 - 이메일 전송
@@ -144,7 +139,9 @@ public class UserService {
     }
 
     // 비밀번호 찾기2 인증코드 확인
-    public ResponseEntity findPwInsertCode(String userId, String authCode) {
+    public ResponseEntity findPwInsertCode(FindPwInsertCodeReq findPwInsertCodeReq) {
+        String userId = findPwInsertCodeReq.getUserId();
+        String authCode = findPwInsertCodeReq.getAuthCode();
         User user = userRepository.findByUserId(userId).orElseThrow(() ->
                 new CustomException(ErrorCode.USER_NOT_FOUND));
         return emailService.checkEmailAuthCodeForPassword(user, authCode);
@@ -155,7 +152,7 @@ public class UserService {
         String password = resetPwdReq.getPassword();
         User user = userRepository.findByUserId(userId).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_OUR_USER));
-        user.resetPwd(password);
+        user.resetPwd(passwordEncoder.encode(password));
         userRepository.save(user);
     }
 
@@ -164,7 +161,7 @@ public class UserService {
         User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_OUR_USER));
         // 닉네임으로 유저 찾기
-        User Owner = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
+        User Owner = userRepository.findByNickname(nickname).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_OUR_USER));
         boolean isOwner = user.getNickname().equals(nickname);
         int feedsCnt = Owner.getFeeds().size();
@@ -177,7 +174,7 @@ public class UserService {
         return GetUserInfoRes.builder()
                 .isOwner(isOwner).feedsCnt(feedsCnt)
                 .likedCnt(likedCnt).bookmarkedCnt(bookmark)
-                .moods(moods).build();
+                .moods(moods).mbti(Owner.getMbti()).image(Owner.getImageUrl()).build();
     }
 
     public GetMyInfoRes getMyInfo(String token, String nickname) {
@@ -197,15 +194,20 @@ public class UserService {
         // 토큰으로 유저 찾기
         User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_OUR_USER));
-        Page<Feed> pages = feedRepository.findByUserOrderByModifiedDateDesc(user, pageable);
+        User Owner = userRepository.findByNickname(nickname).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+        Page<Feed> pages = feedRepository.findByUserOrderByModifiedDateDesc(Owner, pageable);
         List<GetMyFeedsRes> getMyFeedsResList = new ArrayList<>();
         for (Feed feed : pages) {
             String image = null;
             if (feed.getFeedImages().size() != 0) {
-                image = feed.getFeedImages().get(feed.getFeedImages().size() - 1).getImageUrl();
+                image = feed.getFeedImages().get(0).getImageUrl();
             }
             getMyFeedsResList.add(GetMyFeedsRes.builder()
-                    .feedSeq(feed.getFeedSeq()).imageUrl(image).build());
+                    .feedSeq(feed.getFeedSeq())
+                    .imageUrl(image)
+                    .placeSeq(feed.getPlace().getPlaceSeq())
+                    .build());
         }
         return getMyFeedsResList;
     }
@@ -214,16 +216,21 @@ public class UserService {
         // 토큰으로 유저 찾기
         User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_OUR_USER));
-        Page<FeedLike> pages = feedLikeRepository.findByUserOrderByModifiedDateDesc(user, pageable);
+        User Owner = userRepository.findByNickname(nickname).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+        Page<FeedLike> pages = feedLikeRepository.findByUserOrderByModifiedDateDesc(Owner, pageable);
         List<GetMyFeedsRes> getMyFeedsResList = new ArrayList<>();
         for (FeedLike feedLike : pages) {
             Feed feed = feedLike.getFeed();
             String image = null;
             if (feed.getFeedImages().size() != 0) {
-                image = feed.getFeedImages().get(feed.getFeedImages().size() - 1).getImageUrl();
+                image = feed.getFeedImages().get(0).getImageUrl();
             }
             getMyFeedsResList.add(GetMyFeedsRes.builder()
-                    .feedSeq(feed.getFeedSeq()).imageUrl(image).build());
+                    .feedSeq(feed.getFeedSeq())
+                    .imageUrl(image)
+                    .placeSeq(feed.getPlace().getPlaceSeq())
+                    .build());
         }
         return getMyFeedsResList;
     }
@@ -233,18 +240,18 @@ public class UserService {
         // 토큰으로 유저 찾기
         User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_OUR_USER));
-        Page<PlaceWish> pages = placeWishRepository.findByUserOrderByModifiedDateDesc(user, pageable);
+        User Owner = userRepository.findByNickname(nickname).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_OUR_USER));
+        Page<PlaceWish> pages = placeWishRepository.findByUserOrderByModifiedDateDesc(Owner, pageable);
         List<GetMyPlacesRes> getMyPlacesResList = new ArrayList<>();
         for (PlaceWish placeWish : pages) {
             Place place = placeWish.getPlace();
             String image = null;
             // 피드가 존재할때만
             if (place.getFeeds().size() != 0) {
-                Feed feed = place.getFeeds().get(place.getFeeds().size() - 1);
+                Feed feed = place.getFeeds().get(0);
                 // 피드에 사진이 있을 경우에만
-                if (feed.getFeedImages().size() != 0) {
-                    image = feed.getFeedImages().get(feed.getFeedImages().size() - 1).getImageUrl();
-                }
+                image = feed.getThumbnail();
             }
             getMyPlacesResList.add(GetMyPlacesRes.builder()
                     .placeSeq(place.getPlaceSeq()).thumbnail(image).build());
@@ -253,21 +260,31 @@ public class UserService {
     }
 
     @Transactional
-    public String updateProfile(String token, String nickname, UpdateProfileReq updateProfileReq) {
+    public String updateProfile(String token, UpdateProfileReq updateProfileReq) {
         // 토큰으로 유저 찾기
         User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_OUR_USER));
+        // 2. 유저가 닉네임을 변경
         if (!user.getNickname().equals(updateProfileReq.getNickname())) {
-            user.setNickname(updateProfileReq.getNickname());
+            // 해당 닉네임을 가진 유저를 찾는다.
+            User nickUser = userRepository.findByNickname(updateProfileReq.getNickname()).orElseGet(User::new);
+            // 없으면 닉네임을 세팅
+            if(nickUser.getUserSeq() == null){
+                user.setNickname(updateProfileReq.getNickname());
+            }
+            // 있으면 오류
+            else{
+                throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
+            }
         }
-        if(!user.getMbti().equals(updateProfileReq.getMbti())){
+        if (!user.getMbti().equals(updateProfileReq.getMbti())) {
             user.setMbti(updateProfileReq.getMbti());
         }
         // UserMood 지우기
         userMoodRepository.deleteAllByUser(user);
         // 다시 삽입
-        for(String s : updateProfileReq.getMoods()){
-            Mood mood = moodRepository.findByMoodContaining(s).orElseThrow(()->
+        for (String s : updateProfileReq.getMoods()) {
+            Mood mood = moodRepository.findByMoodContaining(s).orElseThrow(() ->
                     new CustomException(ErrorCode.MOOD_NOT_FOUND));
             userMoodRepository.save(UserMood.builder().mood(mood).user(user).build());
         }

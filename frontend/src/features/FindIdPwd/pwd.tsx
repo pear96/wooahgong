@@ -134,7 +134,7 @@ function FindPwd() {
           },
         );
       }
-      if (!inputEmail || !inputEmail.trim()) {
+      if (!e.target[1].value || !e.target[1].value.trim()) {
         return toast.info(
           <div style={{ width: 'inherit', fontSize: '10px' }}>
             <div>이메일을 입력해주세요.</div>
@@ -145,8 +145,10 @@ function FindPwd() {
           },
         );
       }
-      const data = { userId: id, email: inputEmail };
+      const data = { userId: id, email: e.target[1].value };
+      console.log("data : ", data)
       const result = await findPwSendEmail(data);
+      console.log(result)
       if (result.status === 200) {
         toast.info(
           <div style={{ width: 'inherit', fontSize: '10px' }}>
@@ -184,16 +186,15 @@ function FindPwd() {
     const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
 
     const curWord = e.currentTarget.value;
-
     // 이메일 형식 검사
     if (regEmail.test(curWord) === true) {
       setIsOk(true);
       setErrorMsg("");
+      setEmail(curWord);
     } else {
       setIsOk(false);
       setErrorMsg("이메일 형식을 맞춰주세요");
     }
-    setEmail(curWord);
   };
   const handleInputId = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();

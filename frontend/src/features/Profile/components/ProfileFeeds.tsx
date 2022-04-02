@@ -1,15 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ProfileApi from 'common/api/ProfileApi';
-import {
-  ProfileFeedsOrPlacesGrid,
-  FeedOrPlaceImageWrapper,
-} from 'features/Profile/styles/StyledFeedsAndPlaces';
+import { ProfileFeedsOrPlacesGrid, FeedOrPlaceImageWrapper } from 'features/Profile/styles/StyledFeedsAndPlaces';
 import { useNavigate, useParams } from 'react-router-dom';
 
 function ProfileFeeds() {
   // const { feeds } = useSelector((state: ReducerType) => state.profileFeed);
   const { nickname } = useParams<string>();
-  const [feeds, setFeeds] = useState<{ feedSeq: number, imageUrl: string, placeSeq : number }[]>([]);
+  const [feeds, setFeeds] = useState<{ feedSeq: number; imageUrl: string; placeSeq: number }[]>([]);
   const [target, setTarget] = useState<any>(null);
   const [page, setPage] = useState<number>(0);
   const [end, setEnd] = useState<boolean>(false);
@@ -26,31 +23,29 @@ function ProfileFeeds() {
     if (nickname !== undefined && !endRef.current) {
       const value = {
         nickname,
-        page : pageRef.current
-      }
+        page: pageRef.current,
+      };
       console.log(feedsRef.current);
       const result = await ProfileApi.getMyFeeds(value);
 
       if (result.status === 200) {
-        console.log("?!?!?!?!?!");
+        console.log('?!?!?!?!?!');
         console.log(result.data);
-        if(result.data.length === 0){
+        if (result.data.length === 0) {
           setEnd(true);
-        }
-        else if(feedsRef.current.length > 0) {
+        } else if (feedsRef.current.length > 0) {
           setFeeds([...feedsRef.current, ...result.data]);
-          setPage(pageRef.current+1);
-        }
-        else{
+          setPage(pageRef.current + 1);
+        } else {
           setFeeds([...result.data]);
-          setPage(pageRef.current+1);
+          setPage(pageRef.current + 1);
         }
       } else {
         navigate('/not-found');
       }
     }
   };
-  const onIntersect = async ([entry] : any, observer : any) => {
+  const onIntersect = async ([entry]: any, observer: any) => {
     if (entry.isIntersecting) {
       observer.unobserve(entry.target);
       await getMyFeedsApi();
@@ -58,15 +53,15 @@ function ProfileFeeds() {
     }
   };
 
-  const handleClickFeed = (value : {feedSeq : number, placeSeq : number}) => {
+  const handleClickFeed = (value: { feedSeq: number; placeSeq: number }) => {
     navigate(`/place/${value.placeSeq}/feeds/${value.feedSeq}`);
-  }
-  
-  useEffect(()=>{
-    let observer : any;
-    if(target){
+  };
+
+  useEffect(() => {
+    let observer: any;
+    if (target) {
       observer = new IntersectionObserver(onIntersect, {
-        threshold : 0.2,
+        threshold: 0.2,
       });
       observer.observe(target);
     }
@@ -79,16 +74,22 @@ function ProfileFeeds() {
         feeds.map((feed, i) => {
           const idx = i;
           return (
-              <FeedOrPlaceImageWrapper key = {idx} onClick={() => handleClickFeed({feedSeq : feed.feedSeq, placeSeq : feed.placeSeq})} >
-                <img src={feed.imageUrl} alt="" style={{ width: '100%', height: '100%' }} />
-              </FeedOrPlaceImageWrapper>
-          )})
-      ) : (<>loading</>)}
+            <FeedOrPlaceImageWrapper
+              key={idx}
+              onClick={() => handleClickFeed({ feedSeq: feed.feedSeq, placeSeq: feed.placeSeq })}
+            >
+              <img src={feed.imageUrl} alt="" style={{ width: '100%', height: '100%' }} />
+            </FeedOrPlaceImageWrapper>
+          );
+        })
+      ) : (
+        <>loading</>
+      )}
       <div
-          ref={setTarget}
-          style={{
-            height: "15px",
-          }}
+        ref={setTarget}
+        style={{
+          height: '15px',
+        }}
       />
     </ProfileFeedsOrPlacesGrid>
   );

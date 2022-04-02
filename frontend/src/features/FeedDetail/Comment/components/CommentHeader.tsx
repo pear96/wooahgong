@@ -1,49 +1,62 @@
 import React, { useEffect, useState } from 'react';
-import { useAppSelector } from 'app/store';
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import { useLocation } from 'react-router-dom';
+import { typeState } from 'features/FeedDetail/components/Feedfooter';
 import { HeaderContainer, NicknameContainer, ContentText, CustomText } from '../styles/styledCommentHeader';
 
 // 리덕스로 전역처리해서 데이터 가져오면 될듯,,
 
+interface locState {
+  myState: typeState;
+}
+
 function CommentHeader() {
-  const { updateContent } = useAppSelector((state) => state.feeddetail);
-  const { userImage } = useAppSelector((state) => state.feeddetail);
-  const { userNickname } = useAppSelector((state) => state.feeddetail);
-  const { CreateDate } = useAppSelector((state) => state.feeddetail);
+  const [userImage, setuserImage] = useState<string>();
+  const [userNickname, setuserNickname] = useState<string>();
+  const [updateContent, setupdateContent] = useState<string>();
+  const [CreateDate, setCreateDate] = useState<string>();
 
-  const [image, setImage] = useState(userImage);
-  const [content, setContent] = useState(updateContent);
-  const [nickname, setNickname] = useState(userNickname);
-  const [createDate, setCreateDate] = useState(CreateDate);
+  const location = useLocation();
+  const state = location.state as locState;
+  const { myState } = state;
 
-  useEffect(() => {
-    setImage(window.localStorage.getItem('image') || '');
-    setContent(window.localStorage.getItem('content') || '');
-    setNickname(window.localStorage.getItem('nickname') || '');
-    setCreateDate(window.localStorage.getItem('createDate') || '');
-  }, []);
+  window.localStorage.setItem('userImage', myState.userImage);
+  window.localStorage.setItem('userNickname', myState.nickname);
+  window.localStorage.setItem('updateContent', myState.content);
+  window.localStorage.setItem('CreateDate', myState.createDate);
 
   useEffect(() => {
-    window.localStorage.setItem('image', image);
-    window.localStorage.setItem('content', content);
-    window.localStorage.setItem('nickname', nickname);
-    window.localStorage.setItem('createDate', createDate);
-  }, [image, content, nickname, createDate]);
-  console.log(userNickname, userImage);
+    const iamge = window.localStorage.getItem('userImage');
+    const name = window.localStorage.getItem('userNickname');
+    const content = window.localStorage.getItem('updateContent');
+    const date = window.localStorage.getItem('CreateDate');
+    if (iamge !== null) {
+      setuserImage(iamge);
+    }
+    if (name !== null) {
+      setuserNickname(name);
+    }
+    if (content !== null) {
+      setupdateContent(content);
+    }
+    if (date !== null) {
+      setCreateDate(date);
+    }
+  }, [myState.content, myState.createDate, myState.nickname, myState.userImage]);
   return (
     <>
       <HeaderContainer>
         <div style={{ marginRight: '25px', width: '20px' }}>
-          <Avatar size={64} src={image} icon={<UserOutlined />} />
+          <Avatar size={64} src={userImage} icon={<UserOutlined />} />
         </div>
-        <NicknameContainer>{nickname}</NicknameContainer>
+        <NicknameContainer>{userNickname}</NicknameContainer>
       </HeaderContainer>
       <ContentText>
-        <CustomText>{content}</CustomText>
+        <CustomText>{updateContent}</CustomText>
       </ContentText>
       <div style={{ marginLeft: '20px', fontFamily: 'NotoSansKR' }}>
-        <p>{createDate}</p>
+        <p>{CreateDate}</p>
       </div>
     </>
   );

@@ -6,6 +6,7 @@ import FindId from './findId';
 import Pwd from './pwd';
 import PwdAuth from './pwdAuth';
 import EmailRes from './emailRes';
+import ResetPwd from './resetPwd';
 import { ReducerType } from '../../app/rootReducer';
 
 const Container = styled.div`
@@ -32,6 +33,7 @@ function Find() {
         <Route path="/email" element={<EmailRes />} />
         <Route path="/pwd" element={<Pwd />} />
         <Route path="/pwdAuth" element={<PwdAuth />} />
+        <Route path="/resetPwd" element={<ResetPwd />} />
 
       </Routes>
     </Container>

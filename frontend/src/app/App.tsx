@@ -35,6 +35,7 @@ const Place = loadable(() => import('../features/Place/Place'));
 const FeedAdd = loadable(() => import('../features/Feed/Feedadd'));
 const FeedDetail = loadable(() => import('../features/FeedDetail'));
 const Comment = loadable(() => import('../features/FeedDetail/Comment'));
+const Main = loadable(() => import('../features/Main'));
 
 function App() {
   // 리프레시 토큰 사용하면
@@ -83,6 +84,7 @@ function App() {
           {/* <Route path="/find/*" element={<Find />} /> */}
 
           <Route element={<Navbar />}>
+            <Route path="/main" element={<Main />} />
             <Route path="/map" element={<Map />} />
             <Route path="/search/*" element={<Search />} />
             <Route path="/profile/:nickname" element={<Profile />} />

@@ -43,7 +43,7 @@ function UserProfile({ nickname, userProps }: MyProps) {
     <>
       <UserProfileWrapper>
         <ProfilePictureWrapper>
-          {nickname && <ProfilePicture alt={`${nickname} profile picture`} src={userProps.image === 'default' ? picture : userProps.image} />}
+          {nickname && <ProfilePicture style={{objectFit : "cover"}} alt={`${nickname} profile picture`} src={userProps.image === 'default' ? picture : userProps.image} />}
         </ProfilePictureWrapper>
         <ProfileRightWrapper>
           <ProfileRight>

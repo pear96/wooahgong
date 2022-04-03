@@ -6,7 +6,7 @@ function PlaceThumbnail({ thumbnail }: any) {
   console.log(thumbnail);
   return (
     <PlaceThumbnailWrapper>
-      <ThumbnailImage src={thumbnail} alt="Place Thumbnail" />
+      <ThumbnailImage src={thumbnail} alt="Place Thumbnail" style={{objectFit : "cover"}} />
     </PlaceThumbnailWrapper>
   );
 }

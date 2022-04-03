@@ -21,11 +21,12 @@ function FeedDetail() {
   const { feedSeq } = useParams();
 
   const [loadingFinsh, setLoadingFinsh] = useState(false);
-  async function getAndFeedDetail() {
+  const getAndFeedDetail = async () => {
     if (feedSeq !== undefined) {
       const result = await getFeedDetail(feedSeq);
       console.log(result.data);
       setFeedDetails(result.data);
+      setLoadingFinsh(true);
     } else {
       console.log('error');
       // 여기 토스트 메세지 써줘야 할듯 => ok
@@ -53,61 +54,59 @@ function FeedDetail() {
   // 렌더링 오류를 해결,,,
 
   useEffect(() => {
-    getAndFeedDetail().then(() => {
-      setLoadingFinsh(true);
-    });
-  }, [loadingFinsh]);
+    getAndFeedDetail();
+  }, []);
 
-  console.log(feedSeq);
-  console.log(FeedDetails);
   return (
     // <>hi</>
-    <div>
-      {loadingFinsh ? (
-        <div key={FeedDetails.feedSeq} style={{ display: 'flex', flexDirection: 'column' }}>
-          <div>
-            <Feedheader
-              nickname={FeedDetails.nickname}
-              userImage={FeedDetails.userImage}
-              feedSeq={FeedDetails.feedSeq}
-              placeName={FeedDetails.placeName}
-              address={FeedDetails.address}
-              amIOwner={FeedDetails.amIOwner}
-              placeSeq={FeedDetails.placeSeq}
-            />
+    <div style={{display : "flex", justifyContent : "center"}}>
+      <div style={{ display: 'flex',flexDirection: 'column', width : 360, height : 800 }}>
+        {loadingFinsh ? (
+          <div key={FeedDetails.feedSeq} style={{ display: 'flex', flexDirection: 'column' }}>
+            <div>
+              <Feedheader
+                nickname={FeedDetails.nickname}
+                userImage={FeedDetails.userImageUrl}
+                feedSeq={FeedDetails.feedSeq}
+                placeName={FeedDetails.placeName}
+                address={FeedDetails.address}
+                amIOwner={FeedDetails.amIOwner}
+                placeSeq={FeedDetails.placeSeq}
+              />
+            </div>
+            <div>
+              <Feedimages images={FeedDetails.images} />
+            </div>
+            <div>
+              <Feedcontent
+                ratings={FeedDetails.ratings}
+                content={FeedDetails.content}
+                createDate={FeedDetails.createDate}
+                moods={FeedDetails.moods}
+                feedSeq={FeedDetails.feedSeq}
+                placeSeq={FeedDetails.placeSeq}
+              />
+            </div>
+            <div>
+              <Feedfooter
+                amILike={FeedDetails.amILike}
+                likesCnt={FeedDetails.likesCnt}
+                commentsCnt={FeedDetails.commentsCnt}
+                feedSeq={FeedDetails.feedSeq}
+                placeSeq={FeedDetails.placeSeq}
+                content={FeedDetails.content}
+                userImage={FeedDetails.userImageUrl}
+                nickname={FeedDetails.nickname}
+                createDate={FeedDetails.createDate}
+              />
+            </div>
           </div>
-          <div>
-            <Feedimages images={FeedDetails.images} />
-          </div>
-          <div>
-            <Feedcontent
-              ratings={FeedDetails.ratings}
-              content={FeedDetails.content}
-              createDate={FeedDetails.createDate}
-              moods={FeedDetails.moods}
-              feedSeq={FeedDetails.feedSeq}
-              placeSeq={FeedDetails.placeSeq}
-            />
-          </div>
-          <div>
-            <Feedfooter
-              amILike={FeedDetails.amILike}
-              likesCnt={FeedDetails.likesCnt}
-              commentsCnt={FeedDetails.commentsCnt}
-              feedSeq={FeedDetails.feedSeq}
-              placeSeq={FeedDetails.placeSeq}
-              content={FeedDetails.content}
-              userImage={FeedDetails.userImage}
-              nickname={FeedDetails.nickname}
-              createDate={FeedDetails.createDate}
-            />
-          </div>
-        </div>
-      ) : (
-        <CustomSpin>
-          <Spin size="large" />
-        </CustomSpin>
-      )}
+        ) : (
+          <CustomSpin>
+            <Spin size="large" />
+          </CustomSpin>
+        )}
+      </div>
     </div>
   );
 }

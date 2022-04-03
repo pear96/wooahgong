@@ -11,10 +11,8 @@ export const PlaceName = styled.div`
 `;
 
 export const AverageRatings = styled.div`
-  margin-left: 1rem;
   font-size: 1.2rem;
-  color: #9088f3;
-  line-height: 2.2rem;
+  
 `;
 
 export const Address = styled.div`
@@ -23,12 +21,12 @@ export const Address = styled.div`
 `;
 
 export const Icons = styled(Col)`
-  display: flex;
   font-size: 1.5rem;
   margin-top: 4px;
 `;
 
 export const Icon = styled.div`
-  margin-right: 1rem;
+  display : inline;
+  margin : 0 5px;
   cursor: pointer;
 `;

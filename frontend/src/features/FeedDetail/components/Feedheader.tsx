@@ -35,7 +35,7 @@ function Feedheader({ nickname, userImage, feedSeq, placeName, address, amIOwner
   const [isUpdate, setIsUpdate] = useState(false);
   console.log(feedSeq);
   console.log(amIOwner);
-
+  console.log(userImage);
   const onClickDeleteFeedDetail = useCallback(async () => {
     await deleteFeedDetail(feedSeq);
     navigate('/map');
@@ -50,7 +50,7 @@ function Feedheader({ nickname, userImage, feedSeq, placeName, address, amIOwner
   const onClickgoToPlace = useCallback(() => {
     navigate(`/place/${placeSeq}`);
   }, []);
-
+  
   const menu = (
     <Menu style={{ borderRadius: '10px' }}>
       <Menu.Item key="0" onClick={onClickUpdateFeedDetail} style={{ fontFamily: 'NotoSansKR' }}>
@@ -72,19 +72,6 @@ function Feedheader({ nickname, userImage, feedSeq, placeName, address, amIOwner
         <NicknameContainer>{nickname}</NicknameContainer>
         {amIOwner ? (
           <HamburgerContainer>
-            {/* {isUpdate ? (
-              <Dropdown overlay={menu} trigger={['click']}>
-                <a onClick={(e) => e.preventDefault()}>
-                  <Hamburger />
-                </a>
-              </Dropdown>
-            ) : (
-              <Dropdown overlay={menu} trigger={['click']}>
-                <a onClick={(e) => e.preventDefault()}>
-                  <Hamburger />
-                </a>
-              </Dropdown>
-            )} */}
             <Dropdown overlay={menu} trigger={['click']}>
               <a onClick={(e) => e.preventDefault()}>
                 <Hamburger />
@@ -95,6 +82,7 @@ function Feedheader({ nickname, userImage, feedSeq, placeName, address, amIOwner
           <Test />
         )}
       </HeaderContainer>
+      
       <HeaderBelowContainer onClick={onClickgoToPlace}>
         <img src={Mapmarker} alt="test" />
         <span style={{ color: '#8C8C8C' }}>

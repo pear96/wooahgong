@@ -70,7 +70,7 @@ function FeedDetail() {
   return (
     // <>hi</>
     <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', width: 360, height: 800 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', width: 360, height: 720 }}>
         {loadingFinsh ? (
           <div key={FeedDetails.feedSeq} style={{ display: 'flex', flexDirection: 'column' }}>
             <div>

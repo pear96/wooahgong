@@ -42,7 +42,7 @@ function Forme() {
   };
 
   async function getAndFormeplace() {
-    await getLocation();
+    // await getLocation();
     const body = { searchRadius: Changeradius, lat, lng };
     if (lat !== undefined && lng !== undefined) {
       const result = await getFormeplace(body);

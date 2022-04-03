@@ -6,61 +6,44 @@ import { useAppDispatch } from 'app/store';
 import Select from 'react-select';
 import { ReactComponent as Back } from '../../assets/search/back.svg';
 import { setToggle, setAutoComplete } from './searchSlice';
-import SearchResultNicknames, { Keyword, KeywordContainer, RemoveButton } from './searchResultNicknames';
 
-const options = [
-  { value: 'chocolate', label: 'Chocolate' },
-  { value: 'strawberry', label: 'Strawberry' },
-  { value: 'vanilla', label: 'Vanilla' },
-];
-const horizontalCenter = css`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-`;
+
+// &는 자기 자신을 나타냄
+// 즉, 나 자신(li)들에서 마지막 요소 값을 제외한 값에 margin-bottom 속성 지정
 
 const Container = styled.div`
-  position: relative;
-  width: 90%;
-  margin-left: 15px;
-  border-bottom: 1px solid;
+  width: 100%;
+  display : flex;
+  margin : 0px auto;
+  justify-content : space-evenly;
+  align-items : center;
+  // margin-left: 15px;
   background-color: #fff;
-  padding: 20px 90px;
   box-sizing: border-box;
+  margin-bottom : 20px;
+  margin-top : 10px;
 `;
 
 // horizontalCenter 스타일 컴포넌트를 믹스인하여 속성값 전달
-const BackContainer = styled.div`
-  ${horizontalCenter}
-  left: -5px;
-  display: block;
-  width: 21px;
-  height: 18px;
-  background-position: -165px -343px;
-  vertical-align: top;
-`;
-
-const InputContainer = styled.div`
-  position: relative;
-  width: 100%;
-  padding-top: 5px;
-`;
 
 const Input = styled.input`
-  width: 100%;
+  width: 310px;
   background-color: #fff;
   font-weight: 700;
   font-size: 15px;
   font-family: 'NotoSansKR';
-  padding: 0;
-  border-width: 0;
-  border: none;
-  box-sizing: border-box;
+  border-top : none;
+  border-left : none;
+  border-right : none;
+  border-bottom: 1px solid;
+  // box-sizing: border-box;
 `;
+
+
 function SearchBar({ keyword, results, updateField }: any) {
   const dispatch = useAppDispatch();
   const [isOpen, setIsOpen] = useState(false);
-  const [nickname, setNickname] = useState('');
+  const [arr, setArr] = useState<any[]>([]);
 
   const onClickToggle = useCallback(() => {
     setIsOpen((prev) => !prev);
@@ -71,16 +54,10 @@ function SearchBar({ keyword, results, updateField }: any) {
     updateField('keyword', text, false);
     updateField('results', []);
   }, []);
-
-  let renderResults: any;
-  const arr: any[] = results;
-  if (arr) {
-    // arr 에 검색어에 대한 결과가 담기면, SearchView 호출
-    renderResults = arr.map((item: any) => {
-      // console.log(item.name);
-      return <SearchView updateText={updateText} name={item.name} key={item.placeSeq} img={item.imageUrl} />;
-    });
+  const handleGoback = (e : React.MouseEvent) => {
+    window.history.back();
   }
+
 
   useEffect(() => {
     return setIsOpen(false);
@@ -95,33 +72,18 @@ function SearchBar({ keyword, results, updateField }: any) {
   }, [isOpen]);
 
   useEffect(() => {
-    dispatch(setAutoComplete(arr as any));
+    setArr(results);
   }, [results]);
-
+  useEffect(()=>{
+    dispatch(setAutoComplete(arr as any));
+  },[arr])
   return (
     <Container>
-      <BackContainer>
-        <Back />
-      </BackContainer>
-      <InputContainer>
+        <Back style={{width : 35, height : 35}} onClick={handleGoback}/>
         <Input onClick={onClickToggle} placeholder="검색어를 입력하세요" value={keyword} onChange={propsTofunction} />
-      </InputContainer>
     </Container>
   );
 }
 
-function SearchView({ name, updateText, img }: any) {
-  console.log('search view:', name);
-
-  return (
-    <div onClick={() => updateText(name)}>
-      <KeywordContainer>
-        <img src={img} alt="img" style={{ width: 30, height: 30, marginRight: 15 }} />
-        <Keyword>{name}</Keyword>
-        <RemoveButton>x</RemoveButton>
-      </KeywordContainer>
-    </div>
-  );
-}
 
 export default SearchBar;

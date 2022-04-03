@@ -23,7 +23,7 @@ export const ProfileFeedsOrPlacesGrid = styled.div`
 export const FeedOrPlaceImageWrapper = styled.div`
   position: relative;
   width: 115px;
-
+  margin : 0px auto;
   height: 100%;
   cursor: pointer;
   // width : 120px;

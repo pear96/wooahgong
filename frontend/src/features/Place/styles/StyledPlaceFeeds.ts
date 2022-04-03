@@ -20,6 +20,7 @@ export const PlaceFeedsGrid = styled.div`
 
 export const FeedImageWrapper = styled.div`
   position: relative;
+  margin : 0px auto;
   width : 115px;
   height: 100%;
   cursor : pointer;

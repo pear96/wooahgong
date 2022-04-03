@@ -13,7 +13,8 @@ const Summary = styled.div`
     background : white;
     border-radius : 10px;
     top : 637px;
-    left : 10px;
+    left : 50%;
+    transform: translate(-50%, 0%);
     cursor : pointer;
 `;
 const Title = styled.h3`
@@ -120,7 +121,7 @@ function SummarySpot({spot, isSearch, total,searchWay, clearRoute} : MyProps){
         searchWay(type, end);
     }
     return (
-        <Summary onClick={handleClickSpot}>
+        <Summary  onClick={handleClickSpot}>
             <img style={{
                 width : 103,
                 height : 103,

@@ -3,7 +3,7 @@ import { Avatar } from 'antd';
 import { UserOutlined, HeartOutlined, CloseOutlined, HeartTwoTone } from '@ant-design/icons';
 
 import CommentApi from 'common/api/CommentApi';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   HeaderContainer,
   NicknameContainer,
@@ -28,7 +28,7 @@ function CommentContents({
   const [numOfLikes, setNumofLikes] = useState<number>(likeCnt);
 
   const { deleteComment, postCommentLike } = CommentApi;
-
+  const navigate = useNavigate();
   const { feedSeq } = useParams();
 
   const onclickLike = useCallback(async () => {
@@ -51,13 +51,20 @@ function CommentContents({
     await deleteComment(feedSeq, commentSeq);
   }, []);
 
+  const handleGotoProfile = () => {
+    navigate(`/profile/${nickname}`);
+  }
+  const handleStopEvent = (e : React.KeyboardEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+  }
+
   return (
     <HeaderContainer>
-      <div style={{ marginRight: '25px', width: '20px' }}>
-        <Avatar size={64} src={userImage} icon={<UserOutlined />} />
+      <div style={{ marginRight: '25px', width: '20px' }} onKeyDown={handleStopEvent} onClick={handleGotoProfile} role="img">
+        <Avatar size={64} src={userImage} icon={<UserOutlined />}/>
       </div>
       <div style={{ margin: '10px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
-        <NicknameContainer>{nickname}</NicknameContainer>
+        <NicknameContainer onClick={handleGotoProfile}>{nickname}</NicknameContainer>
         <ContentText>
           <CustomText>{content}</CustomText>
         </ContentText>

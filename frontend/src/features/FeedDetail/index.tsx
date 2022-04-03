@@ -3,12 +3,15 @@ import { Spin } from 'antd';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import FeedDetailApi from 'common/api/FeedDetailApi';
+import { useAppDispatch } from 'app/store';
 
 // Componetets
 import Feedcontent from './components/Feedcontent';
 import Feedfooter from './components/Feedfooter';
 import Feedimages from './components/Feedimages';
 import Feedheader from './components/Feedheader';
+
+import { setContent, setUserImage, setUesrNickname, setCreateDate } from '../FeedDetail/feedDetailSlice';
 
 const CustomSpin = styled.div`
   margin-left: 45%;
@@ -19,6 +22,7 @@ function FeedDetail() {
   const [FeedDetails, setFeedDetails] = useState<any>();
   const { getFeedDetail } = FeedDetailApi;
   const { feedSeq } = useParams();
+  const dispatch = useAppDispatch();
 
   const [loadingFinsh, setLoadingFinsh] = useState(false);
   const getAndFeedDetail = async () => {
@@ -31,7 +35,7 @@ function FeedDetail() {
       console.log('error');
       // 여기 토스트 메세지 써줘야 할듯 => ok
     }
-  }
+  };
 
   // 정리.. 신의 한수,,,
 
@@ -54,13 +58,19 @@ function FeedDetail() {
   // 렌더링 오류를 해결,,,
 
   useEffect(() => {
-    getAndFeedDetail();
-  }, []);
+    getAndFeedDetail().then(() => {
+      setLoadingFinsh(true);
+      dispatch(setContent(FeedDetails.content));
+      dispatch(setUserImage(FeedDetails.userImage));
+      dispatch(setUesrNickname(FeedDetails.nickname));
+      dispatch(setCreateDate(FeedDetails.createDate));
+    });
+  }, [loadingFinsh]);
 
   return (
     // <>hi</>
-    <div style={{display : "flex", justifyContent : "center"}}>
-      <div style={{ display: 'flex',flexDirection: 'column', width : 360, height : 800 }}>
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', width: 360, height: 800 }}>
         {loadingFinsh ? (
           <div key={FeedDetails.feedSeq} style={{ display: 'flex', flexDirection: 'column' }}>
             <div>

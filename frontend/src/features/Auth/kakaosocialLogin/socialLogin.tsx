@@ -15,7 +15,6 @@ import { ReactComponent as Title } from '../../../assets/main/Title.svg';
 // kakao socail login
 import { KAKAO_AUTH_URL } from './OAuth';
 
-
 const TitleContainer = styled.div`
   margin-top: 22px;
   margin-left: 69px;
@@ -27,7 +26,7 @@ const SmallMenu = styled.div`
   font-weight: 500;
   line-height: 1;
   transition: transform 250ms;
-  cursor : pointer;
+  cursor: pointer;
   &:hover {
     transform: translateY(-2px);
   }
@@ -83,13 +82,15 @@ function socialLogin() {
   }, []);
 
   return (
-    <div style={{
-      position: "relative",
-      width: "360px",
-      height: "800px",
-      background: "none",
-      margin: "0 auto"
-    }}>
+    <div
+      style={{
+        position: 'relative',
+        width: '360px',
+        height: '800px',
+        background: 'none',
+        margin: '0 auto',
+      }}
+    >
       <Img src={Logo} alt="Logo" />
       <TitleContainer>
         <Title width="222px" />

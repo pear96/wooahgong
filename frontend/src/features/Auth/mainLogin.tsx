@@ -139,7 +139,9 @@ const mainLogin = () => {
           },
         );
         dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg }));
-        navigate('/map');
+        window.localStorage.setItem('nickname', result.data.nickname);
+        window.localStorage.setItem('profileImg', result.data.profileImg);
+        navigate('/main');
       } else {
         toast.error(
           <div style={{ width: 'inherit', fontSize: '10px' }}>

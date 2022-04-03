@@ -117,7 +117,7 @@ function FindPwd() {
   const [isOk, setIsOk] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [email, setEmail] = useState<string>('');
-  const [authcode, onChangeAuthcode] = useState<string>('');
+  const [authcode, onChangeAuthcode] = useInput('');
   const navigate = useNavigate();
   const state = location.state as Location;
 
@@ -126,7 +126,6 @@ function FindPwd() {
 
   const onSubmit = useCallback(
     async (e) => {
-      console.log(authcode)
       e.preventDefault();
       // 인증코드가 비어있을때
       if (!authcode || !authcode.trim()) {
@@ -156,19 +155,20 @@ function FindPwd() {
         navigate('/find/resetPwd', { state: { userId: state.userId } });
         // dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg }));
         // navigate("/map");
+      } else {
+        toast.error(
+          <div style={{ width: 'inherit', fontSize: '10px' }}>
+            <div>인증코드가 올바르지 않습니다.</div>
+          </div>,
+          {
+            position: toast.POSITION.TOP_CENTER,
+            role: 'alert',
+          },
+        );
       }
-      toast.error(
-        <div style={{ width: 'inherit', fontSize: '10px' }}>
-          <div>인증코드가 올바르지 않습니다.</div>
-        </div>,
-        {
-          position: toast.POSITION.TOP_CENTER,
-          role: 'alert',
-        },
-      );
       return null;
     },
-    [],
+    [authcode],
   );
 
   // const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
@@ -185,7 +185,7 @@ function FindPwd() {
   const handleOnChangeAuthcode = (e: React.ChangeEvent<HTMLInputElement>) => {
     const curWord = e.currentTarget.value;
     setIsOk(true);
-    onChangeAuthcode(curWord);
+    console.log(isOk)
   };
 
   return (
@@ -196,22 +196,24 @@ function FindPwd() {
             <Img src={Logo} alt="Logo" />
           </div>
           <Title>비밀번호 찾기</Title>
-          <Input name="authcode" onChange={handleOnChangeAuthcode} placeholder="인증코드를 입력하세요." />
-          <ErrorMsg>{errorMsg}</ErrorMsg>
+          <Form onSubmit={onSubmit}>
+            <Input onChange={onChangeAuthcode} placeholder="인증코드를 입력하세요." />
+            <ErrorMsg>{errorMsg}</ErrorMsg>
 
-          <div
-            style={{
-              position: 'absolute',
-              marginLeft: '80px',
-              top: '523px',
-            }}
-          >
-            {isOk ? (
-              <ActiveButton onClick={onSubmit}>다 음</ActiveButton>
-            ) : (
-              <DisableButton>다 음</DisableButton>
-            )}
-          </div>
+            <div
+              style={{
+                position: 'absolute',
+                marginLeft: '80px',
+                top: '523px',
+              }}
+            >
+              {/* {isOk ? ( */}
+              <ActiveButton>다 음</ActiveButton>
+              {/* ) : ( */}
+              {/* <DisableButton>다 음</DisableButton> */}
+              {/* )} */}
+            </div>
+          </Form>
         </div>
       </article>
     </main>

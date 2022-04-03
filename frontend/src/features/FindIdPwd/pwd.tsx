@@ -147,7 +147,9 @@ function FindPwd() {
       }
       const data = { userId: id, email: e.target[1].value };
       console.log("data : ", data)
-      const result = await findPwSendEmail(data);
+      // 더미데이터
+      const result = { status: 200 }
+      // const result = await findPwSendEmail(data);
       console.log(result)
       if (result.status === 200) {
         toast.info(
@@ -162,16 +164,18 @@ function FindPwd() {
         navigate('/find/pwdAuth', { state: { userId: id, email: inputEmail } });
         // dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg }));
         // navigate("/map");
+      } else {
+
+        toast.error(
+          <div style={{ width: 'inherit', fontSize: '10px' }}>
+            <div>아이디와 이메일을 확인해주세요</div>
+          </div>,
+          {
+            position: toast.POSITION.TOP_CENTER,
+            role: 'alert',
+          },
+        );
       }
-      toast.error(
-        <div style={{ width: 'inherit', fontSize: '10px' }}>
-          <div>아이디와 이메일을 확인해주세요</div>
-        </div>,
-        {
-          position: toast.POSITION.TOP_CENTER,
-          role: 'alert',
-        },
-      );
       return null;
     },
     [id, inputEmail],

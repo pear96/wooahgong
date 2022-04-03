@@ -12,14 +12,16 @@ export const SortOption = styled.div`
 export const PlaceFeedsGrid = styled.div`
   display: grid;
   // height : 241px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
+  grid-auto-rows : 115px;
   gap: 0.25rem;
   overflow-y : auto;
 `;
 
 export const FeedImageWrapper = styled.div`
   position: relative;
-  height: 8rem;
+  width : 115px;
+  height: 100%;
   cursor : pointer;
 `;
 

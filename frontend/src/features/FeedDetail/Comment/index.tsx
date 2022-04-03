@@ -38,7 +38,8 @@ function Comment() {
   }, [isDelete, isWrite]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <div style={{display : "flex", justifyContent : "center"}}>
+    <div style={{ display: 'flex',flexDirection: 'column', width : 360, height : 800 }}>
       <div>
         <CommentHeader
         // userImage={comments.userImage}
@@ -68,6 +69,7 @@ function Comment() {
           );
         })}
       </div>
+    </div>
     </div>
   );
 }

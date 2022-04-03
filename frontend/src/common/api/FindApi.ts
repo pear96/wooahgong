@@ -69,9 +69,32 @@ const findPwInsertCode = async (body: { userId: string, authCode: string }) => {
   return res;
 };
 
+// 비밀번호 변경
+const resetPwd = async (body: { userId: string, password: string }) => {
+  const res = await axios.patch(`${BASE_URL}/repwd`, body
+    // headers: { Authorization: `${token}` },
+  ).then((response) => {
+    console.log("성공")
+    const value = {
+      data: response.data,
+      status: response.status
+    }
+    return value;
+  }).catch((e) => {
+    console.log("실패")
+    const value = {
+      data: null,
+      status: 404
+    }
+    return value;
+  })
+  return res;
+};
+
 const FindApi = {
   findIdByEmail,
   findPwSendEmail,
-  findPwInsertCode
+  findPwInsertCode,
+  resetPwd
 }
 export default FindApi;

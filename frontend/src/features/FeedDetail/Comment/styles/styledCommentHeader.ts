@@ -12,7 +12,7 @@ export const NicknameContainer = styled.p`
   font-weight: bold;
   font-size: 14px;
   width: 100px;
-  margin-left: 25px;
+  margin-left: 10px;
   margin-top: 20px;
   margin-right: 30px;
   text-align: center;

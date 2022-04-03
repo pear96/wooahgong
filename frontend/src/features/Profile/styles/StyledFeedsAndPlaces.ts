@@ -2,8 +2,7 @@ import styled from 'styled-components';
 
 export const FeedsAndPlacesWrapper = styled.div`
   margin-top: 1rem;
-  /* display: flex;
-  justify-content: center; */
+  // justify-content: center;
 `;
 
 export const ProfileFeedsOrPlacesGrid = styled.div`

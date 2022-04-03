@@ -70,7 +70,7 @@ function Feedheader({ nickname, userImage, feedSeq, placeName, address, amIOwner
   return (
     <>
       <HeaderContainer>
-        <div style={{ marginRight: '10px' }} onClick={handleGotoProfile}>
+        <div style={{ marginRight: '10px' , cursor : "pointer"}} onClick={handleGotoProfile}>
           <Avatar size={60} src={userImage} icon={<UserOutlined />} />
         </div>
         <NicknameContainer onClick={handleGotoProfile}>{nickname}</NicknameContainer>

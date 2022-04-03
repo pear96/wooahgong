@@ -14,7 +14,7 @@ function Navbar() {
   const [sidebar, setSidebar] = useState(false);
   const user = useSelector((state: ReducerType) => state.login);
   const showSidebar = () => setSidebar(!sidebar);
-  const profileLink = `/profile/${user.nickname}`;
+  const profileLink = `/profile/${window.localStorage.getItem('nickname')}`;
   const navigate = useNavigate();
   const onClickToSeacrh = useCallback(() => {
     navigate('/search');
@@ -27,7 +27,10 @@ function Navbar() {
           <FaBars style={{ color: '#000' }} onClick={showSidebar} />
         </Menubars>
         <img src={mainLogo} alt="mainLogo" width={50} height={50} />
-        <AiOutlineSearch onClick={onClickToSeacrh} style={{ width: '40px', height: '40px', marginRight: '1rem', cursor : "pointer" }} />
+        <AiOutlineSearch
+          onClick={onClickToSeacrh}
+          style={{ width: '40px', height: '40px', marginRight: '1rem', cursor: 'pointer' }}
+        />
       </StyledNavbar>
       <NavMenu style={sidebar ? { left: '0', transition: '350ms' } : {}}>
         <NavMenuItems onClick={showSidebar}>
@@ -36,27 +39,35 @@ function Navbar() {
               <AiOutlineClose style={{ color: '#000' }} />
             </Menubars>
           </NavbarToggle>
-          <NavText style={{
-            marginLeft : 0
-          }}>
-            <Link style={{
-                    display : "flex",
-                    alignItems : "center",
-                    paddingLeft : 0
-                  }} to={profileLink}>
-              <Avatar src={user.profileImg} style={{ marginRight: '6px' }} />
-              <span style={{marginLeft : 5}}>{user.nickname} 님</span>
+          <NavText
+            style={{
+              marginLeft: 0,
+            }}
+          >
+            <Link
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                paddingLeft: 0,
+              }}
+              to={profileLink}
+            >
+              <Avatar src={window.localStorage.getItem('profileImg')} style={{ marginRight: '6px' }} />
+              <span style={{ marginLeft: 5 }}>{window.localStorage.getItem('nickname')} 님</span>
             </Link>
           </NavText>
           {SidebarList.map((item) => {
             if (item.title === '로그아웃') {
               return (
-                <NavText
-                  key={item.title}>
-                  <Link style={{
-                    display : "flex",
-                    alignItems : "center"
-                  }} to={item.path} onClick={deleteToken}>
+                <NavText key={item.title}>
+                  <Link
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                    to={item.path}
+                    onClick={deleteToken}
+                  >
                     {item.icon}
                     <span style={{ marginLeft: '16px' }}>{item.title}</span>
                   </Link>
@@ -65,10 +76,13 @@ function Navbar() {
             }
             return (
               <NavText key={item.title}>
-                <Link style={{
-                    display : "flex",
-                    alignItems : "center"
-                  }} to={item.title === '프로필' ? `${item.path}/${user.nickname}` : item.path}>
+                <Link
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                  to={item.title === '프로필' ? `${item.path}/${user.nickname}` : item.path}
+                >
                   {item.icon}
                   <span style={{ marginLeft: '16px' }}>{item.title}</span>
                 </Link>

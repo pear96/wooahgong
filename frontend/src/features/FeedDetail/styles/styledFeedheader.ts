@@ -4,21 +4,24 @@ export const HeaderContainer = styled.div`
   margin-top: 20px;
   margin-left: 20px;
   display: flex;
+  align-items : center;
   margin-bottom : 10px;
+  
 `;
 
 export const NicknameContainer = styled.p`
   font-weight: bold;
   font-family: 'NotoSansKR';
   font-size: 14px;
+  margin : 0px;
   width: 100px;
-  margin-top: 20px;
+  cursor : pointer;
 `;
 
 export const HamburgerContainer = styled.div`
   margin-left: 120px;
-  margin-top: 20px;
   padding-right: 10px;
+  cursor : pointer;
 `;
 
 export const HeaderBelowContainer = styled.div`
@@ -26,6 +29,7 @@ export const HeaderBelowContainer = styled.div`
   font-family: 'NotoSansKR';
   width : 300px;
   margin : 0px auto;
+  cursor : pointer;
 `;
 
 export const Test = styled.div`

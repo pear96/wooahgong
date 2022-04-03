@@ -30,7 +30,10 @@ function FeedsAndPlaces() {
       <Tabs defaultActiveKey="1" centered onChange={setFeedsOrPlaces}>
         <TabPane
           tab={
-            <span>
+            <span style={{
+              display: "flex",
+              alignItems : "center"
+            }}>
               <BsGrid3X3 />
               &nbsp;올린 피드
             </span>
@@ -41,7 +44,10 @@ function FeedsAndPlaces() {
         </TabPane>
         <TabPane
           tab={
-            <span>
+            <span style={{
+              display: "flex",
+              alignItems : "center"
+            }}>
               <BsHeart />
               &nbsp;좋아한 피드
             </span>
@@ -52,7 +58,10 @@ function FeedsAndPlaces() {
         </TabPane>
         <TabPane
           tab={
-            <span>
+            <span style={{
+              display: "flex",
+              alignItems : "center"
+            }}>
               <BsBookmarkHeart />
               &nbsp; 찜한 장소
             </span>

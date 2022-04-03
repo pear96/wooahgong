@@ -57,11 +57,11 @@ function Feedfooter({
   return (
     <div style={{ display: 'flex', marginLeft: '20px' }}>
       {islike ? (
-        <div onClick={onClickDisLike}>
+        <div onClick={onClickDisLike} style={{cursor : "pointer"}}>
           <HeartTwoTone twoToneColor="#9088F3" style={{ fontSize: '32px' }} />
         </div>
       ) : (
-        <div onClick={onClickLike}>
+        <div onClick={onClickLike} style={{cursor : "pointer"}}>
           <HeartOutlined style={{ fontSize: '32px' }} />
         </div>
       )}

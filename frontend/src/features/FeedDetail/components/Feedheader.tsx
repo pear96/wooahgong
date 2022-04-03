@@ -50,6 +50,10 @@ function Feedheader({ nickname, userImage, feedSeq, placeName, address, amIOwner
   const onClickgoToPlace = useCallback(() => {
     navigate(`/place/${placeSeq}`);
   }, []);
+  const handleGotoProfile = () => {
+    navigate(`/profile/${nickname}`);
+  }
+
   
   const menu = (
     <Menu style={{ borderRadius: '10px' }}>
@@ -66,10 +70,10 @@ function Feedheader({ nickname, userImage, feedSeq, placeName, address, amIOwner
   return (
     <>
       <HeaderContainer>
-        <div style={{ marginRight: '10px' }}>
+        <div style={{ marginRight: '10px' , cursor : "pointer"}} onClick={handleGotoProfile}>
           <Avatar size={60} src={userImage} icon={<UserOutlined />} />
         </div>
-        <NicknameContainer>{nickname}</NicknameContainer>
+        <NicknameContainer onClick={handleGotoProfile}>{nickname}</NicknameContainer>
         {amIOwner ? (
           <HamburgerContainer>
             <Dropdown overlay={menu} trigger={['click']}>

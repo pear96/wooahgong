@@ -7,7 +7,11 @@ const token = getToken();
 // 피드 상세 정보 조회
 
 // 피드 좋아요 => 정리 axios 형식에 따른,,, body,, {}를 넣어야만 했었따.
-const getFormeplace = async (body: { searchRadius: number | string; lat: number | string; lng: number | string }) => {
+const getFormeplace = async (body: {
+  searchRadius: number | undefined;
+  lat: number | undefined;
+  lng: number | undefined;
+}) => {
   console.log(body);
 
   const result = await axios

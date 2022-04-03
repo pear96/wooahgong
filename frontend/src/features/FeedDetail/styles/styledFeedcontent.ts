@@ -24,7 +24,9 @@ export const CustomText = styled.p`
 export const MoodContainer = styled.div`
   margin-left: 20px;
   display: flex;
-  flex-direction: row;
+  flex-wrap : wrap;
+  justify-content : center;
+  // flex-direction: row;
 `;
 
 export const CustomButtom = styled.button`

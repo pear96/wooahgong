@@ -29,7 +29,7 @@ function OAuth2RedirectHandler() {
       navigate('/map');
     }
     return result;
-  }
+  };
   // code를 저장
   useEffect(() => {
     const result = apiResult();

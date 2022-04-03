@@ -3,7 +3,7 @@ import { Avatar } from 'antd';
 import { UserOutlined, HeartOutlined, CloseOutlined, HeartTwoTone } from '@ant-design/icons';
 
 import CommentApi from 'common/api/CommentApi';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   HeaderContainer,
   NicknameContainer,
@@ -25,14 +25,23 @@ function CommentContents({
   setIsDelete,
 }: any) {
   const [isLike, setIsLike] = useState(amILike);
+  const [numOfLikes, setNumofLikes] = useState<number>(likeCnt);
 
   const { deleteComment, postCommentLike } = CommentApi;
-
+  const navigate = useNavigate();
   const { feedSeq } = useParams();
 
   const onclickLike = useCallback(async () => {
     const result = await postCommentLike(feedSeq, commentSeq);
     console.log(result.data);
+    setNumofLikes((prev) => prev + 1);
+    setIsLike(result.data);
+  }, []);
+
+  const onclickDisLike = useCallback(async () => {
+    const result = await postCommentLike(feedSeq, commentSeq);
+    console.log(result.data);
+    setNumofLikes((prev) => prev - 1);
     setIsLike(result.data);
   }, []);
 
@@ -42,26 +51,33 @@ function CommentContents({
     await deleteComment(feedSeq, commentSeq);
   }, []);
 
+  const handleGotoProfile = () => {
+    navigate(`/profile/${nickname}`);
+  }
+  const handleStopEvent = (e : React.KeyboardEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+  }
+
   return (
     <HeaderContainer>
-      <div style={{ marginRight: '25px', width: '20px' }}>
-        <Avatar size={64} src={userImage} icon={<UserOutlined />} />
+      <div style={{width: '64px', cursor : "pointer" }} onKeyDown={handleStopEvent} onClick={handleGotoProfile} role="img">
+        <Avatar size={64} src={userImage} icon={<UserOutlined />}/>
       </div>
-      <div style={{ margin: '10px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
-        <NicknameContainer>{nickname}</NicknameContainer>
+      <div style={{display: 'flex', flexDirection: 'column'}}>
+        <NicknameContainer onClick={handleGotoProfile}>{nickname}</NicknameContainer>
         <ContentText>
           <CustomText>{content}</CustomText>
         </ContentText>
-        <BelowContainer style={{ marginLeft: '20px' }}>
-          <p style={{ fontFamily: 'NotoSansKR' }}>
-            {createDate} 좋아요 {likeCnt}개
+        <BelowContainer style={{ marginLeft: '10px' }}>
+          <p style={{ fontFamily: 'NotoSansKR', marginBottom : "0px" }}>
+            {createDate} 좋아요 {numOfLikes}개
             {amIOwner && <CloseOutlined onClick={onClickDelete} style={{ marginLeft: '15px' }} />}
           </p>
         </BelowContainer>
       </div>
-      <HeartContainer style={{ paddingTop: '35px' }}>
+      <HeartContainer>
         {isLike ? (
-          <HeartTwoTone onClick={onclickLike} style={{ fontSize: '20px' }} />
+          <HeartTwoTone onClick={onclickDisLike} style={{ fontSize: '20px' }} />
         ) : (
           <HeartOutlined onClick={onclickLike} style={{ fontSize: '20px' }} />
         )}

@@ -9,6 +9,7 @@ export const UserProfileWrapper = styled.div`
   margin-left: auto;
   margin-right: auto;
   margin-top: 2rem;
+  cursor : default;
 `;
 
 export const ProfilePictureWrapper = styled.div`
@@ -53,6 +54,7 @@ export const ProfileBottomWrapper = styled.div`
   margin-left: auto;
   margin-right: auto;
   margin-top: 1rem;
+  cursor : default;
 `;
 
 export const ProfileMBTI = styled.div`

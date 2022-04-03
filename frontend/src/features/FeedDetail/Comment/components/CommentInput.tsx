@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom';
 import { InputWrapper, CustomInput, CustomButton, CustomForm, ButtonContainer } from '../styles/styledCommentInput';
 
 function CommentInput({ setIsWrite }: any) {
-  const [comment, onChangeComment] = useInput('');
+  const [comment, onChangeComment, setComment] = useInput('');
 
   const { feedSeq } = useParams();
 
@@ -36,6 +36,7 @@ function CommentInput({ setIsWrite }: any) {
       setIsWrite(true);
       await postFeedComment(feedSeq, data).then(() => {
         getFeedComment(feedSeq);
+        setComment('');
       });
     },
     [comment, feedSeq],

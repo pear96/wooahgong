@@ -60,22 +60,22 @@ function CommentContents({
 
   return (
     <HeaderContainer>
-      <div style={{ marginRight: '25px', width: '20px' }} onKeyDown={handleStopEvent} onClick={handleGotoProfile} role="img">
+      <div style={{width: '64px', cursor : "pointer" }} onKeyDown={handleStopEvent} onClick={handleGotoProfile} role="img">
         <Avatar size={64} src={userImage} icon={<UserOutlined />}/>
       </div>
-      <div style={{ margin: '10px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
+      <div style={{display: 'flex', flexDirection: 'column'}}>
         <NicknameContainer onClick={handleGotoProfile}>{nickname}</NicknameContainer>
         <ContentText>
           <CustomText>{content}</CustomText>
         </ContentText>
-        <BelowContainer style={{ marginLeft: '20px' }}>
-          <p style={{ fontFamily: 'NotoSansKR' }}>
+        <BelowContainer style={{ marginLeft: '10px' }}>
+          <p style={{ fontFamily: 'NotoSansKR', marginBottom : "0px" }}>
             {createDate} 좋아요 {numOfLikes}개
             {amIOwner && <CloseOutlined onClick={onClickDelete} style={{ marginLeft: '15px' }} />}
           </p>
         </BelowContainer>
       </div>
-      <HeartContainer style={{ paddingTop: '35px' }}>
+      <HeartContainer>
         {isLike ? (
           <HeartTwoTone onClick={onclickDisLike} style={{ fontSize: '20px' }} />
         ) : (

@@ -39,7 +39,7 @@ function Comment() {
 
   return (
     <div style={{display : "flex", justifyContent : "center"}}>
-    <div style={{ display: 'flex',flexDirection: 'column', width : 360, height : 800 }}>
+    <div style={{ display: 'flex',flexDirection: 'column', width : 360, height : 720 }}>
       <div>
         <CommentHeader
         // userImage={comments.userImage}

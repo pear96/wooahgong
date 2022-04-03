@@ -53,7 +53,7 @@ function CommentHeader() {
   return (
     <>
       <HeaderContainer>
-        <div style={{ marginRight: '25px', width: '20px' }}>
+        <div style={{ width: '64px', margin : "0px 15px"}}>
           <Avatar size={64} src={userImages} icon={<UserOutlined />} />
         </div>
         <NicknameContainer>{userNicknames}</NicknameContainer>

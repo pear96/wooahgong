@@ -25,6 +25,7 @@ function CommentContents({
   setIsDelete,
 }: any) {
   const [isLike, setIsLike] = useState(amILike);
+  const [numOfLikes, setNumofLikes] = useState<number>(likeCnt);
 
   const { deleteComment, postCommentLike } = CommentApi;
 
@@ -33,6 +34,14 @@ function CommentContents({
   const onclickLike = useCallback(async () => {
     const result = await postCommentLike(feedSeq, commentSeq);
     console.log(result.data);
+    setNumofLikes((prev) => prev + 1);
+    setIsLike(result.data);
+  }, []);
+
+  const onclickDisLike = useCallback(async () => {
+    const result = await postCommentLike(feedSeq, commentSeq);
+    console.log(result.data);
+    setNumofLikes((prev) => prev - 1);
     setIsLike(result.data);
   }, []);
 
@@ -54,14 +63,14 @@ function CommentContents({
         </ContentText>
         <BelowContainer style={{ marginLeft: '20px' }}>
           <p style={{ fontFamily: 'NotoSansKR' }}>
-            {createDate} 좋아요 {likeCnt}개
+            {createDate} 좋아요 {numOfLikes}개
             {amIOwner && <CloseOutlined onClick={onClickDelete} style={{ marginLeft: '15px' }} />}
           </p>
         </BelowContainer>
       </div>
       <HeartContainer style={{ paddingTop: '35px' }}>
         {isLike ? (
-          <HeartTwoTone onClick={onclickLike} style={{ fontSize: '20px' }} />
+          <HeartTwoTone onClick={onclickDisLike} style={{ fontSize: '20px' }} />
         ) : (
           <HeartOutlined onClick={onclickLike} style={{ fontSize: '20px' }} />
         )}

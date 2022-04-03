@@ -46,9 +46,9 @@ const authSlice = createSlice({
     setProfileImg: (state, action: PayloadAction<string>) => {
       state.profileImg = action.payload;
     },
-    setProfileNick : (state, action: PayloadAction<string>) => {
+    setProfileNick: (state, action: PayloadAction<string>) => {
       state.nickname = action.payload;
-    }
+    },
   },
   // extraReducers: (builder) => {
   //   builder

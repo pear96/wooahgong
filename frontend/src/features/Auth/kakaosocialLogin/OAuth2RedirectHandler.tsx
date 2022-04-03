@@ -5,29 +5,29 @@ import { useAppDispatch } from '../../../app/store';
 import { setEmail } from '../../Regist/registerReducer';
 
 // reducers
-import {setUser} from '../authSlice';
+import { setUser } from '../authSlice';
 import { saveToken } from '../../../common/api/JTW-Token';
 
 function OAuth2RedirectHandler() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const {getKakaoLoginResult} = UserApi;
+  const { getKakaoLoginResult } = UserApi;
 
   const code = new URL(window.location.href).searchParams.get('code');
   console.log(code);
-  const apiResult = async () =>{
+  const apiResult = async () => {
     const result = await getKakaoLoginResult(code as string);
-    if(result.data.email){
+    if (result.data.email) {
       dispatch(setEmail(result.data.email));
       navigate('/regist/confirmetc');
-    }else{
+    } else {
       // console.log(result.data);
       saveToken(result.data.token);
       navigate('/map');
     }
     return result;
-  }
+  };
   // code를 저장
   useEffect(() => {
     const result = apiResult();

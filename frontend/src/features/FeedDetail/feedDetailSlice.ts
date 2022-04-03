@@ -2,17 +2,17 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export interface InitialState {
   isUpdate: boolean;
-  updateContest: string;
-  userImage: string;
-  userNickname: string;
-  CreateDate: string;
+  updateConttent: string;
+  userImages: string;
+  userNicknames: string;
+  CreateDates: string;
 }
 const initialState = {
   isUpdate: false,
-  updateContent: '',
-  userImage: '',
-  userNickname: '',
-  CreateDate: '',
+  updateConttent: '',
+  userImages: '',
+  userNicknames: '',
+  CreateDates: '',
 };
 
 const feedDetailSlice = createSlice({
@@ -23,16 +23,16 @@ const feedDetailSlice = createSlice({
       state.isUpdate = action.payload;
     },
     setContent(state, action) {
-      state.updateContent = action.payload;
+      state.updateConttent = action.payload;
     },
     setUserImage(state, action) {
-      state.userImage = action.payload;
+      state.userImages = action.payload;
     },
     setUesrNickname(state, action) {
-      state.userNickname = action.payload;
+      state.userNicknames = action.payload;
     },
     setCreateDate(state, action) {
-      state.CreateDate = action.payload;
+      state.CreateDates = action.payload;
     },
   },
 });

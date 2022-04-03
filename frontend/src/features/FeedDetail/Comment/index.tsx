@@ -20,6 +20,7 @@ function Comment() {
   async function getAndFeedComment() {
     if (feedSeq !== undefined) {
       const result = await getFeedComment(feedSeq);
+      console.log(result);
       setComments(result.data);
       if (isDelete === true) {
         setIsDelete(false);
@@ -39,7 +40,12 @@ function Comment() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <div>
-        <CommentHeader />
+        <CommentHeader
+        // userImage={comments.userImage}
+        // content={comments.content}
+        // createDate={comments.createDate}
+        // nickname={comments.nickname}
+        />
       </div>
       <div>
         <CommentInput setIsWrite={setIsWrite} />

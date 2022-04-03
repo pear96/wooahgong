@@ -3,12 +3,15 @@ import { Spin } from 'antd';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import FeedDetailApi from 'common/api/FeedDetailApi';
+import { useAppDispatch } from 'app/store';
 
 // Componetets
 import Feedcontent from './components/Feedcontent';
 import Feedfooter from './components/Feedfooter';
 import Feedimages from './components/Feedimages';
 import Feedheader from './components/Feedheader';
+
+import { setContent, setUserImage, setUesrNickname, setCreateDate } from '../FeedDetail/feedDetailSlice';
 
 const CustomSpin = styled.div`
   margin-left: 45%;
@@ -19,6 +22,7 @@ function FeedDetail() {
   const [FeedDetails, setFeedDetails] = useState<any>();
   const { getFeedDetail } = FeedDetailApi;
   const { feedSeq } = useParams();
+  const dispatch = useAppDispatch();
 
   const [loadingFinsh, setLoadingFinsh] = useState(false);
   async function getAndFeedDetail() {
@@ -55,6 +59,10 @@ function FeedDetail() {
   useEffect(() => {
     getAndFeedDetail().then(() => {
       setLoadingFinsh(true);
+      dispatch(setContent(FeedDetails.content));
+      dispatch(setUserImage(FeedDetails.userImage));
+      dispatch(setUesrNickname(FeedDetails.nickname));
+      dispatch(setCreateDate(FeedDetails.createDate));
     });
   }, [loadingFinsh]);
 

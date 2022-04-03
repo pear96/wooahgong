@@ -109,6 +109,10 @@ const searchHistory = () => {
     [],
   );
 
+  const stopPropagation = useCallback((e) => {
+    e.stopPropagation();
+  }, []);
+
   console.log(recentSearches);
   return (
     <HistoryContainer>
@@ -116,7 +120,7 @@ const searchHistory = () => {
         <Title>최근 검색어</Title>
         <RemoveText onClick={onClickAllDelete}>전체삭제</RemoveText>
       </HeaderContainer>
-      <ListContainer>
+      <ListContainer onClick={stopPropagation}>
         {/* 자동검색결과 */}
         {recentSearches.length !== 0
           ? recentSearches.map((props: any) => {

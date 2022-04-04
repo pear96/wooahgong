@@ -16,17 +16,23 @@ function Navbar() {
   const showSidebar = () => setSidebar(!sidebar);
   const profileLink = `/profile/${window.localStorage.getItem('nickname')}`;
   const navigate = useNavigate();
+  
   const onClickToSeacrh = useCallback(() => {
     navigate('/search');
   }, []);
-
+  const handleClickLogo = () => {
+    navigate(`/main`);
+  }
+  const handleClickstop = (e : React.KeyboardEvent) => {
+    console.log(e);
+  }
   return (
     <>
       <StyledNavbar>
         <Menubars to="#">
           <FaBars style={{ color: '#000' }} onClick={showSidebar} />
         </Menubars>
-        <img src={mainLogo} alt="mainLogo" width={50} height={50} />
+        <img src={mainLogo} alt="mainLogo" width={50} height={50} onClick={handleClickLogo} onKeyDown={handleClickstop}/>
         <AiOutlineSearch
           onClick={onClickToSeacrh}
           style={{ width: '40px', height: '40px', marginRight: '1rem', cursor: 'pointer' }}

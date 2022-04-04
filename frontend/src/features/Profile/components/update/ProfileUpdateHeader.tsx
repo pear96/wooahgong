@@ -13,29 +13,29 @@ import { ReducerType } from 'app/rootReducer';
 import ProfileApi from 'common/api/ProfileApi';
 import { setProfileNick } from '../../../Auth/authSlice';
 
-
 type MyProps = {
-  newNickname: string,
-  newMbti: string,
-  newMoods: string[],
-  isNick : boolean
-}
+  newNickname: string;
+  newMbti: string;
+  newMoods: string[];
+  isNick: boolean;
+};
 
 function ProfileUpdateHeader({ newNickname, newMbti, newMoods, isNick }: MyProps) {
-
   const navigate = useNavigate();
   const currentNickname = useSelector((state: ReducerType) => state.login.nickname);
   const dispatch = useDispatch();
   const updateProfile = async () => {
-    
     if (newMoods !== undefined && (newMoods.length < 1 || newMoods.length > 2)) {
-      toast.error(<div style={{ width: 'inherit', fontSize: '14px' }}>관심 분위기는 최소 1개 최대 2개 설정해야 합니다.</div>, {
-        position: toast.POSITION.TOP_CENTER,
-        role: 'alert',
-      });
+      toast.error(
+        <div style={{ width: 'inherit', fontSize: '14px' }}>관심 분위기는 최소 1개 최대 2개 설정해야 합니다.</div>,
+        {
+          position: toast.POSITION.TOP_CENTER,
+          role: 'alert',
+        },
+      );
       return;
     }
-    if(!isNick){
+    if (!isNick) {
       toast.error(<div style={{ width: 'inherit', fontSize: '14px' }}>닉네임 형식이 올바르지 않습니다.</div>, {
         position: toast.POSITION.TOP_CENTER,
         role: 'alert',
@@ -53,7 +53,7 @@ function ProfileUpdateHeader({ newNickname, newMbti, newMoods, isNick }: MyProps
           position: toast.POSITION.TOP_CENTER,
           role: 'alert',
         });
-        if(currentNickname !== newNickname){
+        if (currentNickname !== newNickname) {
           dispatch(setProfileNick(newNickname));
         }
         navigate(`/profile/${newNickname}`);

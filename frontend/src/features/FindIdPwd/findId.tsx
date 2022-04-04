@@ -37,7 +37,7 @@ const Input = styled.input`
   font-size: 11px;
   width: 200px;
   height: 31px;
-  margin-left: 75px;
+  margin-left: 80px;
   margin-bottom: 20px;
   padding-left: 3px;
   padding-bottom: 0px;
@@ -46,18 +46,7 @@ const Input = styled.input`
   border-right: none;
   border-bottom: #d7d7d7 1px solid;
 `;
-const ConfirmBtn = styled.button`
-  width: 80px;
-  height: 23px;
-  margin-left: 10px;
-  font-family: 'NotoSansKR';
-  font-size: 10px;
-  font-weight: 400;
-  background: #ffffff;
-  border: 0.7px solid #b0b0b0;
-  border-radius: 50px;
-  cursor: pointer;
-`;
+
 
 const DisableButton = styled.button`
   border-style: none;
@@ -92,8 +81,8 @@ const ErrorMsg = styled.span`
   color: red;
   font-family: 'NotoSansKR';
   font-size: 3px;
-  top: 450px;
-  left: 0px;
+  top: 385px;
+  left: 20px;
   margin-left: 61px;
 `;
 const Desc = styled.span`
@@ -104,22 +93,12 @@ const Desc = styled.span`
   font-family: 'NotoSansKR';
   font-size: 11px;
 `;
-// type MyProps = {
-//   progress: number;
-// };
 function FindId() {
+
   const [isOk, setIsOk] = useState<boolean>(false);
-  const [nickName, setStatenickName] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [email, setEmail] = useState<string>('');
-  const [isnickName, setIsnickName] = useState<boolean>(false);
   const navigate = useNavigate();
-
-
-  const { getNickDuplicateCheck } = UserApi
-
-  // const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
-  const dispatch = useDispatch();
 
   const handleInputEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
 
@@ -175,7 +154,7 @@ function FindId() {
             style={{
               position: 'absolute',
               marginLeft: '80px',
-              top: '523px',
+              top: '423px',
             }}
           >
             {isOk ? (

@@ -10,10 +10,6 @@ import Logo from '../../assets/Logo.png';
 import { ReducerType } from '../../app/rootReducer';
 import useInput from '../../common/hooks/useInput';
 
-export const Form = styled.form`
-  margin: 0 auto;
-  max-width: 400px;
-`;
 const Img = styled.img`
   width: 65px;
   height: 65px;
@@ -21,10 +17,6 @@ const Img = styled.img`
   margin-left: 147px;
   margin-bottom: 25px;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-`;
-const Progress = styled.div`
-  margin-top: 55px;
-  margin-left: 61px;
 `;
 const Title = styled.h3`
   text-align: left;
@@ -39,7 +31,8 @@ const Input = styled.input`
   font-size: 11px;
   width: 200px;
   height: 31px;
-  margin-left: 58px;
+  margin-top : 20px;
+  margin-left: 80px;
   margin-bottom: 20px;
   padding-left: 3px;
   padding-bottom: 0px;
@@ -168,16 +161,6 @@ function FindPwd() {
       return null;
     }
 
-
-  const handleOnClickNextStep = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const userId = await findIdByEmail();
-    navigate('/find/email', { state: { email, userId } });
-  };
-  const findIdByEmail = async () => {
-    const result = await FindApi.findIdByEmail(email);
-    return result.data
-  };
   const handleOnChangeAuthcode = (e: React.ChangeEvent<HTMLInputElement>) => {
     const curWord = e.currentTarget.value;
     onChangeAuthcode(curWord);
@@ -199,7 +182,7 @@ function FindPwd() {
             style={{
               position: 'absolute',
               marginLeft: '80px',
-              top: '523px',
+              top: '423px',
             }}
           >
             {isOk ? (

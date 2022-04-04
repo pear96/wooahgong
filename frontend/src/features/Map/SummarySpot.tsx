@@ -12,7 +12,7 @@ const Summary = styled.div`
     height : 103px;
     background : white;
     border-radius : 10px;
-    top : 637px;
+    top : 80%;
     left : 50%;
     transform: translate(-50%, 0%);
     cursor : pointer;
@@ -121,6 +121,7 @@ function SummarySpot({spot, isSearch, total,searchWay, clearRoute} : MyProps){
         searchWay(type, end);
     }
     return (
+        <>
         <Summary  onClick={handleClickSpot}>
             <img style={{
                 width : 103,
@@ -178,10 +179,9 @@ function SummarySpot({spot, isSearch, total,searchWay, clearRoute} : MyProps){
                     </Sub>
                 </>
             )}
-            
-            
-            <SearchType open={open} onClose={handleCloseModal} searchWay={sendData}/>
         </Summary>
+        <SearchType open={open} onClose={handleCloseModal} searchWay={sendData}/>
+        </>
     )
 }
 

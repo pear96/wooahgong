@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import ProgressBar from '@ramonak/react-progress-bar';
@@ -114,6 +114,24 @@ function ConfirmPwd({ progress }: MyProps) {
   const [pwdCheck, setPwdCheck] = useState<string>('');
   const [pwdErrorMsg, setPwdErrorMsg] = useState<string>('');
   const [pwdCheckErrorMsg, setPwdCheckErrorMsg] = useState<string>('');
+
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+      const detectMobileKeyboard = () =>{
+        if(document.activeElement?.tagName === "INPUT"){
+          console.log("??S?S?D?SSD?SD?SD?");
+          if(listRef.current !== null) {
+            console.log(listRef.current);
+            listRef.current.scrollIntoView({block : 'end'});
+
+          } 
+        }
+      }
+      window.addEventListener("resize", detectMobileKeyboard);
+      return () => window.removeEventListener("resize", detectMobileKeyboard);
+  }, []);
+
   const navigate = useNavigate();
 
   const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
@@ -179,6 +197,7 @@ function ConfirmPwd({ progress }: MyProps) {
           <Input type="password" placeholder="비밀번호 확인" onChange={handleCheckCheckPwd} />
           <PwdCheckErrorMsg>{pwdCheckErrorMsg}</PwdCheckErrorMsg>
           <div
+            ref={listRef}
             style={{
               position: 'absolute',
               marginLeft: '80px',

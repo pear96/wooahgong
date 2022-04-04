@@ -178,7 +178,7 @@ function ResetPwd() {
               style={{
                 position: 'absolute',
                 marginLeft: '80px',
-                top: '523px',
+                top: '473px',
               }}
             >
               {isOk ? (

@@ -49,9 +49,8 @@ export const Warning = styled.div`
 `;
 
 export const LeaveButton = styled.div`
-  position: absolute;
-  left: 2rem;
-  bottom: 2rem;
+  margin-left : 2rem;
+  margin-top : 8rem;
   color: lightgray;
   &:hover {
     cursor: pointer;

@@ -7,7 +7,12 @@ import FindApi from 'common/api/FindApi';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../../assets/Logo.png';
 import { ReducerType } from '../../app/rootReducer';
+import useInput from '../../common/hooks/useInput';
 
+export const Form = styled.form`
+  margin: 0 auto;
+  max-width: 400px;
+`;
 const Img = styled.img`
   width: 65px;
   height: 65px;
@@ -110,7 +115,7 @@ interface Location {
 }
 function ResetPwd() {
   const [isOk, setIsOk] = useState<boolean>(false);
-  const [pwd, setStatePwd] = useState<string>('');
+  const [pwd, onChangePwd] = useInput('');
   const [pwdCheck, setPwdCheck] = useState<string>('');
   const [pwdErrorMsg, setPwdErrorMsg] = useState<string>('');
   const [pwdCheckErrorMsg, setPwdCheckErrorMsg] = useState<string>('');
@@ -123,7 +128,6 @@ function ResetPwd() {
     e.preventDefault();
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{5,10}$/;
     const curPwd = e.currentTarget.value;
-    setStatePwd(curPwd);
     console.log(pwd);
     if (!passwordRegex.test(curPwd)) {
       setPwdErrorMsg('숫자+영문자+특수문자 조합으로 8자리 이상 입력!');
@@ -150,7 +154,7 @@ function ResetPwd() {
     }
   };
 
-  const handleOnClickNextStep = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleOnClickNextStep = async (e: any) => {
     e.preventDefault();
     // dispatch(setPwd(pwd));
 
@@ -209,23 +213,25 @@ function ResetPwd() {
             <Img src={Logo} alt="Logo" />
           </div>
           <Title>비밀번호 재설정</Title>
-          <Input type="password" placeholder="비밀번호를 입력해주세요." onChange={handleCheckPwd} />
-          <PwdErrorMsg>{pwdErrorMsg}</PwdErrorMsg>
-          <Input type="password" placeholder="비밀번호 확인" onChange={handleCheckCheckPwd} />
-          <PwdCheckErrorMsg>{pwdCheckErrorMsg}</PwdCheckErrorMsg>
-          <div
-            style={{
-              position: 'absolute',
-              marginLeft: '80px',
-              top: '523px',
-            }}
-          >
-            {isOk ? (
-              <ActiveButton onClick={handleOnClickNextStep}>확인</ActiveButton>
-            ) : (
-              <DisableButton>확인</DisableButton>
-            )}
-          </div>
+          <Form onSubmit={handleOnClickNextStep}>
+            <Input type="password" placeholder="비밀번호를 입력해주세요." onChange={onChangePwd} />
+            <PwdErrorMsg>{pwdErrorMsg}</PwdErrorMsg>
+            <Input type="password" placeholder="비밀번호 확인" onChange={onChangePwd} />
+            <PwdCheckErrorMsg>{pwdCheckErrorMsg}</PwdCheckErrorMsg>
+            <div
+              style={{
+                position: 'absolute',
+                marginLeft: '80px',
+                top: '523px',
+              }}
+            >
+              {isOk ? (
+                <ActiveButton>확인</ActiveButton>
+              ) : (
+                <DisableButton>확인</DisableButton>
+              )}
+            </div>
+          </Form>
         </div>
       </article>
     </main>

@@ -24,8 +24,11 @@ function OAuth2RedirectHandler() {
     } else {
       // console.log(result.data);
       saveToken(result.data.token);
+
       // 추후 /main 으로 변경
       dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg }));
+      window.localStorage.setItem('nickname', result.data.nickname);
+      window.localStorage.setItem('profileImg', result.data.profileImg);
       navigate('/map');
     }
     return result;

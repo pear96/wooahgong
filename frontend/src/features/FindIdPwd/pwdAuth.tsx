@@ -110,7 +110,7 @@ function FindPwd() {
   const [isOk, setIsOk] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [email, setEmail] = useState<string>('');
-  const [authcode, onChangeAuthcode] = useState<string>('');
+  const [authcode, onChangeAuthcode, setAuthCode] = useInput('');
   const navigate = useNavigate();
   const state = location.state as Location;
 
@@ -149,21 +149,12 @@ function FindPwd() {
         ))
 
       }
-      toast.error(
-        <div style={{ width: 'inherit', fontSize: '10px' }}>
-          <div>인증코드가 올바르지 않습니다.</div>
-        </div>,
-        {
-          position: toast.POSITION.TOP_CENTER,
-          role: 'alert',
-        },
-      );
       return null;
     }
 
   const handleOnChangeAuthcode = (e: React.ChangeEvent<HTMLInputElement>) => {
     const curWord = e.currentTarget.value;
-    onChangeAuthcode(curWord);
+    setAuthCode(curWord);
     setIsOk(true);
   };
 
@@ -175,8 +166,8 @@ function FindPwd() {
             <Img src={Logo} alt="Logo" />
           </div>
           <Title>비밀번호 찾기</Title>
-          <Input name="authcode" onChange={handleOnChangeAuthcode} placeholder="인증코드를 입력하세요." />
-          <ErrorMsg>{errorMsg}</ErrorMsg>
+            <Input onChange={handleOnChangeAuthcode} placeholder="인증코드를 입력하세요." />
+            <ErrorMsg>{errorMsg}</ErrorMsg>
 
           <div
             style={{

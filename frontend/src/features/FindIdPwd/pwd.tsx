@@ -1,3 +1,4 @@
+/* eslint-disable prefer-template */
 import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -93,7 +94,7 @@ function FindPwd() {
   const navigate = useNavigate();
 
   // APIs.
-  const { findPwSendEmail } = FindApi
+  const { findPwSendEmail } = FindApi;
 
   const onSubmit = useCallback(
     (e) => {
@@ -164,11 +165,11 @@ function FindPwd() {
     // 이메일 형식 검사
     if (regEmail.test(curWord) === true) {
       setIsOk(true);
-      setErrorMsg("");
+      setErrorMsg('');
       setEmail(curWord);
     } else {
       setIsOk(false);
-      setErrorMsg("이메일 형식을 맞춰주세요");
+      setErrorMsg('이메일 형식을 맞춰주세요');
     }
   };
 

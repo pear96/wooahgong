@@ -61,7 +61,7 @@ function FeedDetail() {
     getAndFeedDetail().then(() => {
       setLoadingFinsh(true);
       dispatch(setContent(FeedDetails.content));
-      dispatch(setUserImage(FeedDetails.userImage));
+      dispatch(setUserImage(FeedDetails.userImageUrl));
       dispatch(setUesrNickname(FeedDetails.nickname));
       dispatch(setCreateDate(FeedDetails.createDate));
     });

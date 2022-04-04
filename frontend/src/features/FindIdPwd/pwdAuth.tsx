@@ -124,8 +124,7 @@ function FindPwd() {
   // APIs.
   const { findPwInsertCode } = FindApi
 
-  const onSubmit = useCallback(
-    async (e) => {
+  const onSubmit = async (e : React.MouseEvent) => {
       console.log(authcode)
       e.preventDefault();
       // 인증코드가 비어있을때
@@ -144,7 +143,9 @@ function FindPwd() {
       const result = await findPwInsertCode(data);
       // 인증코드 성공
       if (result.status === 200) {
-        toast.info(
+        navigate('/find/resetPwd', { state: { userId: state.userId } });
+        
+        return (toast.info(
           <div style={{ width: 'inherit', fontSize: '10px' }}>
             <div>인증코드가 일치합니다.</div>
           </div>,
@@ -152,10 +153,8 @@ function FindPwd() {
             position: toast.POSITION.TOP_CENTER,
             role: 'alert',
           },
-        );
-        navigate('/find/resetPwd', { state: { userId: state.userId } });
-        // dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg }));
-        // navigate("/map");
+        ))
+
       }
       toast.error(
         <div style={{ width: 'inherit', fontSize: '10px' }}>
@@ -167,11 +166,8 @@ function FindPwd() {
         },
       );
       return null;
-    },
-    [],
-  );
+    }
 
-  // const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
 
   const handleOnClickNextStep = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -184,8 +180,8 @@ function FindPwd() {
   };
   const handleOnChangeAuthcode = (e: React.ChangeEvent<HTMLInputElement>) => {
     const curWord = e.currentTarget.value;
-    setIsOk(true);
     onChangeAuthcode(curWord);
+    setIsOk(true);
   };
 
   return (

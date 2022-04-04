@@ -9,10 +9,6 @@ import Logo from '../../assets/Logo.png';
 import { ReducerType } from '../../app/rootReducer';
 import useInput from '../../common/hooks/useInput';
 
-export const Form = styled.form`
-  margin: 0 auto;
-  max-width: 400px;
-`;
 const Img = styled.img`
   width: 65px;
   height: 65px;
@@ -20,10 +16,6 @@ const Img = styled.img`
   margin-left: 147px;
   margin-bottom: 25px;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-`;
-const Progress = styled.div`
-  margin-top: 55px;
-  margin-left: 61px;
 `;
 const Title = styled.h3`
   text-align: left;
@@ -46,19 +38,6 @@ const Input = styled.input`
   border-top: none;
   border-right: none;
   border-bottom: #d7d7d7 1px solid;
-`;
-const ConfirmBtn = styled.button`
-  width: 80px;
-  height: 23px;
-  margin-left: 10px;
-  font-family: 'NotoSansKR';
-  font-size: 10px;
-  font-style: normal;
-  font-weight: 400;
-  background: #ffffff;
-  border: 0.7px solid #b0b0b0;
-  border-radius: 50px;
-  cursor: pointer;
 `;
 const DisableButton = styled.button`
   border-style: none;
@@ -95,7 +74,7 @@ const PwdErrorMsg = styled.span`
   color: red;
   font-family: 'NotoSansKR';
   font-size: 3px;
-  top: 428px;
+  top: 368px;
   left: 0px;
   margin-left: 61px;
 `;
@@ -104,7 +83,7 @@ const PwdCheckErrorMsg = styled.span`
   color: red;
   font-family: 'NotoSansKR';
   font-size: 3px;
-  top: 481px;
+  top: 419px;
   left: 0px;
   margin-left: 61px;
 `;
@@ -115,7 +94,7 @@ interface Location {
 }
 function ResetPwd() {
   const [isOk, setIsOk] = useState<boolean>(false);
-  const [pwd, onChangePwd] = useInput('');
+  const [pwd, onChangePwd, setPwd] = useInput('');
   const [pwdCheck, setPwdCheck] = useState<string>('');
   const [pwdErrorMsg, setPwdErrorMsg] = useState<string>('');
   const [pwdCheckErrorMsg, setPwdCheckErrorMsg] = useState<string>('');
@@ -128,30 +107,29 @@ function ResetPwd() {
     e.preventDefault();
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{5,10}$/;
     const curPwd = e.currentTarget.value;
-    console.log(pwd);
+    // console.log(pwd);
     if (!passwordRegex.test(curPwd)) {
       setPwdErrorMsg('숫자+영문자+특수문자 조합으로 8자리 이상 입력!');
     } else {
       console.log(curPwd);
-      // setStatePwd(curPwd);
       setPwdErrorMsg('');
     }
+    setPwd(curPwd);
   };
 
   const handleCheckCheckPwd = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const curPwd = e.currentTarget.value;
     console.log(curPwd);
-    setPwdCheck(curPwd);
 
     if (pwd !== curPwd) {
-      // setStatePwd(pwd);
       setPwdCheckErrorMsg('비밀번호가 일치하지 않습니다.');
       setIsOk(false);
     } else {
       setPwdCheckErrorMsg('');
       setIsOk(true);
     }
+    setPwdCheck(curPwd);
   };
 
   const handleOnClickNextStep = async (e: any) => {
@@ -161,7 +139,8 @@ function ResetPwd() {
     const data = { userId: state.userId, password: pwd }
     const result = await FindApi.resetPwd(data);
     if (result.status === 200) {
-      toast.info(
+      navigate('/login');
+      return(toast.info(
         <div style={{ width: 'inherit', fontSize: '10px' }}>
           <div>비밀번호가 변경되었습니다.</div>
         </div>,
@@ -169,10 +148,7 @@ function ResetPwd() {
           position: toast.POSITION.TOP_CENTER,
           role: 'alert',
         },
-      );
-      navigate('/login');
-      // dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg }));
-      // navigate("/map");
+      ))
     }
     toast.error(
       <div style={{ width: 'inherit', fontSize: '10px' }}>
@@ -185,26 +161,7 @@ function ResetPwd() {
     );
     return null;
   };
-  const pressEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === `Enter`) {
-      const data = { userId: state.userId, password: pwd }
-      const result = await FindApi.resetPwd(data);
-      if (result.status === 200) {
-        toast.info(
-          <div style={{ width: 'inherit', fontSize: '10px' }}>
-            <div>비밀번호가 변경되었습니다.</div>
-          </div>,
-          {
-            position: toast.POSITION.TOP_CENTER,
-            role: 'alert',
-          },
-        );
-        navigate('/');
-        // dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg }));
-        // navigate("/map");
-      }
-    }
-  }
+  
   return (
     <main>
       <article>
@@ -213,10 +170,9 @@ function ResetPwd() {
             <Img src={Logo} alt="Logo" />
           </div>
           <Title>비밀번호 재설정</Title>
-          <Form onSubmit={handleOnClickNextStep}>
-            <Input type="password" placeholder="비밀번호를 입력해주세요." onChange={onChangePwd} />
+            <Input type="password" placeholder="비밀번호를 입력해주세요." onChange={handleCheckPwd} />
             <PwdErrorMsg>{pwdErrorMsg}</PwdErrorMsg>
-            <Input type="password" placeholder="비밀번호 확인" onChange={onChangePwd} />
+            <Input type="password" placeholder="비밀번호 확인" onChange={handleCheckCheckPwd} />
             <PwdCheckErrorMsg>{pwdCheckErrorMsg}</PwdCheckErrorMsg>
             <div
               style={{
@@ -226,12 +182,11 @@ function ResetPwd() {
               }}
             >
               {isOk ? (
-                <ActiveButton>확인</ActiveButton>
+                <ActiveButton onClick={handleOnClickNextStep}>확인</ActiveButton>
               ) : (
                 <DisableButton>확인</DisableButton>
               )}
             </div>
-          </Form>
         </div>
       </article>
     </main>

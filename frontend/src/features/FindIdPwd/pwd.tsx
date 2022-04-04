@@ -148,9 +148,10 @@ function FindPwd() {
       const data = { userId: id, email: e.target[1].value };
       console.log("data : ", data)
       const result = await findPwSendEmail(data);
-      console.log(result + " ")
+
       if (result.status === 200) {
-        toast.info(
+        navigate('/find/pwdAuth', { state: { userId: id, email: inputEmail } });
+        return (toast.info(
           <div style={{ width: 'inherit', fontSize: '10px' }}>
             <div>이메일을 보냈습니다. 인증코드를 입력하세요.</div>
           </div>,
@@ -158,8 +159,7 @@ function FindPwd() {
             position: toast.POSITION.TOP_CENTER,
             role: 'alert',
           },
-        );
-        navigate('/find/pwdAuth', { state: { userId: id, email: inputEmail } });
+        ))
         // dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg }));
         // navigate("/map");
       }

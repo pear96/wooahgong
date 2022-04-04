@@ -316,7 +316,7 @@ function Map() {
             new window.Tmapv2.Map('TMapContainer', {
               center: new window.Tmapv2.LatLng(state.latitude, state.longitude),
               width: '100%',
-              height: '720px',
+              height: '100vh',
               zoom: 17,
               draggable: true,
               https: true,
@@ -362,7 +362,7 @@ function Map() {
               new window.Tmapv2.Map('TMapContainer', {
                 center: new window.Tmapv2.LatLng(lat, lng),
                 width: '100%',
-                height: '720px',
+                height: '100vh',
                 zoom: 17,
                 draggable: true,
                 https: true,

@@ -7,11 +7,12 @@
     left: 0;
     z-index: 99;
     background-color: rgba(0, 0, 0, 0.5);
+    /* height: 90%; */
+    overflow: auto;
   }
   
   .modalForm {
     padding: 20px 10px;
-    height: 500px;
   }
   
   .modalForm .title {
@@ -30,7 +31,7 @@
   }
   .modal > section {
     width: 100%;
-    height: 750px;
+    height: 600px;
     /* margin: 0 auto; */
     border-radius: 10px;
     background-color: #ffff;
@@ -39,7 +40,7 @@
     overflow: hidden;
   }
   .configForm {
-    height: 550px;
+    height: 400px;
     margin-top : 10px;
     text-align: center;
 

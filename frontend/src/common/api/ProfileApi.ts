@@ -111,8 +111,8 @@ const getWishedFeeds = async (data : {nickname : string, page : number}) => {
   return result;
 };
 
-const updateProfile = async (nickname: string, data: { nickname: string; mbti: string; moods: string[] }) => {
-  
+const updateProfile = async (nickname: string | null, data: { nickname: string; mbti: string; moods: string[] }) => {
+  if(nickname === null) return {status : 400, data : null};
   const result = await axios.patch(`${BASE_URL}/${nickname}`, data,{headers: { Authorization: `${token}`}})
                           .then((response)=>{
                             const value = {
@@ -129,8 +129,8 @@ const updateProfile = async (nickname: string, data: { nickname: string; mbti: s
   return result;                    
 };
 
-const updateProfileImage = async (nickname: string, data: FormData) => {
-  if(token){
+const updateProfileImage = async (nickname: string | null, data: FormData) => {
+  if(token && nickname !== null){
     const result = await axios.patch(`${BASE_URL}/${nickname}/profileimg`, data, {headers : {Authorization: token, 'Content-type' : "multipart/form-data"}})
                             .then((response)=>{
                                 const value = {

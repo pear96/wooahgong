@@ -11,8 +11,10 @@ import Logo from '../../assets/Logo.png';
 import { ReducerType } from '../../app/rootReducer';
 import useInput from '../../common/hooks/useInput';
 
-export const Form = styled.form`
-  margin: 0 auto;
+const Form = styled.form`
+  display : flex;
+  flex-wrap : wrap;
+  justify-content : center;
   max-width: 400px;
 `;
 const Img = styled.img`
@@ -23,10 +25,7 @@ const Img = styled.img`
   margin-bottom: 25px;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 `;
-const Progress = styled.div`
-  margin-top: 55px;
-  margin-left: 61px;
-`;
+
 const Title = styled.h3`
   text-align: left;
   margin-left: 58px;
@@ -40,26 +39,11 @@ const Input = styled.input`
   font-size: 11px;
   width: 200px;
   height: 31px;
-  margin-left: 58px;
-  margin-bottom: 20px;
-  padding-left: 3px;
-  padding-bottom: 0px;
+  margin-top : 20px;
   border-left: none;
   border-top: none;
   border-right: none;
   border-bottom: #d7d7d7 1px solid;
-`;
-const ConfirmBtn = styled.button`
-  width: 80px;
-  height: 23px;
-  margin-left: 10px;
-  font-family: 'NotoSansKR';
-  font-size: 10px;
-  font-weight: 400;
-  background: #ffffff;
-  border: 0.7px solid #b0b0b0;
-  border-radius: 50px;
-  cursor: pointer;
 `;
 const DisableButton = styled.button`
   border-style: none;
@@ -93,18 +77,10 @@ const ErrorMsg = styled.span`
   position: absolute;
   color: red;
   font-family: 'NotoSansKR';
-  font-size: 3px;
-  top: 450px;
-  left: 0px;
-  margin-left: 61px;
-`;
-const Desc = styled.span`
-  display: block;
-  text-align: left;
-  margin-left: 60px;
-  margin-bottom: 18px;
-  font-family: 'NotoSansKR';
   font-size: 11px;
+  top: 420px;
+  left: 80px;
+  // margin-left: 61px;
 `;
 // type MyProps = {
 //   progress: number;
@@ -121,7 +97,7 @@ function FindPwd() {
   const { findPwSendEmail } = FindApi;
 
   const onSubmit = useCallback(
-    async (e) => {
+    (e) => {
       e.preventDefault();
       console.log(e.target[0].value, e.target[1].value);
       if (!id || !id.trim()) {
@@ -146,12 +122,18 @@ function FindPwd() {
           },
         );
       }
-      const data = { userId: id, email: e.target[1].value };
-      console.log('data : ', data);
+      return null;
+    },
+    [id, inputEmail],
+  );
+  const handleOnClickNextStep = async (e : React.MouseEvent) => {
+    const data = { userId: id, email };
+      console.log("data : ", data)
       const result = await findPwSendEmail(data);
 
       if (result.status === 200) {
-        toast.info(
+        navigate('/find/pwdAuth', { state: { userId: id, email: inputEmail } });
+        return (toast.info(
           <div style={{ width: 'inherit', fontSize: '10px' }}>
             <div>이메일을 보냈습니다. 인증코드를 입력하세요.</div>
           </div>,
@@ -159,8 +141,7 @@ function FindPwd() {
             position: toast.POSITION.TOP_CENTER,
             role: 'alert',
           },
-        );
-        navigate('/find/pwdAuth', { state: { userId: id, email: inputEmail } });
+        ))
         // dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg }));
         // navigate("/map");
       }
@@ -174,13 +155,7 @@ function FindPwd() {
         },
       );
       return null;
-    },
-    [id, inputEmail],
-  );
-
-  // const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
-  const dispatch = useDispatch();
-
+  }
   const handleInputEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
@@ -197,19 +172,8 @@ function FindPwd() {
       setErrorMsg('이메일 형식을 맞춰주세요');
     }
   };
-  const handleInputId = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-  };
 
-  const handleOnClickNextStep = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const userId = await findIdByEmail();
-    navigate('/find/email', { state: { email, userId } });
-  };
-  const findIdByEmail = async () => {
-    const result = await FindApi.findIdByEmail(email);
-    return result.data;
-  };
+
 
   return (
     <main>
@@ -223,17 +187,20 @@ function FindPwd() {
             <Input name="id" onChange={onChangeId} placeholder="아이디를 입력하세요." />
             <Input name="inputEmail" onChange={handleInputEmail} placeholder="이메일을 입력하세요." />
             <ErrorMsg>{errorMsg}</ErrorMsg>
-
-            <div
+          </Form>
+          <div
               style={{
                 position: 'absolute',
                 marginLeft: '80px',
-                top: '523px',
+                top: '473px',
               }}
             >
-              {isOk ? <ActiveButton>다 음</ActiveButton> : <DisableButton>다 음</DisableButton>}
+              {isOk ? (
+                <ActiveButton onClick={handleOnClickNextStep} >다 음</ActiveButton>
+              ) : (
+                <DisableButton>다 음</DisableButton>
+              )}
             </div>
-          </Form>
         </div>
       </article>
     </main>

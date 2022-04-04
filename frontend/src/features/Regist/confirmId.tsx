@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import ProgressBar from '@ramonak/react-progress-bar';
@@ -104,6 +104,22 @@ function ConfirmId({ progress }: MyProps) {
   const [id, setStateId] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [isId, setIsId] = useState<boolean>(false);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+      const detectMobileKeyboard = () =>{
+        if(document.activeElement?.tagName === "INPUT"){
+          console.log("??S?S?D?SSD?SD?SD?");
+          if(listRef.current !== null) {
+            console.log(listRef.current);
+            listRef.current.scrollIntoView({block : 'end'});
+
+          } 
+        }
+      }
+      window.addEventListener("resize", detectMobileKeyboard);
+      return () => window.removeEventListener("resize", detectMobileKeyboard);
+  }, []);
   const navigate = useNavigate();
 
 
@@ -178,13 +194,14 @@ function ConfirmId({ progress }: MyProps) {
             </Progress>
           </div>
           <Title>아이디 설정</Title>
-          <Input onChange={handleCheckId} placeholder="아이디를 입력해주세요." />
+          <Input type="text" onChange={handleCheckId} placeholder="아이디를 입력해주세요." />
           <ConfirmBtn onClick={handleCheckDuplicationId} disabled={!isId}>
             중복확인
           </ConfirmBtn>
           <ErrorMsg>{errorMsg}</ErrorMsg>
 
           <div
+            ref={listRef}
             style={{
               position: 'absolute',
               marginLeft: '80px',

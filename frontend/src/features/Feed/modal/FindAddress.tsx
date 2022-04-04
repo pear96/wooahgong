@@ -1,25 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import style from './FindAddress.module.css';
 import My from '../../../assets/MyPosition.png';
 
-const MbtiContainer = styled.div`
-  display: inline-block;
-  background: #d7d7d7;
-  font-family: 'NotoSansKR';
-  font-size: 14px;
-  font-weight: 700;
-  width: 100px;
-  height: 30px;
-  margin: 2px 10px;
-  margin-bottom: 10px;
-  line-height: 28px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-`;
 
 type MyProps = {
   open: boolean;
@@ -28,11 +13,30 @@ type MyProps = {
 };
 
 function FindAddress({ open, onClose, handleInput }: MyProps) {
+  
   const [map, setMap] = useState<any>(null);
   const [myPosition, setPosition] = useState<{ lat: number; lng: number }>();
   const [address, setAddress] = useState<string>('');
   const [markerList, setMarkerList] = useState<any>(null);
   const [check, setCheck] = useState<boolean>(false);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+      const detectMobileKeyboard = () =>{
+        if(document.activeElement?.tagName === "INPUT"){
+          console.log("??S?S?D?SSD?SD?SD?");
+          if(listRef.current !== null) {
+            console.log(listRef.current);
+            listRef.current.scrollIntoView({block : 'end'});
+
+          } 
+        }
+      }
+      window.addEventListener("resize", detectMobileKeyboard);
+      return () => window.removeEventListener("resize", detectMobileKeyboard);
+  }, []);
+  
+  
   const markerRef = useRef(markerList);
   markerRef.current = markerList;
   const handleStopEvent = (e: any) => {
@@ -196,6 +200,7 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
   useEffect(() => {
     if (map === null) return;
     map.addListener('click', handleClickMap);
+    map.addListener('touchstart', handleClickMap, true);
   }, [map]);
   useEffect(() => {
     console.log(markerList);
@@ -215,6 +220,7 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
           onKeyDown={handleStopEvent}
           role="button"
           tabIndex={0}
+          ref={listRef}
         >
           <header>
             <h3 className={style.title}>주소 등록 🚋</h3>
@@ -280,7 +286,7 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
                   color: 'white',
                   width: 150,
                   height: 30,
-                  marginTop: 25,
+                  marginTop: 10,
                   // marginLeft : 5,
                   border: 'none',
                   borderRadius: '10px',
@@ -296,7 +302,7 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
                   color: 'white',
                   width: 150,
                   height: 30,
-                  marginTop: 25,
+                  marginTop: 10,
                   marginLeft: 15,
                   border: 'none',
                   borderRadius: '10px',

@@ -10,10 +10,6 @@ import Logo from '../../assets/Logo.png';
 import { ReducerType } from '../../app/rootReducer';
 import useInput from '../../common/hooks/useInput';
 
-export const Form = styled.form`
-  margin: 0 auto;
-  max-width: 400px;
-`;
 const Img = styled.img`
   width: 65px;
   height: 65px;
@@ -21,10 +17,6 @@ const Img = styled.img`
   margin-left: 147px;
   margin-bottom: 25px;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-`;
-const Progress = styled.div`
-  margin-top: 55px;
-  margin-left: 61px;
 `;
 const Title = styled.h3`
   text-align: left;
@@ -39,7 +31,8 @@ const Input = styled.input`
   font-size: 11px;
   width: 200px;
   height: 31px;
-  margin-left: 58px;
+  margin-top : 20px;
+  margin-left: 80px;
   margin-bottom: 20px;
   padding-left: 3px;
   padding-bottom: 0px;
@@ -117,15 +110,15 @@ function FindPwd() {
   const [isOk, setIsOk] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [email, setEmail] = useState<string>('');
-  const [authcode, onChangeAuthcode] = useInput('');
+  const [authcode, onChangeAuthcode, setAuthCode] = useInput('');
   const navigate = useNavigate();
   const state = location.state as Location;
 
   // APIs.
   const { findPwInsertCode } = FindApi
 
-  const onSubmit = useCallback(
-    async (e) => {
+  const onSubmit = async (e : React.MouseEvent) => {
+      console.log(authcode)
       e.preventDefault();
       // 인증코드가 비어있을때
       if (!authcode || !authcode.trim()) {
@@ -143,7 +136,9 @@ function FindPwd() {
       const result = await findPwInsertCode(data);
       // 인증코드 성공
       if (result.status === 200) {
-        toast.info(
+        navigate('/find/resetPwd', { state: { userId: state.userId } });
+        
+        return (toast.info(
           <div style={{ width: 'inherit', fontSize: '10px' }}>
             <div>인증코드가 일치합니다.</div>
           </div>,
@@ -151,41 +146,16 @@ function FindPwd() {
             position: toast.POSITION.TOP_CENTER,
             role: 'alert',
           },
-        );
-        navigate('/find/resetPwd', { state: { userId: state.userId } });
-        // dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg }));
-        // navigate("/map");
-      } else {
-        toast.error(
-          <div style={{ width: 'inherit', fontSize: '10px' }}>
-            <div>인증코드가 올바르지 않습니다.</div>
-          </div>,
-          {
-            position: toast.POSITION.TOP_CENTER,
-            role: 'alert',
-          },
-        );
+        ))
+
       }
       return null;
-    },
-    [authcode],
-  );
+    }
 
-  // const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
-
-  const handleOnClickNextStep = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const userId = await findIdByEmail();
-    navigate('/find/email', { state: { email, userId } });
-  };
-  const findIdByEmail = async () => {
-    const result = await FindApi.findIdByEmail(email);
-    return result.data
-  };
   const handleOnChangeAuthcode = (e: React.ChangeEvent<HTMLInputElement>) => {
     const curWord = e.currentTarget.value;
+    setAuthCode(curWord);
     setIsOk(true);
-    console.log(isOk)
   };
 
   return (
@@ -196,24 +166,22 @@ function FindPwd() {
             <Img src={Logo} alt="Logo" />
           </div>
           <Title>비밀번호 찾기</Title>
-          <Form onSubmit={onSubmit}>
-            <Input onChange={onChangeAuthcode} placeholder="인증코드를 입력하세요." />
+            <Input onChange={handleOnChangeAuthcode} placeholder="인증코드를 입력하세요." />
             <ErrorMsg>{errorMsg}</ErrorMsg>
 
-            <div
-              style={{
-                position: 'absolute',
-                marginLeft: '80px',
-                top: '523px',
-              }}
-            >
-              {/* {isOk ? ( */}
-              <ActiveButton>다 음</ActiveButton>
-              {/* ) : ( */}
-              {/* <DisableButton>다 음</DisableButton> */}
-              {/* )} */}
-            </div>
-          </Form>
+          <div
+            style={{
+              position: 'absolute',
+              marginLeft: '80px',
+              top: '423px',
+            }}
+          >
+            {isOk ? (
+              <ActiveButton onClick={onSubmit}>다 음</ActiveButton>
+            ) : (
+              <DisableButton>다 음</DisableButton>
+            )}
+          </div>
         </div>
       </article>
     </main>

@@ -29,7 +29,6 @@ const findIdByEmail = async (email: string) => {
 // 이메일, 아이디로 회원 아이디 찾기
 const findPwSendEmail = async (body: { userId: string, email: string }) => {
   const res = await axios.patch(`${BASE_URL}/pwd`, body
-    // headers: { Authorization: `${token}` },
   ).then((response) => {
     console.log("성공")
     const value = {

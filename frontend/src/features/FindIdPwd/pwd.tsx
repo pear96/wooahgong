@@ -149,7 +149,7 @@ function FindPwd() {
       const data = { userId: id, email: e.target[1].value };
       console.log('data : ', data);
       const result = await findPwSendEmail(data);
-      console.log(result + ' ');
+
       if (result.status === 200) {
         toast.info(
           <div style={{ width: 'inherit', fontSize: '10px' }}>

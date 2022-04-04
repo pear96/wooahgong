@@ -9,7 +9,11 @@ import ProfilePlaces from './ProfilePlaces';
 
 const { TabPane } = Tabs;
 
-function FeedsAndPlaces() {
+type MyProps ={
+  nickname : string
+}
+
+function FeedsAndPlaces({nickname} : MyProps) {
   const setFeedsOrPlaces = (key: string) => {
     switch (key) {
       case '1':
@@ -22,9 +26,6 @@ function FeedsAndPlaces() {
         break;
     }
   };
-  // useEffect(()=>{
-  //   getMyFeedsApi();
-  // }, []);
   return (
     <FeedsAndPlacesWrapper>
       <Tabs defaultActiveKey="1" centered onChange={setFeedsOrPlaces}>
@@ -40,7 +41,7 @@ function FeedsAndPlaces() {
           }
           key="1"
         >
-          <ProfileFeeds />
+          <ProfileFeeds nickname={nickname}/>
         </TabPane>
         <TabPane
           tab={
@@ -54,7 +55,7 @@ function FeedsAndPlaces() {
           }
           key="2"
         >
-          <ProfileLikeFeeds />
+          <ProfileLikeFeeds nickname={nickname}/>
         </TabPane>
         <TabPane
           tab={
@@ -68,7 +69,7 @@ function FeedsAndPlaces() {
           }
           key="3"
         >
-          <ProfilePlaces />
+          <ProfilePlaces nickname={nickname}/>
         </TabPane>
       </Tabs>
     </FeedsAndPlacesWrapper>

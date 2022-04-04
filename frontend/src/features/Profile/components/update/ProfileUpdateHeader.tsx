@@ -43,7 +43,7 @@ function ProfileUpdateHeader({ newNickname, newMbti, newMoods, isNick }: MyProps
       return;
     }
     if (newNickname !== undefined && newMbti !== undefined && newMoods !== undefined) {
-      const result = await ProfileApi.updateProfile(currentNickname, {
+      const result = await ProfileApi.updateProfile(window.localStorage.getItem("nickname"), {
         nickname: newNickname,
         mbti: newMbti,
         moods: newMoods,
@@ -53,7 +53,8 @@ function ProfileUpdateHeader({ newNickname, newMbti, newMoods, isNick }: MyProps
           position: toast.POSITION.TOP_CENTER,
           role: 'alert',
         });
-        if (currentNickname !== newNickname) {
+        if (window.localStorage.getItem("nickname") !== newNickname) {
+          window.localStorage.setItem("nickname", newNickname);
           dispatch(setProfileNick(newNickname));
         }
         navigate(`/profile/${newNickname}`);

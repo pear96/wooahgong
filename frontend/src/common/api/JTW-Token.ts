@@ -8,7 +8,7 @@ export const getToken = () => {
   return window.localStorage.getItem('token');
 };
 export const deleteToken = () => {
-  window.localStorage.removeItem('token');
-  window.localStorage.removeItem('nickname');
-  window.localStorage.removeItem('profileImg');
+  console.log("????실행");
+  window.localStorage.clear();
+  console.log(window.localStorage)
 };

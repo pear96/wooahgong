@@ -108,7 +108,8 @@ function ProfileUpdateBody({
     if (e.currentTarget.files) {
       formData.append('image', e.currentTarget.files[0]);
       // setTempImg(reader.result);
-      const result = await ProfileApi.updateProfileImage(nickname, formData);
+      console.log(nickname);
+      const result = await ProfileApi.updateProfileImage(window.localStorage.getItem("nickname"), formData);
       if (result?.status === 200) {
         console.log(result.data);
         window.localStorage.setItem('profileImg', result.data);

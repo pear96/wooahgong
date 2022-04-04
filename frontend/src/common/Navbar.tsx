@@ -57,7 +57,7 @@ function Navbar() {
             </Link>
           </NavText>
           {SidebarList.map((item) => {
-            if (item.title === '로그아웃') {
+            if (item.title === 'LOGOUT') {
               return (
                 <NavText key={item.title}>
                   <Link
@@ -81,7 +81,7 @@ function Navbar() {
                     display: 'flex',
                     alignItems: 'center',
                   }}
-                  to={item.title === '프로필' ? `${item.path}/${user.nickname}` : item.path}
+                  to={item.path}
                 >
                   {item.icon}
                   <span style={{ marginLeft: '16px' }}>{item.title}</span>

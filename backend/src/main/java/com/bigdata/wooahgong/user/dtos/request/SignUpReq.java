@@ -29,7 +29,7 @@ public class SignUpReq {
                 .birth(birth)
                 .gender(gender)
                 .provider(provider)
-                .imageUrl("default")
+                .imageUrl("https://wooagong.s3.ap-northeast-2.amazonaws.com/static/profile/29fceb82-4b88-47b1-8a6b-2f53e3abceeawooahgong_logo.png")
                 .mbti(mbti).build();
     }
 }

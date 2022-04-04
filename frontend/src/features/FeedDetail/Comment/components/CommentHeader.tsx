@@ -13,10 +13,10 @@ interface locState {
 }
 
 function CommentHeader() {
-  const [userImage, setuserImage] = useState<string>();
-  const [userNickname, setuserNickname] = useState<string>();
-  const [updateContent, setupdateContent] = useState<string>();
-  const [CreateDate, setCreateDate] = useState<string>();
+  // const [userImage, setuserImage] = useState<string>();
+  // const [userNickname, setuserNickname] = useState<string>();
+  // const [updateContent, setupdateContent] = useState<string>();
+  // const [CreateDate, setCreateDate] = useState<string>();
   const { updateConttent } = useAppSelector((state) => state.feeddetail);
   const { userImages } = useAppSelector((state) => state.feeddetail);
   const { userNicknames } = useAppSelector((state) => state.feeddetail);
@@ -50,10 +50,11 @@ function CommentHeader() {
   //     setCreateDate(date);
   //   }
   // }, [myState.content, myState.createDate, myState.nickname, myState.userImage]);
+  console.log(userImages);
   return (
     <>
       <HeaderContainer>
-        <div style={{ width: '64px', margin : "0px 15px"}}>
+        <div style={{ width: '64px', margin: '0px 15px' }}>
           <Avatar size={64} src={userImages} icon={<UserOutlined />} />
         </div>
         <NicknameContainer>{userNicknames}</NicknameContainer>

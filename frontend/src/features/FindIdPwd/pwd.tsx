@@ -1,3 +1,4 @@
+/* eslint-disable prefer-template */
 import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -117,7 +118,7 @@ function FindPwd() {
   const navigate = useNavigate();
 
   // APIs.
-  const { findPwSendEmail } = FindApi
+  const { findPwSendEmail } = FindApi;
 
   const onSubmit = useCallback(
     async (e) => {
@@ -146,9 +147,9 @@ function FindPwd() {
         );
       }
       const data = { userId: id, email: e.target[1].value };
-      console.log("data : ", data)
+      console.log('data : ', data);
       const result = await findPwSendEmail(data);
-      console.log(result + " ")
+      console.log(result + ' ');
       if (result.status === 200) {
         toast.info(
           <div style={{ width: 'inherit', fontSize: '10px' }}>
@@ -189,17 +190,16 @@ function FindPwd() {
     // 이메일 형식 검사
     if (regEmail.test(curWord) === true) {
       setIsOk(true);
-      setErrorMsg("");
+      setErrorMsg('');
       setEmail(curWord);
     } else {
       setIsOk(false);
-      setErrorMsg("이메일 형식을 맞춰주세요");
+      setErrorMsg('이메일 형식을 맞춰주세요');
     }
   };
   const handleInputId = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-  }
-
+  };
 
   const handleOnClickNextStep = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -208,8 +208,8 @@ function FindPwd() {
   };
   const findIdByEmail = async () => {
     const result = await FindApi.findIdByEmail(email);
-    return result.data
-  }
+    return result.data;
+  };
 
   return (
     <main>
@@ -231,11 +231,7 @@ function FindPwd() {
                 top: '523px',
               }}
             >
-              {isOk ? (
-                <ActiveButton >다 음</ActiveButton>
-              ) : (
-                <DisableButton>다 음</DisableButton>
-              )}
+              {isOk ? <ActiveButton>다 음</ActiveButton> : <DisableButton>다 음</DisableButton>}
             </div>
           </Form>
         </div>

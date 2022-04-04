@@ -96,6 +96,7 @@ function ProfileUpdateBody({
       const result = await ProfileApi.updateProfileImage(nickname, formData);
       if (result?.status === 200) {
         console.log(result.data);
+        window.localStorage.setItem('profileImg', result.data);
         dispatch(setProfileImg(result.data));
       } else {
         console.log('error');
@@ -117,7 +118,11 @@ function ProfileUpdateBody({
       <StyledUpdateBody>
         <CenterAlignedSpace direction="vertical">
           {/* {loading && <Spin size="large" tip="로딩 중..." />} */}
-          {loading ? <Avatar size={80} icon={<UserOutlined />} /> : <Avatar size={80} src={image.profileImg} />}
+          {loading ? (
+            <Avatar size={80} icon={<UserOutlined />} />
+          ) : (
+            <Avatar size={80} src={window.localStorage.getItem('profileImg')} />
+          )}
           <input
             type="file"
             name="image-upload"

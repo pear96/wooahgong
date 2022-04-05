@@ -526,7 +526,9 @@ function Map() {
         console.log('안녕');
       });
       marker.addListener('touchstart', () => {
-        console.log('???');
+        setSpot(data);
+        setisOpen(true);
+        console.log('안녕');
       });
       markertemp.push(marker);
       const marker2 = new window.Tmapv2.Marker({
@@ -556,7 +558,9 @@ function Map() {
           console.log('안녕');
         });
         marker.addListener('touchstart', () => {
-          console.log('???');
+          setSpot(point[i]);
+          setisOpen(true);
+          console.log('안녕');
         });
         markertemp.push(marker);
       }

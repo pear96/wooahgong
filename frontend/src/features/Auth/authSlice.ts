@@ -13,6 +13,7 @@ export interface InitialState {
   test: number;
   nickname: string;
   profileImg: string;
+  gender : boolean | null;
   postkakaoCodeLoading: boolean;
   postkakaoCodeDone: boolean;
   postkakaoCodeError: string;
@@ -25,6 +26,7 @@ const initialState: InitialState = {
   test: 0,
   nickname: '',
   profileImg: '',
+  gender : null,
   postkakaoCodeLoading: false,
   postkakaoCodeDone: false,
   postkakaoCodeError: '',
@@ -36,9 +38,10 @@ const authSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<{ nickname: string; profileImg: string }>) => {
+    setUser: (state, action: PayloadAction<{ nickname: string; profileImg: string, gender : boolean }>) => {
       state.nickname = action.payload.nickname;
       state.profileImg = action.payload.profileImg;
+      state.gender = action.payload.gender;
     },
     testNum: (state, action: PayloadAction<number>) => {
       state.test = action.payload;

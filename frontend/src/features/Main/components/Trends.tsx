@@ -74,7 +74,8 @@ function Trends() {
       setMood1name(result.data.recByMoods.mood1);
       setMood2name(result.data.recByMoods.mood2);
       setAgename(result.data.recByAgeGender.ageGroup);
-      if (result.data.recByAgeGender.gender) {
+      console.log(window.localStorage.getItem('gender'));
+      if (window.localStorage.getItem('gender') === 'true') {
         setGendername('남자');
       } else {
         setGendername('여자');

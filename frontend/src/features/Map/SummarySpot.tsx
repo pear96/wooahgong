@@ -19,11 +19,15 @@ const Summary = styled.div`
 `;
 const Title = styled.h3`
     position : absolute;
+    overflow: hidden;
+    white-space : nowrap;
     top : 20px;
     left : 115px;
     font-family: 'NotoSansKR';
     font-size : 20px;
     font-weight : 900;
+    width : 140px;
+    text-overflow: ellipsis;
     // display : inline;
 `
 const Sub = styled.div`
@@ -42,8 +46,8 @@ const SubText = styled.div`
 `
 const Total = styled.div`
     position : absolute;
-    top : 37px;
-    left : 230px;
+    top : 50px;
+    left : 245px;
     font-family: 'NotoSansKR';
     font-weight : 600;
 `
@@ -51,8 +55,8 @@ const SearchPath = styled.button`
     position : absolute;
     top : 5px;
     left : 270px;
-    width : 60px;
-    height : 25px;
+    width : fit-content;
+    height : fit-content;
     background-color : rgba(144, 136, 243, 1);
     color : white;
     font-family : 'NotoSansKR';

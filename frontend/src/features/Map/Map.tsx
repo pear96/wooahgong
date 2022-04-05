@@ -613,8 +613,8 @@ function Map() {
         <button
           style={{
             zIndex: 2,
-            width: 95,
-            height : 25,
+            width: "fit-content",
+            height : "fit-content",
             position: 'absolute',
             top: 100,
             left: 10,

@@ -174,7 +174,6 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
       setPosition({ lat, lng });
       setAddress(resAdr);
       setCheck(true);
-      map.setCenter(new window.Tmapv2.LatLng(lat, lng));
     });
   };
   const submit = (e: React.MouseEvent) => {
@@ -258,6 +257,7 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
               style={{
                 background: '#80b2fe',
                 color: 'white',
+                fontSize : 11,
                 width: 45,
                 height: 30,
                 marginTop: 10,

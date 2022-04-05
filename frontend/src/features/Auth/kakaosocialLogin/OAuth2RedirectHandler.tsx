@@ -29,7 +29,7 @@ function OAuth2RedirectHandler() {
       dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg }));
       window.localStorage.setItem('nickname', result.data.nickname);
       window.localStorage.setItem('profileImg', result.data.profileImg);
-      navigate('/map');
+      navigate('/main');
     }
     return result;
   };

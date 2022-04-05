@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const UserProfileWrapper = styled.div`
   display: grid;
   justify-content: space-between;
+  font-family: 'NotoSansKR';
   max-width: 1024px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   /* gap: 0.5rem; */

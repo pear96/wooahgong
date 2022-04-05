@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import FeedDetailApi from 'common/api/FeedDetailApi';
 import { useNavigate } from 'react-router-dom';
@@ -50,11 +50,19 @@ function Feedheader({ nickname, userImage, feedSeq, placeName, address, amIOwner
   const onClickgoToPlace = useCallback(() => {
     navigate(`/place/${placeSeq}`);
   }, []);
+
   const handleGotoProfile = () => {
     navigate(`/profile/${nickname}`);
-  }
+  };
+  useEffect(()=>{
+    return () => {
+      if(isUpdate) {
+        dispatch(setUpdate(false));
+        setIsUpdate(false);
+      }
+    }
+  })
 
-  
   const menu = (
     <Menu style={{ borderRadius: '10px' }}>
       <Menu.Item key="0" onClick={onClickUpdateFeedDetail} style={{ fontFamily: 'NotoSansKR' }}>
@@ -70,7 +78,7 @@ function Feedheader({ nickname, userImage, feedSeq, placeName, address, amIOwner
   return (
     <>
       <HeaderContainer>
-        <div style={{ marginRight: '10px' , cursor : "pointer"}} onClick={handleGotoProfile}>
+        <div style={{ marginRight: '10px', cursor: 'pointer' }} onClick={handleGotoProfile}>
           <Avatar size={60} src={userImage} icon={<UserOutlined />} />
         </div>
         <NicknameContainer onClick={handleGotoProfile}>{nickname}</NicknameContainer>
@@ -86,7 +94,7 @@ function Feedheader({ nickname, userImage, feedSeq, placeName, address, amIOwner
           <Test />
         )}
       </HeaderContainer>
-      
+
       <HeaderBelowContainer onClick={onClickgoToPlace}>
         <img src={Mapmarker} alt="test" />
         <span style={{ color: '#8C8C8C' }}>

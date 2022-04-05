@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useLayoutEffect } from 'react';
 import { toast } from 'react-toastify';
 import UserApi from 'common/api/UserApi';
 import styled from 'styled-components';
@@ -95,8 +95,26 @@ const mainLogin = () => {
 
   const [id, onChangeId] = useInput('');
   const [password, onChangePassword] = useInput('');
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const idRef = useRef<any>();
+  useLayoutEffect(() => {
+    const detectMobileKeyboard = () =>{
+      if(document.activeElement?.tagName === "INPUT"){
+        console.log("??S?S?D?SSD?SD?SD?");
+        if(inputRef.current !== null) {
+          console.log(inputRef.current);
+          inputRef.current.scrollIntoView({block : 'end'});
+
+        } 
+      }
+    }
+    window.addEventListener("resize", detectMobileKeyboard);
+    return () => window.removeEventListener("resize", detectMobileKeyboard);
+}, []);
+
+
+
+  
   const handleLogin = async () => {
     // console.log(result);
   };
@@ -161,9 +179,6 @@ const mainLogin = () => {
     navigate('/regist');
   }, []);
 
-  useEffect(() => {
-    idRef.current.focus();
-  }, []);
 
   return (
     <div
@@ -181,7 +196,7 @@ const mainLogin = () => {
       </TitleContainer>
       <Form onSubmit={onSubmit}>
         <div style={{ marginTop: 40 }}>
-          <Input ref={idRef} placeholder="아이디 입력" type="text" name="id" value={id} onChange={onChangeId} />
+          <Input ref={inputRef} placeholder="아이디 입력" type="text" name="id" value={id} onChange={onChangeId} />
         </div>
         <div style={{ marginTop: 25 }}>
           <Input
@@ -193,6 +208,7 @@ const mainLogin = () => {
           />
         </div>
         <div
+          ref={inputRef}
           style={{
             width: 360,
             marginTop: 36,
@@ -216,7 +232,7 @@ const mainLogin = () => {
           >
             회원가입
           </ActiveButton>
-        </div>
+        </div >
       </Form>
     </div>
   );

@@ -316,10 +316,10 @@ function Map() {
             new window.Tmapv2.Map('TMapContainer', {
               center: new window.Tmapv2.LatLng(state.latitude, state.longitude),
               width: '100%',
-              height: '720px',
+              height: '100vh',
               zoom: 17,
               draggable: true,
-              https: true,
+              httpsMode: true,
             }),
           );
 
@@ -362,10 +362,10 @@ function Map() {
               new window.Tmapv2.Map('TMapContainer', {
                 center: new window.Tmapv2.LatLng(lat, lng),
                 width: '100%',
-                height: '720px',
+                height: '100vh',
                 zoom: 17,
                 draggable: true,
-                https: true,
+                httpsMode: true,
               }),
             );
             console.log('???실행');
@@ -437,7 +437,9 @@ function Map() {
           console.log('안녕');
         });
         marker.addListener('touchstart', () => {
-          console.log('???');
+          setSpot(point[i]);
+          setisOpen(true);
+          console.log('안녕');
         });
         markertemp.push(marker);
       }
@@ -526,7 +528,9 @@ function Map() {
         console.log('안녕');
       });
       marker.addListener('touchstart', () => {
-        console.log('???');
+        setSpot(data);
+        setisOpen(true);
+        console.log('안녕');
       });
       markertemp.push(marker);
       const marker2 = new window.Tmapv2.Marker({
@@ -556,7 +560,9 @@ function Map() {
           console.log('안녕');
         });
         marker.addListener('touchstart', () => {
-          console.log('???');
+          setSpot(point[i]);
+          setisOpen(true);
+          console.log('안녕');
         });
         markertemp.push(marker);
       }
@@ -607,7 +613,8 @@ function Map() {
         <button
           style={{
             zIndex: 2,
-            width: 90,
+            width: 95,
+            height : 25,
             position: 'absolute',
             top: 100,
             left: 10,
@@ -615,6 +622,7 @@ function Map() {
             fontWeight: 700,
             border: 'none',
             borderRadius: 5,
+            fontSize : 14,
             color: 'white',
             background: 'tomato',
             cursor: 'pointer',

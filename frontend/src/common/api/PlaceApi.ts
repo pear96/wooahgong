@@ -2,10 +2,10 @@ import axios from 'axios';
 import { getToken } from './JTW-Token';
 
 const BASE_URL = 'https://j6a505.p.ssafy.io/api/place';
-const token = getToken();
 
 // 장소 상세정보
 const readPlace = async (placeSeq: string) => {
+  const token = getToken();
   const result = await axios.get(`${BASE_URL}/${placeSeq}`, {headers: { Authorization: `${token}` }})
                           .then((response) => {
                             const value = {
@@ -26,6 +26,7 @@ const readPlace = async (placeSeq: string) => {
 
 // 피드 최신순 정렬
 const getFeedsSortResult = async (placeSeq: string, key : string) => {
+  const token = getToken();
   const result = await axios.get(`${BASE_URL}/${placeSeq}?sort=${key}`, {headers: { Authorization: `${token}` }})
                           .then((response) => {
                             const value = {
@@ -46,6 +47,7 @@ const getFeedsSortResult = async (placeSeq: string, key : string) => {
 
 // 피드 인기순 정렬
 const getPopularFeeds = async (placeSeq: string) => {
+  const token = getToken();
   try {
     const res = await axios({
       method: 'GET',
@@ -60,6 +62,7 @@ const getPopularFeeds = async (placeSeq: string) => {
 
 // 장소 찜하기
 const bookmarkPlace = async (placeSeq: string) => {
+  const token = getToken();
   const result = await axios.post(`${BASE_URL}/${placeSeq}/wish`,null,{headers: { Authorization: `${token}` }})
                           .then((response)=>{
                             const value = {

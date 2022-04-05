@@ -4,27 +4,34 @@ import { ProfileFeedsOrPlacesGrid, FeedOrPlaceImageWrapper } from 'features/Prof
 import { Spin } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 
-function ProfilePlaces() {
+
+type MyProps = {
+  nickname : string
+}
+function ProfilePlaces({nickname} : MyProps) {
   // const { places } = useSelector((state: ReducerType) => state.profilePlace);
   console.log('??????????');
-  const { nickname } = useParams<string>();
+
   const [places, setPlaces] = useState<{ placeSeq: number; thumbnail: string }[]>([]);
   const [target, setTarget] = useState<any>(null);
   const [page, setPage] = useState<number>(0);
   const [end, setEnd] = useState<boolean>(false);
+  const [curNick, setCurNick] = useState<string>('');
   const placesRef = useRef(places);
   placesRef.current = places;
   const endRef = useRef(end);
   endRef.current = end;
   const pageRef = useRef(page);
   pageRef.current = page;
+  const nickRef = useRef(curNick);
+  nickRef.current = curNick;
 
   const navigate = useNavigate();
 
   const getWishedFeedsApi = async () => {
     if (nickname !== undefined && !endRef.current) {
       const value = {
-        nickname,
+        nickname : nickRef.current,
         page: pageRef.current,
       };
       const result = await ProfileApi.getWishedFeeds(value);
@@ -64,6 +71,13 @@ function ProfilePlaces() {
       observer.observe(target);
     }
   }, [target]);
+  useEffect(()=>{
+    console.log(nickname);
+    setCurNick(nickname);
+    setPlaces([]);
+    setPage(0);
+    setEnd(false);
+  }, [nickname]);
 
   return (
     <div>

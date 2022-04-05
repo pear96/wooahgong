@@ -56,6 +56,7 @@ function Feedcontent({ ratings, content, createDate, moods, feedSeq, placeSeq }:
           {isUpdate ? (
             <>
               <TextArea
+                maxLength={250}
                 style={{ resize: 'none', fontFamily: 'NotoSansKR', height: '150px', borderRadius: '10px' }}
                 onChange={onChangeTextArea}
                 value={updateContent}

@@ -41,13 +41,17 @@ function Profile() {
         getProfileApi();
         // getMyFeedsApi();
     }, []);
+    useEffect(() => {
+        console.log(nickname);
+        getProfileApi();
+    }, [nickname])
 
     return (
         <div style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '1024px' }}>
         {nickname !== undefined && isProfileLoading ? (
             <>
             <UserProfile nickname={nickname} userProps={userProps} />
-            <FeedsAndPlaces />
+            <FeedsAndPlaces nickname={nickname} />
             </>
         ) : (
             <div style={{

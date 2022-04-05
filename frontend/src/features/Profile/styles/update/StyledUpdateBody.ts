@@ -5,6 +5,7 @@ export const StyledUpdateBody = styled.div`
   /* height: 60px; */
   display: flex;
   justify-content: center;
+  font-family: 'NotoSansKR';
   align-items: center;
   margin-top: 1rem;
 `;
@@ -15,6 +16,7 @@ export const CenterAlignedSpace = styled(Space)`
 `;
 
 export const UploadButton = styled(Button)`
+font-family: 'NotoSansKR';
   border-radius: 5px;
   &:hover {
     color: #9088f3;
@@ -29,6 +31,7 @@ export const RePwdButton = styled(Button)`
 `;
 
 export const StyledUpdateInfo = styled.div`
+font-family: 'NotoSansKR';
   margin: 2rem 2rem 0 2rem;
 `;
 export const StyledInfoRow = styled(Row)`
@@ -49,9 +52,8 @@ export const Warning = styled.div`
 `;
 
 export const LeaveButton = styled.div`
-  position: absolute;
-  left: 2rem;
-  bottom: 2rem;
+  margin-left : 2rem;
+  margin-top : 8rem;
   color: lightgray;
   &:hover {
     cursor: pointer;

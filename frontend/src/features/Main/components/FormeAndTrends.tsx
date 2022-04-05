@@ -88,28 +88,27 @@ function FormeAndTrends() {
   console.log(value);
 
   return (
-    <div style={{ marginTop: '1rem', padding: '20px' }}>
-      <div
-        onClick={() => {
-          console.log('여기');
-        }}
-        style={{ position: 'absolute', right: '10px', marginRight: '60px', marginTop: '20px', zIndex: 1 }}
-      >
-        <Dropdown.Button overlay={menu} placement="bottom" icon={<Adjustment />} style={{ border: 'none' }} />
-        {/* <Adjustment /> */}
-      </div>
-      <div
-        style={{
-          position: 'absolute',
-          right: '10px',
-          marginTop: '20px',
-          marginRight: '10px',
-          fontFamily: 'NotoSansKR',
-          fontSize: '15px',
-        }}
-      >
-        {distance}
-      </div>
+    <div style={{ position : "relative", width : "100%",  height : "30px",marginTop: '1rem'}}>
+      <div style={{position : "absolute", top : "45%", left : "65%", display : 'flex', alignItems : "center"}}>
+        <div
+          onClick={() => {
+            console.log('여기');
+          }}
+          style={{ zIndex: 1 }}
+        >
+          <Dropdown.Button overlay={menu} placement="bottom" icon={<Adjustment />} style={{ border: 'none' }} />
+          {/* <Adjustment /> */}
+        </div>
+        <div
+          style={{
+            fontFamily: 'NotoSansKR',
+            fontSize: '15px',
+            marginLeft : 5
+          }}
+        >
+          {distance}
+        </div>
+        </div>
       <Tabs defaultActiveKey="1" onChange={setFormeAndTrends}>
         <TabPane tab={<span style={{ fontFamily: 'NotoSansKR', fontSize: '18px' }}>&nbsp;For me</span>} key="1">
           <Forme />

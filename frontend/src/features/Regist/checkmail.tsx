@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import ProgressBar from '@ramonak/react-progress-bar';
@@ -90,7 +90,7 @@ const ErrorMsg = styled.span`
   position: absolute;
   color: red;
   font-family: 'NotoSansKR';
-  font-size: 3px;
+  font-size: 11px;
   top: 450px;
   left: 0px;
   margin-left: 61px;
@@ -107,6 +107,24 @@ function Checkmail({ progress }: MyProps) {
   const [isEmail, setIsEmail] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [isOk, setIsOk] = useState<boolean>(false);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+      const detectMobileKeyboard = () =>{
+        if(document.activeElement?.tagName === "INPUT"){
+          console.log("??S?S?D?SSD?SD?SD?");
+          if(listRef.current !== null) {
+            console.log(listRef.current);
+            listRef.current.scrollIntoView({block : 'end'});
+
+          } 
+        }
+      }
+      window.addEventListener("resize", detectMobileKeyboard);
+      return () => window.removeEventListener("resize", detectMobileKeyboard);
+  }, []);
+
+
   const navigate = useNavigate();
 
   const {getEmailCheckResult, getEmailCheckCodeResult} = UserApi;
@@ -225,7 +243,7 @@ function Checkmail({ progress }: MyProps) {
             </Progress>
           </div>
           <Title>인증메일 전송</Title>
-          <Input placeholder="이메일을 입력해주세요." onChange={handleEmailOk} />
+          <Input type="text" placeholder="이메일을 입력해주세요." onChange={handleEmailOk} />
           <ConfirmBtn onClick={handleEmailCheck} disabled={!isEmail}>
             인증메일 발송
           </ConfirmBtn>
@@ -236,6 +254,7 @@ function Checkmail({ progress }: MyProps) {
           </ConfirmBtn>
 
           <div
+            ref={listRef}
             style={{
               position: 'absolute',
               marginLeft: '80px',

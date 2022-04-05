@@ -16,17 +16,23 @@ function Navbar() {
   const showSidebar = () => setSidebar(!sidebar);
   const profileLink = `/profile/${window.localStorage.getItem('nickname')}`;
   const navigate = useNavigate();
+  
   const onClickToSeacrh = useCallback(() => {
     navigate('/search');
   }, []);
-
+  const handleClickLogo = () => {
+    navigate(`/main`);
+  }
+  const handleClickstop = (e : React.KeyboardEvent) => {
+    console.log(e);
+  }
   return (
     <>
       <StyledNavbar>
         <Menubars to="#">
           <FaBars style={{ color: '#000' }} onClick={showSidebar} />
         </Menubars>
-        <img src={mainLogo} alt="mainLogo" width={50} height={50} />
+        <img src={mainLogo} alt="mainLogo" width={50} height={50} onClick={handleClickLogo} onKeyDown={handleClickstop}/>
         <AiOutlineSearch
           onClick={onClickToSeacrh}
           style={{ width: '40px', height: '40px', marginRight: '1rem', cursor: 'pointer' }}
@@ -57,7 +63,7 @@ function Navbar() {
             </Link>
           </NavText>
           {SidebarList.map((item) => {
-            if (item.title === '로그아웃') {
+            if (item.title === 'LOGOUT') {
               return (
                 <NavText key={item.title}>
                   <Link
@@ -81,7 +87,7 @@ function Navbar() {
                     display: 'flex',
                     alignItems: 'center',
                   }}
-                  to={item.title === '프로필' ? `${item.path}/${user.nickname}` : item.path}
+                  to={item.path}
                 >
                   {item.icon}
                   <span style={{ marginLeft: '16px' }}>{item.title}</span>

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { getToken } from './JTW-Token';
 
 const BASE_URL = 'https://j6a505.p.ssafy.io/data/main';
-const token = getToken();
+
 
 // main For me api
 const getFormeplace = async (body: {
@@ -12,6 +12,7 @@ const getFormeplace = async (body: {
   lng: number | undefined;
 }) => {
   // console.log(body);
+  const token = getToken();
 
   const result = await axios
     .post(`${BASE_URL}`, body, { headers: { Authorization: `${token}` } })
@@ -35,7 +36,7 @@ const getTrendplace = async (body: {
   lng: number | undefined;
 }) => {
   // console.log(body);
-
+  const token = getToken();
   const result = await axios
     .post(`${BASE_URL}/trend`, body, { headers: { Authorization: `${token}` } })
     .then((res) => {

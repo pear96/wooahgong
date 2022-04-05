@@ -2,11 +2,12 @@ import axios from 'axios';
 import { getToken } from './JTW-Token';
 
 const BASE_URL = 'https://j6a505.p.ssafy.io/api/feed';
-const token = getToken();
+
 
 // 댓글 불러오기
 
 const getFeedComment = async (feedseq: number | string | undefined) => {
+  const token = getToken();
   const result = await axios
     .get(`${BASE_URL}/${feedseq}/comments`, { headers: { Authorization: `${token}` } })
     .then((res) => {
@@ -25,6 +26,7 @@ const getFeedComment = async (feedseq: number | string | undefined) => {
 const postFeedComment = async (feedSeq: string | number | undefined, body: { content: string }) => {
   console.log(feedSeq);
   console.log(body);
+  const token = getToken();
   const result = await axios
     .post(`${BASE_URL}/${feedSeq}/comments`, body, {
       headers: { Authorization: `${token}` },
@@ -43,6 +45,7 @@ const postFeedComment = async (feedSeq: string | number | undefined, body: { con
 // 댓글 삭제하기
 
 const deleteComment = async (feedSeq: string | number | undefined, commentSeq: string | number) => {
+  const token = getToken();
   await axios({
     method: 'DELETE',
     url: `${BASE_URL}/${feedSeq}/comments/${commentSeq}`,
@@ -64,6 +67,7 @@ const deleteComment = async (feedSeq: string | number | undefined, commentSeq: s
 const postCommentLike = async (feedSeq: number | string | undefined, commentSeq: number | string) => {
   console.log(feedSeq);
   console.log(commentSeq);
+  const token = getToken();
   const result = await axios
     .post(`${BASE_URL}/${feedSeq}/comments/${commentSeq}`, {}, { headers: { Authorization: `${token}` } })
     .then((res) => {

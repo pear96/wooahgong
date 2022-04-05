@@ -3,9 +3,10 @@ import {saveToken, getToken} from "./JTW-Token";
 
 
 const BASE_URL = "https://j6a505.p.ssafy.io/api/main/map";
-const token = getToken();
+
 
 const getResultPlaceDistance = async (data : {radius : number, lat : number, lng : number}) => {
+    const token = getToken();
     console.log(data);
     if(token){
         const result = await axios.post(BASE_URL, data, {headers : {Authorization: token}})

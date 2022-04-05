@@ -29,7 +29,10 @@ function Feedimages({ images }: any) {
     >
       {images.map((props: any) => {
         return (
-          <SwiperSlide key={props}>
+          <SwiperSlide style={{
+            width : 300,
+            height : 300
+          }} key={props}>
             <ImgWrapper src={props} />
           </SwiperSlide>
         );

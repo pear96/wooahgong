@@ -63,7 +63,7 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
             height: '100%',
             zoom: 17,
             draggable: true,
-            https: true,
+            httpsMode: true,
           }),
         );
 

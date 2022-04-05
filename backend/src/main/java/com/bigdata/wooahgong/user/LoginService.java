@@ -44,12 +44,11 @@ public class LoginService {
         if(!passwordEncoder.matches(password, user.getPassword())){
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
-        CommonLoginRes commonLoginRes = CommonLoginRes.builder()
+        return CommonLoginRes.builder()
                 .nickname(user.getNickname())
                 .token("Bearer "+JwtTokenUtil.getToken(user.getEmail()))
-                .profileImg(user.getImageUrl())
+                .profileImg(user.getImageUrl()).gender(user.isGender()).provider(user.isProvider())
                 .build();
-        return commonLoginRes;
     }
 
     // refreshToken을 같이 담아 보낼수도 있음.

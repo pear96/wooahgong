@@ -173,15 +173,6 @@ function ProfileUpdateBody({
             <UnderlinedDiv>
               <Input bordered={false} value={oldNickname} onChange={changeNickname} />
             </UnderlinedDiv>
-            <span
-              style={{
-                position: 'absolute',
-                fontSize: 12,
-                color: 'red',
-              }}
-            >
-              {error}
-            </span>
           </Col>
         </StyledInfoRow>
         <StyledInfoRow align="middle">

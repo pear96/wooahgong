@@ -87,7 +87,7 @@ const ErrorMsg = styled.span`
   position: absolute;
   color: red;
   font-family: 'NotoSansKR';
-  font-size: 3px;
+  font-size: 11px;
   top: 450px;
   left: 0px;
   margin-left: 61px;

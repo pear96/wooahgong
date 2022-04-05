@@ -89,7 +89,7 @@ const PwdErrorMsg = styled.span`
   position: absolute;
   color: red;
   font-family: 'NotoSansKR';
-  font-size: 3px;
+  font-size: 11px;
   top: 428px;
   left: 0px;
   margin-left: 61px;
@@ -98,7 +98,7 @@ const PwdCheckErrorMsg = styled.span`
   position: absolute;
   color: red;
   font-family: 'NotoSansKR';
-  font-size: 3px;
+  font-size: 11px;
   top: 481px;
   left: 0px;
   margin-left: 61px;

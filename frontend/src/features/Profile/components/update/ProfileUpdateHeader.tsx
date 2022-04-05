@@ -36,7 +36,11 @@ function ProfileUpdateHeader({ newNickname, newMbti, newMoods, isNick }: MyProps
       return;
     }
     if (!isNick) {
-      toast.error(<div style={{ width: 'inherit', fontSize: '14px' }}>닉네임 형식이 올바르지 않습니다.</div>, {
+      toast.error(<div style={{ width: 'inherit', fontSize: '14px' }}>닉네임 형식이 올바르지 않습니다.
+      <span style={{display : "block"}}>
+              5글자 이상 8글자 이하 영문, 한글, 숫자, ., _ 만 사용가능합니다.
+            </span></div>
+      , {
         position: toast.POSITION.TOP_CENTER,
         role: 'alert',
       });

@@ -319,7 +319,7 @@ function Map() {
               height: '100vh',
               zoom: 17,
               draggable: true,
-              https: true,
+              httpsMode: true,
             }),
           );
 
@@ -365,7 +365,7 @@ function Map() {
                 height: '100vh',
                 zoom: 17,
                 draggable: true,
-                https: true,
+                httpsMode: true,
               }),
             );
             console.log('???실행');

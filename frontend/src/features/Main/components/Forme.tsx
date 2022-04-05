@@ -67,7 +67,7 @@ function Forme() {
         {(lng || lat) !== undefined ? (
           state?.map((item: any) => {
             return (
-              <div key={item.placeSeq}>
+              <div style={{width: 115, margin : "0px auto"}} key={item.placeSeq}>
                 <img
                   style={{ objectFit: 'cover', width: '100%', height: '100%' }}
                   src={item.placeImageUrl}

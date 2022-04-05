@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import FeedDetailApi from 'common/api/FeedDetailApi';
 import { useNavigate } from 'react-router-dom';
@@ -54,6 +54,14 @@ function Feedheader({ nickname, userImage, feedSeq, placeName, address, amIOwner
   const handleGotoProfile = () => {
     navigate(`/profile/${nickname}`);
   };
+  useEffect(()=>{
+    return () => {
+      if(isUpdate) {
+        dispatch(setUpdate(false));
+        setIsUpdate(false);
+      }
+    }
+  })
 
   const menu = (
     <Menu style={{ borderRadius: '10px' }}>

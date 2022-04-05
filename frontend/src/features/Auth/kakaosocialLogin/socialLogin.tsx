@@ -4,11 +4,12 @@ import React, { FC, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'app/store';
 // antd
-import { Button } from 'antd';
+// import { Button } from 'antd';
 // asseets main logo image
 import styled from 'styled-components';
 import { testNum } from '../authSlice';
 import Logo from '../../../assets/Logo.png';
+import KaKao from '../../../assets/kakao_login_medium_narrow.png';
 import * as kakalogin from '../../../assets/kakaoLogo/kakao_login_large_wide.png';
 import { ReactComponent as Title } from '../../../assets/main/Title.svg';
 
@@ -43,11 +44,11 @@ const Img = styled.img`
 export const ActiveButton = styled.button`
   background: linear-gradient(90deg, #b3a1e0 0%, #5dacf5 100%);
   border-style: none;
-  border-radius: 10px;
-  width: 221px;
+  border-radius: 5px;
+  width: 183px;
   height: 45px;
   margin-top: 20px;
-  margin-left: 70px;
+  margin-left: 88.5px;
   font-family: 'NotoSansKR';
   font-size: 18px;
   // font-style: normal;
@@ -80,6 +81,9 @@ function socialLogin() {
   const onClickGotoSearcPassword = useCallback(() => {
     navigate('/find/pwd');
   }, []);
+  const handleKaKao = () => {
+    navigate(KAKAO_AUTH_URL);
+  }
 
   return (
     <div
@@ -89,6 +93,9 @@ function socialLogin() {
         height: '800px',
         background: 'none',
         margin: '0 auto',
+        display : "flex",
+        // justifyContent : "center",
+        flexDirection : "column"
       }}
     >
       <Img src={Logo} alt="Logo" />
@@ -96,21 +103,20 @@ function socialLogin() {
         <Title width="222px" />
       </TitleContainer>
       <ActiveButton onClick={onClickGotoLoginPage}>로그인</ActiveButton>
-      <Button
-        href={KAKAO_AUTH_URL}
-        style={{
-          backgroundColor: '#B3A1E0',
-          width: 221,
-          marginLeft: 70,
-          height: 45,
-          marginTop: 20,
-        }}
-        shape="round"
-        size="large"
-      >
-        카카오 로그인
-      </Button>
-
+      <img
+        src={KaKao}
+        onClick={handleKaKao}
+        style = {
+          {
+            width: 183,
+            height: 45,
+            marginLeft: 88.5,
+            marginTop : 15,
+            cursor : "pointer",
+          }
+        }
+        alt = "Kakao"
+        />
       <div style={{ width: 221, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-evenly', marginTop: 20 }}>
           <SmallMenu role="button" onClick={onClickGotoSignupPage}>

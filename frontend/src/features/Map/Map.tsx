@@ -437,7 +437,9 @@ function Map() {
           console.log('안녕');
         });
         marker.addListener('touchstart', () => {
-          console.log('???');
+          setSpot(point[i]);
+          setisOpen(true);
+          console.log('안녕');
         });
         markertemp.push(marker);
       }
@@ -611,7 +613,8 @@ function Map() {
         <button
           style={{
             zIndex: 2,
-            width: 90,
+            width: 95,
+            height : 25,
             position: 'absolute',
             top: 100,
             left: 10,
@@ -619,6 +622,7 @@ function Map() {
             fontWeight: 700,
             border: 'none',
             borderRadius: 5,
+            fontSize : 14,
             color: 'white',
             background: 'tomato',
             cursor: 'pointer',

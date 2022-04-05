@@ -103,9 +103,9 @@ function socialLogin() {
         <Title width="222px" />
       </TitleContainer>
       <ActiveButton onClick={onClickGotoLoginPage}>로그인</ActiveButton>
+      <a href={KAKAO_AUTH_URL}>
       <img
         src={KaKao}
-        onClick={handleKaKao}
         style = {
           {
             width: 183,
@@ -117,6 +117,7 @@ function socialLogin() {
         }
         alt = "Kakao"
         />
+        </a>
       <div style={{ width: 221, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-evenly', marginTop: 20 }}>
           <SmallMenu role="button" onClick={onClickGotoSignupPage}>

@@ -49,6 +49,7 @@ public class LoginController {
             map.put("nickname", user.getNickname());
             map.put("profileImg", user.getImageUrl());
             map.put("provider", user.isProvider());
+            map.put("gender", user.isGender());
         }
         return new ResponseEntity<>(map, HttpStatus.OK);
     }

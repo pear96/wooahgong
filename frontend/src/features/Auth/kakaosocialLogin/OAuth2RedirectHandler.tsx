@@ -26,9 +26,10 @@ function OAuth2RedirectHandler() {
       saveToken(result.data.token);
 
       // 추후 /main 으로 변경
-      dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg }));
+      dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg, gender : result.data.gender }));
       window.localStorage.setItem('nickname', result.data.nickname);
       window.localStorage.setItem('profileImg', result.data.profileImg);
+      window.localStorage.setItem('gender', result.data.gender);
       navigate('/main');
     }
     return result;

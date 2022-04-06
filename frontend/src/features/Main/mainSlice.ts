@@ -12,7 +12,7 @@ export interface InitialState {
 }
 
 const initialState: InitialState = {
-  Changeradius: 1500,
+  Changeradius: 300000000000000,
 };
 const mainSlice = createSlice({
   name: 'user',

@@ -10,8 +10,10 @@ import styled from 'styled-components';
 import { Grid } from '../styles/stylesForme';
 
 const CustomSpin = styled.div`
-  margin-left: 140%;
-  margin-top: 200%;
+  height : 400px;
+  display : flex;
+  justify-content : center;
+  align-items : center;
 `;
 
 function Forme() {
@@ -24,6 +26,8 @@ function Forme() {
   const [lng, setLng] = useState<number>();
   const [real, setReal] = useState([]);
   const [end, setEnd] = useState<boolean>(false);
+  const [check, setCheck] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const stateRef = useRef(state);
   stateRef.current = state;
   const realRef = useRef(real);
@@ -60,10 +64,16 @@ function Forme() {
           setEnd(true);
         }
         if(realRef.current.length > 0){
-          setReal([...realRef.current, ...temp])
+          setReal([...realRef.current, ...temp]);
         }
-        else setReal([...temp]);
+        else {
+          setReal([...temp]);
+          setCheck(false);
+        }
       }
+    }
+    else {
+      setLoading(true);
     }
   } 
   async function getAndFormeplace() {
@@ -76,45 +86,11 @@ function Forme() {
     }
   }
 
-
-  const onIntersect = async ([entry]: any, observer: any) => {
-    if (entry.isIntersecting) {
-      observer.unobserve(entry.target);
-      if(!endRef.current) setArray();
-      observer.observe(entry.target);
-    }
-  };
-  useEffect(() => {
-    let observer: any;
-    if (target) {
-      observer = new IntersectionObserver(onIntersect, {
-        threshold: 0.2,
-      });
-      observer.observe(target);
-    }
-    return () => observer && observer.disconnect();
-  }, [target]);
-  useEffect(()=>{
-    setArray();
-  },[state])
-
-  useEffect(() => {
-    setState([]);
-    setReal([]);
-    setEnd(false);
-    getAndFormeplace();
-  }, [lat, lng, Changeradius]);
-
-  useEffect(() => {
-    getLocation();
-  }, []);
-
-  return (
-    <>
-      <h2 style={{ fontFamily: 'NotoSansKR', fontWeight: 'bold' }}>
-        {window.localStorage.getItem('nickname')}님을 위한 추천
-      </h2>
-      { (lng || lat) !== undefined ? (<Grid>
+  const checkLength = () => {
+    console.log(real.length);
+    if(real.length > 0){
+      return (
+        <Grid>
           {real.map((item: any, i) => {
             const idx = i;
             return (
@@ -135,18 +111,71 @@ function Forme() {
           height: '15px',
         }}
       />
-      </Grid>) : (
-      <div style={{
-        height : 525,
+      </Grid>
+      )
+    }
+    return (<div style={{
+        height : 400,
         display : "flex",
         justifyContent : "center",
         alignItems : "center",
         fontFamily: 'NotoSansKR',
-        fontSize : 30
+        fontSize : 30,
+        fontWeight : 700
       }}>
-          결과가 없습니다😥
+          추천 장소가 없습니다😥
       </div>)
-      }
+  }
+
+  const onIntersect = async ([entry]: any, observer: any) => {
+    if (entry.isIntersecting) {
+      observer.unobserve(entry.target);
+      if(!endRef.current) setArray();
+      observer.observe(entry.target);
+    }
+  };
+  useEffect(() => {
+    let observer: any;
+    if (target) {
+      observer = new IntersectionObserver(onIntersect, {
+        threshold: 0.2,
+      });
+      observer.observe(target);
+    }
+    return () => observer && observer.disconnect();
+  }, [target]);
+
+  useEffect(()=>{
+    setArray();
+  },[state])
+
+  useEffect(()=>{
+    if(loading) {
+      setCheck(false);
+    }
+  },[loading])
+
+  useEffect(() => {
+    setReal([]);
+    setEnd(false);
+    setCheck(true);
+    setLoading(false);
+    getAndFormeplace();
+  }, [lat, lng, Changeradius]);
+
+  useEffect(() => {
+    getLocation();
+  }, []);
+
+  return (
+    <>
+      <h2 style={{ fontFamily: 'NotoSansKR', fontWeight: 'bold', marginLeft : 10 }}>
+        {window.localStorage.getItem('nickname')}님을 위한 추천
+      </h2>
+      {check === true ? (<CustomSpin>
+                  <Spin size="large" />
+                </CustomSpin>
+            ) : (checkLength())}
     </>
   );
 }

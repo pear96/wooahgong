@@ -153,10 +153,10 @@ function ProfileUpdateBody({
         </CenterAlignedSpace>
       </StyledUpdateBody>
       <StyledUpdateInfo>
-        <StyledInfoRow align="middle">
+        {!isProvider ? (<StyledInfoRow align="middle">
           <StyledInfoTitle xs={10}>아이디</StyledInfoTitle>
           <Col xs={14}>{userId}</Col>
-        </StyledInfoRow>
+        </StyledInfoRow>) : (null)}
         {!isProvider ? (
           <StyledInfoRow align="middle">
             <StyledInfoTitle xs={10}>비밀번호</StyledInfoTitle>

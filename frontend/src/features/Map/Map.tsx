@@ -438,7 +438,7 @@ function Map() {
           setisOpen(true);
           console.log('안녕');
         });
-        marker.addListener('touchstart', () => {
+        marker.addListener('touchend', () => {
           setSpot(point[i]);
           setisOpen(true);
           console.log('안녕');
@@ -529,7 +529,7 @@ function Map() {
         setisOpen(true);
         console.log('안녕');
       });
-      marker.addListener('touchstart', () => {
+      marker.addListener('touchend', () => {
         setSpot(data);
         setisOpen(true);
         console.log('안녕');
@@ -561,7 +561,7 @@ function Map() {
           setisOpen(true);
           console.log('안녕');
         });
-        marker.addListener('touchstart', () => {
+        marker.addListener('touchend', () => {
           setSpot(point[i]);
           setisOpen(true);
           console.log('안녕');

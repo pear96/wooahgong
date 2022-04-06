@@ -11,8 +11,8 @@ import { setRadius } from '../mainSlice';
 const { TabPane } = Tabs;
 
 function FormeAndTrends() {
-  const [value, setValue] = useState<number>(15000);
-  const [distance, setDistance] = useState('1.5km');
+  const [value, setValue] = useState<number | string>(300000000000000);
+  const [distance, setDistance] = useState('제한없음');
   const dispatch = useAppDispatch();
 
   const setFormeAndTrends = (key: string) => {
@@ -23,6 +23,12 @@ function FormeAndTrends() {
         break;
       case '3':
         break;
+      // case '4':
+      //   break;
+      // case '5':
+      //   break;
+      // case '6':
+      //   break;
       default:
         break;
     }
@@ -33,11 +39,22 @@ function FormeAndTrends() {
       <Menu.Item
         onClick={() => {
           console.log();
+          setValue("제한없음");
+          dispatch(setRadius(300000000000000));
+          setDistance('제한없음');
+        }}
+        key="1"
+      >
+        제한없음
+      </Menu.Item>
+      <Menu.Item
+        onClick={() => {
+          console.log();
           setValue(5000);
           dispatch(setRadius(500));
           setDistance('500m');
         }}
-        key="1"
+        key="2"
       >
         500m
       </Menu.Item>
@@ -47,7 +64,7 @@ function FormeAndTrends() {
           dispatch(setRadius(1000));
           setDistance('1km');
         }}
-        key="2"
+        key="3"
       >
         1km
       </Menu.Item>
@@ -58,7 +75,7 @@ function FormeAndTrends() {
 
           setDistance('1.5km');
         }}
-        key="3"
+        key="4"
       >
         1.5km
       </Menu.Item>
@@ -69,7 +86,7 @@ function FormeAndTrends() {
 
           setDistance('2km');
         }}
-        key="4"
+        key="5"
       >
         2km
       </Menu.Item>
@@ -79,7 +96,7 @@ function FormeAndTrends() {
           dispatch(setRadius(2500));
           setDistance('2.5km');
         }}
-        key="5"
+        key="6"
       >
         2.5km
       </Menu.Item>

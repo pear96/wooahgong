@@ -53,9 +53,9 @@ const Total = styled.div`
 `
 const SearchPath = styled.button`
     position : absolute;
-    top : 5px;
-    left : 270px;
-    width : fit-content;
+    top : 4%;
+    left : 80%;
+    width : 60px;
     height : fit-content;
     background-color : rgba(144, 136, 243, 1);
     color : white;

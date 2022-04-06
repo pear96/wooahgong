@@ -494,7 +494,7 @@ function Map() {
     // map이 null인 경우 일단 return
     if (map === null) return;
     map.addListener('click', closeModal); // map 아무 공간이나 클릭 시 상세정보 모달 닫기
-
+    map.addListener('touchstart', closeModal);
     // 마커가 존재하는 경우 다 지워 버림
     if (markerlist.length > 0) {
       console.log('???????');

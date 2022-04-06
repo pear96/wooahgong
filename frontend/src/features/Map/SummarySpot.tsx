@@ -54,13 +54,13 @@ const Total = styled.div`
 const SearchPath = styled.button`
     position : absolute;
     top : 4%;
-    left : 80%;
-    width : 60px;
+    left : 75%;
+    width : 80px;
     height : fit-content;
     background-color : rgba(144, 136, 243, 1);
     color : white;
     font-family : 'NotoSansKR';
-    font-size : 13px;
+    font-size : 12px;
     border : none;
     border-radius : 5px;
     cursor : pointer;

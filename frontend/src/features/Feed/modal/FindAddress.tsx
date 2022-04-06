@@ -20,7 +20,11 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
   const [markerList, setMarkerList] = useState<any>(null);
   const [check, setCheck] = useState<boolean>(false);
   const listRef = useRef<HTMLDivElement>(null);
-
+  let startx = 0;
+  let starty = 0;
+  let endx = 0;
+  let endy = 0;
+  let latlng: any;
   useLayoutEffect(() => {
       const detectMobileKeyboard = () =>{
         if(document.activeElement?.tagName === "INPUT"){
@@ -192,14 +196,35 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
       onClose(e);
     }
   };
-
+  const handleDrag = (e : any) => {
+    console.log(e.screenPoint.x);
+    endx = e.screenPoint.x;
+    endy = e.screenPoint.y;
+  }
+  const handleStartTouch = (e : any) => {
+    console.log(e);
+    latlng = e.latLng;
+    startx = e.screenPoint.x;
+    starty = e.screenPoint.y;
+    endx = startx;
+    endy = starty;
+  }
+  const handleEndTouch = (e : any) => {
+    // console.log(e.screenPoint);
+    if(startx === endx && starty === endy) {
+      e.latLng = latlng;
+      handleClickMap(e);
+    }
+  }
   useEffect(() => {
     CreateMap();
   }, []);
   useEffect(() => {
     if (map === null) return;
     map.addListener('click', handleClickMap);
-    map.addListener('touchstart', handleClickMap, true);
+    map.addListener('touchstart', handleStartTouch, true);
+    map.addListener('drag', handleDrag);
+    map.addListener('touchend', handleEndTouch);
   }, [map]);
   useEffect(() => {
     console.log(markerList);

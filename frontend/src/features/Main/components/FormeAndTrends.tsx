@@ -103,11 +103,6 @@ function FormeAndTrends() {
     </Menu>
   );
   console.log(value);
-  useEffect(()=>{
-    return () => {
-      dispatch(setRadius(300000000000000));
-    }
-  });
 
   return (
     <div style={{ position : "relative", width : "100%",  height : "30px",marginTop: '1rem'}}>

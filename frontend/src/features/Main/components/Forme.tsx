@@ -42,10 +42,10 @@ function Forme() {
   const getLocation = async () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
-        setLat(37.557620);
-        setLng(126.923110);
-        // setLat(position.coords.latitude);
-        // setLng(position.coords.longitude);
+        // setLat(37.557620);
+        // setLng(126.923110);
+        setLat(position.coords.latitude);
+        setLng(position.coords.longitude);
       });
     }
   };

@@ -309,10 +309,10 @@ function Map() {
     // if (state.placeInfo.)
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(async (position) => {
-        lat = 37.557620;
-        lng = 126.923110;
-        // lat = position.coords.latitude;
-        // lng = position.coords.longitude;
+        // lat = 37.557620;
+        // lng = 126.923110;
+        lat = position.coords.latitude;
+        lng = position.coords.longitude;
         if (state !== null) {
           setMap(
             new window.Tmapv2.Map('TMapContainer', {

@@ -97,25 +97,25 @@ function Map() {
     // 전달 받는 type에 따라서 도보(true) 인지 차량(false)인지 판단
     const body = type
       ? {
-          startX: `${myPosition.lng}`,
-          startY: `${myPosition.lat}`,
-          endX: `${end.lng}`,
-          endY: `${end.lat}`,
-          reqCoordType: 'WGS84GEO',
-          resCoordType: 'EPSG3857',
-          startName: '출발지',
-          endName: '도착지',
-        }
+        startX: `${myPosition.lng}`,
+        startY: `${myPosition.lat}`,
+        endX: `${end.lng}`,
+        endY: `${end.lat}`,
+        reqCoordType: 'WGS84GEO',
+        resCoordType: 'EPSG3857',
+        startName: '출발지',
+        endName: '도착지',
+      }
       : {
-          startX: `${myPosition.lng}`,
-          startY: `${myPosition.lat}`,
-          endX: `${end.lng}`,
-          endY: `${end.lat}`,
-          reqCoordType: 'WGS84GEO',
-          resCoordType: 'EPSG3857',
-          searchOption: 0,
-          trafficInfo: 'Y',
-        };
+        startX: `${myPosition.lng}`,
+        startY: `${myPosition.lat}`,
+        endX: `${end.lng}`,
+        endY: `${end.lat}`,
+        reqCoordType: 'WGS84GEO',
+        resCoordType: 'EPSG3857',
+        searchOption: 0,
+        trafficInfo: 'Y',
+      };
     // axios 요청, type 값을 보고 요청 주소 바꿔줌
     axios
       .post(
@@ -309,10 +309,10 @@ function Map() {
     // if (state.placeInfo.)
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(async (position) => {
-        // lat = 37.557620;
-        // lng = 126.923110;
-        lat = position.coords.latitude;
-        lng = position.coords.longitude;
+        lat = 37.557620;
+        lng = 126.923110;
+        // lat = position.coords.latitude;
+        // lng = position.coords.longitude;
         if (state !== null) {
           setMap(
             new window.Tmapv2.Map('TMapContainer', {
@@ -616,7 +616,7 @@ function Map() {
           style={{
             zIndex: 2,
             width: "fit-content",
-            height : "fit-content",
+            height: "fit-content",
             position: 'absolute',
             top: 100,
             left: 10,
@@ -624,7 +624,7 @@ function Map() {
             fontWeight: 700,
             border: 'none',
             borderRadius: 5,
-            fontSize : 14,
+            fontSize: 14,
             color: 'white',
             background: 'tomato',
             cursor: 'pointer',

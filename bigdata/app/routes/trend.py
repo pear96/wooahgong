@@ -258,7 +258,7 @@ def find_by_moods(request, trend_request, session):
     # 최근 3개월간 피드 평점 순으로 장소들을 추천(3개 이상)
     result1_places = []
     result2_places = []
-    result_places = []
+    
 
     # feed_mood 데이터프레임에 feed_seq의 해당 place_seq와 user_seq를 병합
     df_feed_moods = pd.merge(df_feed_moods, df_feeds[['feed_seq', 'place_seq', 'user_seq', 'ratings']], on='feed_seq', how='left')
@@ -267,7 +267,7 @@ def find_by_moods(request, trend_request, session):
     df_user_moods = df_user_moods[df_user_moods.user_seq == user_seq]
     user_moods_idx = list(df_user_moods['mood_seq']) # [3, 5]
     user_moods_str = []
-    
+    result_places = [[] for _ in range(len(user_moods_idx))]
     # user_mood1_str = df_moods[df_moods.mood_seq == user_moods_idx[0]]['mood'].values[0] # '복고풍의'
     # user_mood2_str = df_moods[df_moods.mood_seq == user_moods_idx[1]]['mood'].values[0] # '낭만적인'
     for i in range(len(user_moods_idx)):
@@ -327,11 +327,11 @@ def find_by_moods(request, trend_request, session):
                 distance = haversine(user_position, place_position, unit='m')
                 # 거리 내에 있는 경우에만 추가
                 if distance <= search_radius:
-                    result_places.append({
+                    result_places[i].append({
                         'placeSeq': place.place_seq,
                         'placeImageUrl': place.feeds[0].thumbnail
                     })
-                    if len(result1_places) >= 20:
+                    if len(result_places[i]) >= 20:
                         break
     # if user_moods_idx[0] != 9:
     #     for place_seq in sorted_places_idx1:
@@ -369,7 +369,7 @@ def find_by_moods(request, trend_request, session):
     for i in range(len(user_moods_idx)):
         dict = {}
         dict.setdefault("mood",user_moods_str[i])
-        dict.setdefault("moodPlaces", result_places)
+        dict.setdefault("moodPlaces", result_places[i])
         moods.append(dict)
         
     # return {

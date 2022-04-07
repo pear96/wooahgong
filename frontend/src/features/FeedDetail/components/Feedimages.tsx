@@ -24,6 +24,10 @@ function Feedimages({ images }: any) {
       pagination={{
         dynamicBullets: true,
       }}
+      style={{
+        width : 300,
+        height : 300
+      }}
       modules={[Pagination]}
       className="mySwiper"
     >

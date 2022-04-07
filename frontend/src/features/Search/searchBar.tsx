@@ -80,7 +80,7 @@ function SearchBar({ keyword, results, updateField }: any) {
   return (
     <Container>
         <Back style={{width : 35, height : 35}} onClick={handleGoback}/>
-        <Input onClick={onClickToggle} placeholder="검색어를 입력하세요" value={keyword} onChange={propsTofunction} />
+        <Input type="text" onClick={onClickToggle} placeholder="검색어를 입력하세요" value={keyword} onChange={propsTofunction} />
     </Container>
   );
 }

@@ -6,7 +6,8 @@ export const PlaceFeedsWrapper = styled.div`
 
 export const SortOption = styled.div`
   text-align: right;
-  padding-right: 1%;
+  margin-right : 5px;
+  margin-bottom : 2%;
 `;
 
 export const PlaceFeedsGrid = styled.div`

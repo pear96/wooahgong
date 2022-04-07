@@ -113,7 +113,7 @@ function FormeAndTrends() {
           }}
           style={{ zIndex: 1 }}
         >
-          <Dropdown.Button overlay={menu} placement="bottom" icon={<Adjustment />} style={{ border: 'none' }} />
+          <Dropdown.Button overlay={menu} placement="bottom" icon={<Adjustment />} style={{ border: 'none' }}/>
           {/* <Adjustment /> */}
         </div>
         <div

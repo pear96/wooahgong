@@ -10,6 +10,7 @@ from pydantic import BaseModel
 from haversine import haversine
 import pandas as pd
 import numpy as np
+import random
 
 import datetime
 from pytz import timezone
@@ -257,6 +258,7 @@ def find_by_moods(request, trend_request, session):
     # 최근 3개월간 피드 평점 순으로 장소들을 추천(3개 이상)
     result1_places = []
     result2_places = []
+    
 
     # feed_mood 데이터프레임에 feed_seq의 해당 place_seq와 user_seq를 병합
     df_feed_moods = pd.merge(df_feed_moods, df_feeds[['feed_seq', 'place_seq', 'user_seq', 'ratings']], on='feed_seq', how='left')
@@ -264,8 +266,12 @@ def find_by_moods(request, trend_request, session):
     # 로그인한 유저의 선호 분위기 찾기
     df_user_moods = df_user_moods[df_user_moods.user_seq == user_seq]
     user_moods_idx = list(df_user_moods['mood_seq']) # [3, 5]
-    user_mood1_str = df_moods[df_moods.mood_seq == user_moods_idx[0]]['mood'].values[0] # '복고풍의'
-    user_mood2_str = df_moods[df_moods.mood_seq == user_moods_idx[1]]['mood'].values[0] # '낭만적인'
+    user_moods_str = []
+    result_places = [[] for _ in range(len(user_moods_idx))]
+    # user_mood1_str = df_moods[df_moods.mood_seq == user_moods_idx[0]]['mood'].values[0] # '복고풍의'
+    # user_mood2_str = df_moods[df_moods.mood_seq == user_moods_idx[1]]['mood'].values[0] # '낭만적인'
+    for i in range(len(user_moods_idx)):
+        user_moods_str.append(df_moods[df_moods.mood_seq == user_moods_idx[i]]['mood'].values[0])
 
     # 내가 방문한 피드무드 제외
     df_feed_moods = df_feed_moods.drop(df_feed_moods[df_feed_moods.user_seq == user_seq].index)
@@ -280,65 +286,99 @@ def find_by_moods(request, trend_request, session):
    
     ## 여기서부터 분기
     # # df[~df['col_name'].isin(values_list)]
-    df_feed_moods1 = df_feed_moods[df_feed_moods.mood_seq == user_moods_idx[0]]
-    df_feed_moods2 = df_feed_moods[df_feed_moods.mood_seq == user_moods_idx[1]]
-    
+    df_feed_moods_seq = []
+    for i in range(len(user_moods_idx)):
+        df_feed_moods_seq.append(df_feed_moods[df_feed_moods.mood_seq == user_moods_idx[i]]) 
+    # df_feed_moods1 = df_feed_moods[df_feed_moods.mood_seq == user_moods_idx[0]]
+    # df_feed_moods2 = df_feed_moods[df_feed_moods.mood_seq == user_moods_idx[1]]
+    sorted_places_idx = []
+    for i in range(len(user_moods_idx)):
+        df_feed_moods_seq[i] = df_feed_moods_seq[i].groupby('place_seq').filter(lambda x : len(x) >= MIN_FEEDS_NUM)
+        df_feed_moods_seq[i]['avg_rating'] = df_feed_moods_seq[i].groupby(['place_seq'])['ratings'].transform('mean')
+        df_feed_moods_seq[i] = df_feed_moods_seq[i].sort_values(by=['avg_rating'], axis=0, ascending=False)
+        df_feed_moods_seq[i] = df_feed_moods_seq[i].drop_duplicates(['place_seq'], keep='first')
+        sorted_places_idx.append(list(df_feed_moods_seq[i]['place_seq']))
+        
     # 해당하는 장소의 피드가 3개 미만이면 제외
-    df_feed_moods1 = df_feed_moods1.groupby('place_seq').filter(lambda x : len(x) >= MIN_FEEDS_NUM)
-    df_feed_moods2 = df_feed_moods2.groupby('place_seq').filter(lambda x : len(x) >= MIN_FEEDS_NUM)
+    # df_feed_moods1 = df_feed_moods1.groupby('place_seq').filter(lambda x : len(x) >= MIN_FEEDS_NUM)
+    # df_feed_moods2 = df_feed_moods2.groupby('place_seq').filter(lambda x : len(x) >= MIN_FEEDS_NUM)
+
 
     # 최근 3개월의 평균 평점을 내림차순으로 정렬
-    df_feed_moods1['avg_rating'] = df_feed_moods1.groupby(['place_seq'])['ratings'].transform('mean')
-    df_feed_moods2['avg_rating'] = df_feed_moods2.groupby(['place_seq'])['ratings'].transform('mean')
+    # df_feed_moods1['avg_rating'] = df_feed_moods1.groupby(['place_seq'])['ratings'].transform('mean')
+    # df_feed_moods2['avg_rating'] = df_feed_moods2.groupby(['place_seq'])['ratings'].transform('mean')
     
-    df_feed_moods1 = df_feed_moods1.sort_values(by=['avg_rating'], axis=0, ascending=False)
-    df_feed_moods2 = df_feed_moods2.sort_values(by=['avg_rating'], axis=0, ascending=False)
+    # df_feed_moods1 = df_feed_moods1.sort_values(by=['avg_rating'], axis=0, ascending=False)
+    # df_feed_moods2 = df_feed_moods2.sort_values(by=['avg_rating'], axis=0, ascending=False)
     
     # 중복되는 place_seq 삭제
-    df_feed_moods1 = df_feed_moods1.drop_duplicates(['place_seq'], keep='first')
-    df_feed_moods2 = df_feed_moods2.drop_duplicates(['place_seq'], keep='first')
+    # df_feed_moods1 = df_feed_moods1.drop_duplicates(['place_seq'], keep='first')
+    # df_feed_moods2 = df_feed_moods2.drop_duplicates(['place_seq'], keep='first')
    
-    sorted_places_idx1 = list(df_feed_moods1['place_seq'])
-    sorted_places_idx2 = list(df_feed_moods2['place_seq'])
+    # sorted_places_idx1 = list(df_feed_moods1['place_seq'])
+    # sorted_places_idx2 = list(df_feed_moods2['place_seq'])
+    for i in range(len(user_moods_idx)):
+        if user_moods_idx[i] != 9:
+            for place_seq in sorted_places_idx[i]:
+                # 어차피 seq니까 한개임(one)
+                place = session.query(Place).filter(Place.place_seq == place_seq).one()
+                place_position = (place.latitude, place.longitude)
+
+                distance = haversine(user_position, place_position, unit='m')
+                # 거리 내에 있는 경우에만 추가
+                if distance <= search_radius:
+                    result_places[i].append({
+                        'placeSeq': place.place_seq,
+                        'placeImageUrl': place.feeds[0].thumbnail
+                    })
+                    if len(result_places[i]) >= 20:
+                        break
+    # if user_moods_idx[0] != 9:
+    #     for place_seq in sorted_places_idx1:
+    #         # 어차피 seq니까 한개임(one)
+    #         place = session.query(Place).filter(Place.place_seq == place_seq).one()
+    #         place_position = (place.latitude, place.longitude)
+
+    #         distance = haversine(user_position, place_position, unit='m')
+    #         # 거리 내에 있는 경우에만 추가
+    #         if distance <= search_radius:
+    #             result1_places.append({
+    #                 'placeSeq': place.place_seq,
+    #                 'placeImageUrl': place.feeds[0].thumbnail
+    #             })
+    #             if len(result1_places) >= 20:
+    #                 break
+
+    # if user_moods_idx[1] != 9:
+    #     for place_seq in sorted_places_idx2:
+    #         # 어차피 seq니까 한개임(one)
+    #         place = session.query(Place).filter(Place.place_seq == place_seq).one()
+    #         place_position = (place.latitude, place.longitude)
+
+    #         distance = haversine(user_position, place_position, unit='m')
+    #         # 거리 내에 있는 경우에만 추가
+    #         if distance <= search_radius:
+    #             result2_places.append({
+    #                 'placeSeq': place.place_seq,
+    #                 'placeImageUrl': place.feeds[0].thumbnail
+    #             })
+    #             if len(result2_places) >= 20:
+    #                 break
+    moods = []
     
-    if user_moods_idx[0] != 9:
-        for place_seq in sorted_places_idx1:
-            # 어차피 seq니까 한개임(one)
-            place = session.query(Place).filter(Place.place_seq == place_seq).one()
-            place_position = (place.latitude, place.longitude)
-
-            distance = haversine(user_position, place_position, unit='m')
-            # 거리 내에 있는 경우에만 추가
-            if distance <= search_radius:
-                result1_places.append({
-                    'placeSeq': place.place_seq,
-                    'placeImageUrl': place.feeds[0].thumbnail
-                })
-                if len(result1_places) >= 20:
-                    break
-
-    if user_moods_idx[1] != 9:
-        for place_seq in sorted_places_idx2:
-            # 어차피 seq니까 한개임(one)
-            place = session.query(Place).filter(Place.place_seq == place_seq).one()
-            place_position = (place.latitude, place.longitude)
-
-            distance = haversine(user_position, place_position, unit='m')
-            # 거리 내에 있는 경우에만 추가
-            if distance <= search_radius:
-                result2_places.append({
-                    'placeSeq': place.place_seq,
-                    'placeImageUrl': place.feeds[0].thumbnail
-                })
-                if len(result2_places) >= 20:
-                    break
-
-    return {
-        "mood1": user_mood1_str,
-        "mood1Places": result1_places,
-        "mood2": user_mood2_str,
-        "mood2Places": result2_places
-    }
+    for i in range(len(user_moods_idx)):
+        dict = {}
+        dict.setdefault("mood",user_moods_str[i])
+        dict.setdefault("moodPlaces", result_places[i])
+        moods.append(dict)
+        
+    # return {
+    #     "mood1": user_mood1_str,
+    #     "mood1Places": result1_places,
+    #     "mood2": user_mood2_str,
+    #     "mood2Places": result2_places
+    # }
+    return moods
 
 # 사용자 찾기
 def find_user(request, session):

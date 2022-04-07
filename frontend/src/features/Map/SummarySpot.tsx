@@ -6,22 +6,28 @@ import SearchType from './modal/SearchType';
 
 
 const Summary = styled.div`
+    z-index : 2;
     position : absolute;
     width : 340px;
     height : 103px;
     background : white;
     border-radius : 10px;
-    top : 637px;
-    left : 10px;
+    top : 80%;
+    left : 50%;
+    transform: translate(-50%, 0%);
     cursor : pointer;
 `;
 const Title = styled.h3`
     position : absolute;
+    overflow: hidden;
+    white-space : nowrap;
     top : 20px;
     left : 115px;
     font-family: 'NotoSansKR';
     font-size : 20px;
     font-weight : 900;
+    width : 140px;
+    text-overflow: ellipsis;
     // display : inline;
 `
 const Sub = styled.div`
@@ -40,21 +46,21 @@ const SubText = styled.div`
 `
 const Total = styled.div`
     position : absolute;
-    top : 37px;
-    left : 230px;
+    top : 50px;
+    left : 245px;
     font-family: 'NotoSansKR';
     font-weight : 600;
 `
 const SearchPath = styled.button`
     position : absolute;
-    top : 5px;
-    left : 270px;
-    width : 60px;
-    height : 25px;
+    top : 4%;
+    left : 75%;
+    width : 80px;
+    height : fit-content;
     background-color : rgba(144, 136, 243, 1);
     color : white;
     font-family : 'NotoSansKR';
-    font-size : 13px;
+    font-size : 12px;
     border : none;
     border-radius : 5px;
     cursor : pointer;
@@ -119,7 +125,8 @@ function SummarySpot({spot, isSearch, total,searchWay, clearRoute} : MyProps){
         searchWay(type, end);
     }
     return (
-        <Summary onClick={handleClickSpot}>
+        <>
+        <Summary  onClick={handleClickSpot}>
             <img style={{
                 width : 103,
                 height : 103,
@@ -176,10 +183,9 @@ function SummarySpot({spot, isSearch, total,searchWay, clearRoute} : MyProps){
                     </Sub>
                 </>
             )}
-            
-            
-            <SearchType open={open} onClose={handleCloseModal} searchWay={sendData}/>
         </Summary>
+        <SearchType open={open} onClose={handleCloseModal} searchWay={sendData}/>
+        </>
     )
 }
 

@@ -109,6 +109,9 @@ def find_by_age_gender(request, trend_request, session):
 
     MAX_ELAPSED_DAYS = 90
     MIN_WISHES_NUM = 3
+
+    user_position = (trend_request.lat, trend_request.lng)
+    search_radius = trend_request.searchRadius
     #################### ${20}대 ${남자}가 좋아하는 장소 ####################
     # 로그인한 유저와 연령대와 성별이 같은 유저들이
     # 최근 3개월간 찜 순으로 장소들을 추천(3개 이상)
@@ -178,8 +181,11 @@ def find_by_MBTI(request, trend_request, session):
 
     MAX_ELAPSED_DAYS = 90
     MIN_WISHES_NUM = 3
-    #################### ${20}대 ${남자}가 좋아하는 장소 ####################
-    # 로그인한 유저와 연령대와 성별이 같은 유저들이
+
+    user_position = (trend_request.lat, trend_request.lng)
+    search_radius = trend_request.searchRadius
+    #################### ${ISTP}가 좋아하는 장소 ####################
+    # 로그인한 유저와 MBTI가 같은 유저들이
     # 최근 3개월간 찜 순으로 장소들을 추천(3개 이상)
     result_places = []
 

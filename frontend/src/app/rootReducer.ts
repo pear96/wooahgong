@@ -7,7 +7,7 @@ import searchReducer from 'features/Search/searchSlice';
 import feedDeatilReducer from 'features/FeedDetail/feedDetailSlice';
 import registerReducer from '../features/Regist/registerReducer';
 import authSlice from '../features/Auth/authSlice';
-
+import mainSlice from '../features/Main/mainSlice';
 
 // 만들어 놓은 리듀서들을 합친다.
 const rootReducer = combineReducers({
@@ -16,6 +16,7 @@ const rootReducer = combineReducers({
   login: authSlice,
   search: searchReducer,
   feeddetail: feedDeatilReducer,
+  main: mainSlice,
 });
 
 // React에서 사용할 수 있도록 타입을 만들어 export 해준다.

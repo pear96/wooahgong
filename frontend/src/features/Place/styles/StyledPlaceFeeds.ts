@@ -6,20 +6,24 @@ export const PlaceFeedsWrapper = styled.div`
 
 export const SortOption = styled.div`
   text-align: right;
-  padding-right: 1%;
+  margin-right : 5px;
+  margin-bottom : 2%;
 `;
 
 export const PlaceFeedsGrid = styled.div`
   display: grid;
   // height : 241px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(111px, 1fr));
+  grid-auto-rows : 111px;
   gap: 0.25rem;
   overflow-y : auto;
 `;
 
 export const FeedImageWrapper = styled.div`
   position: relative;
-  height: 8rem;
+  margin : 0px auto;
+  width : 111px;
+  height: 100%;
   cursor : pointer;
 `;
 

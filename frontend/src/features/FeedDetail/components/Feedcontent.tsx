@@ -1,24 +1,29 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Input, Rate } from 'antd';
 
 // styled
 
 import { useAppDispatch, useAppSelector } from 'app/store';
 import FeedDetailApi from 'common/api/FeedDetailApi';
-import { useNavigate } from 'react-router-dom';
-import { ContentWrapper, RateWrapper, ContentText, CustomText, MoodContainer } from '../styles/styledFeedcontent';
+import {
+  ContentWrapper,
+  RateWrapper,
+  ContentText,
+  CustomText,
+  MoodContainer,
+  CustomButtom,
+} from '../styles/styledFeedcontent';
 
 // aciotns
 
-import { setUpdate } from '../feedDetailSlice';
+import { setUpdate, setContent } from '../feedDetailSlice';
 
 function Feedcontent({ ratings, content, createDate, moods, feedSeq, placeSeq }: any) {
   const { isUpdate } = useAppSelector((state) => state.feeddetail);
   console.log('콘텐츠 컴포넌트인데', isUpdate);
 
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { patchFeedDetail, getFeedDetail } = FeedDetailApi;
+  const { patchFeedDetail } = FeedDetailApi;
 
   const [updateContent, setUpdateContent] = useState(content);
 
@@ -32,11 +37,15 @@ function Feedcontent({ ratings, content, createDate, moods, feedSeq, placeSeq }:
     console.log(data);
     console.log(feedSeq);
     dispatch(setUpdate(false));
-    await patchFeedDetail(feedSeq, data).then(() => {
-      const result = getFeedDetail(feedSeq);
-    });
+    await patchFeedDetail(feedSeq, data);
   }, [updateContent]);
+
   const { TextArea } = Input;
+
+  useEffect(() => {
+    dispatch(setContent(updateContent));
+  }, [updateContent]);
+
   return (
     <>
       <ContentWrapper>
@@ -46,16 +55,22 @@ function Feedcontent({ ratings, content, createDate, moods, feedSeq, placeSeq }:
         <ContentText>
           {isUpdate ? (
             <>
-              <TextArea onChange={onChangeTextArea} value={updateContent} rows={4} />
-              <button type="submit" onClick={onClickUpdate}>
+              <TextArea
+                maxLength={250}
+                style={{ resize: 'none', fontFamily: 'NotoSansKR', height: '150px', borderRadius: '10px' }}
+                onChange={onChangeTextArea}
+                value={updateContent}
+                rows={4}
+              />
+              <CustomButtom type="submit" onClick={onClickUpdate}>
                 수정
-              </button>
+              </CustomButtom>
             </>
           ) : (
             <CustomText>{updateContent}</CustomText>
           )}
         </ContentText>
-        <div style={{ marginLeft: '20px' }}>
+        <div style={{ marginLeft: '20px', fontFamily: 'NotoSansKR' }}>
           <p>{createDate}</p>
         </div>
       </ContentWrapper>

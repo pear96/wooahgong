@@ -5,29 +5,35 @@ import { useAppDispatch } from '../../../app/store';
 import { setEmail } from '../../Regist/registerReducer';
 
 // reducers
-import {setUser} from '../authSlice';
+import { setUser } from '../authSlice';
 import { saveToken } from '../../../common/api/JTW-Token';
 
 function OAuth2RedirectHandler() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const {getKakaoLoginResult} = UserApi;
+  const { getKakaoLoginResult } = UserApi;
 
   const code = new URL(window.location.href).searchParams.get('code');
   console.log(code);
-  const apiResult = async () =>{
+  const apiResult = async () => {
     const result = await getKakaoLoginResult(code as string);
-    if(result.data.email){
+    if (result.data.email) {
       dispatch(setEmail(result.data.email));
       navigate('/regist/confirmetc');
-    }else{
+    } else {
       // console.log(result.data);
       saveToken(result.data.token);
-      navigate('/map');
+
+      // 추후 /main 으로 변경
+      dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg, gender : result.data.gender }));
+      window.localStorage.setItem('nickname', result.data.nickname);
+      window.localStorage.setItem('profileImg', result.data.profileImg);
+      window.localStorage.setItem('gender', result.data.gender);
+      navigate('/main');
     }
     return result;
-  }
+  };
   // code를 저장
   useEffect(() => {
     const result = apiResult();
@@ -36,7 +42,6 @@ function OAuth2RedirectHandler() {
   // 분기 처리가 있어야 함. 서버로 코드 보내고 토큰까지 받는데, 이미 회원가입한 사람이면 바로 main으로 넘어가고,
   // 그것이 아니라면 닉네임부터 입력받는 곳으로 redirect
 
-  return <>로딩중</>;
 }
 
 export default OAuth2RedirectHandler;

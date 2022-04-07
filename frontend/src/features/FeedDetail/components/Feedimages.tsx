@@ -9,6 +9,14 @@ import 'swiper/css/pagination';
 import './styles.css';
 
 import { Pagination } from 'swiper';
+import styled from 'styled-components';
+
+const ImgWrapper = styled.img`
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
 
 function Feedimages({ images }: any) {
   return (
@@ -16,13 +24,20 @@ function Feedimages({ images }: any) {
       pagination={{
         dynamicBullets: true,
       }}
+      style={{
+        width : 300,
+        height : 300
+      }}
       modules={[Pagination]}
       className="mySwiper"
     >
       {images.map((props: any) => {
         return (
-          <SwiperSlide key={props}>
-            <img src={props} />
+          <SwiperSlide style={{
+            width : 300,
+            height : 300
+          }} key={props}>
+            <ImgWrapper src={props} />
           </SwiperSlide>
         );
       })}

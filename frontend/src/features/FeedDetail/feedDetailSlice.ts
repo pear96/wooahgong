@@ -2,11 +2,17 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export interface InitialState {
   isUpdate: boolean;
-  updateContest: string;
+  updateConttent: string;
+  userImages: string;
+  userNicknames: string;
+  CreateDates: string;
 }
 const initialState = {
   isUpdate: false,
-  updateContest: '',
+  updateConttent: '',
+  userImages: '',
+  userNicknames: '',
+  CreateDates: '',
 };
 
 const feedDetailSlice = createSlice({
@@ -16,12 +22,21 @@ const feedDetailSlice = createSlice({
     setUpdate(state, action) {
       state.isUpdate = action.payload;
     },
-    setUpdateContent(state, action) {
-      state.updateContest = action.payload;
+    setContent(state, action) {
+      state.updateConttent = action.payload;
+    },
+    setUserImage(state, action) {
+      state.userImages = action.payload;
+    },
+    setUesrNickname(state, action) {
+      state.userNicknames = action.payload;
+    },
+    setCreateDate(state, action) {
+      state.CreateDates = action.payload;
     },
   },
 });
 
-export const { setUpdate, setUpdateContent } = feedDetailSlice.actions;
+export const { setUpdate, setContent, setUserImage, setUesrNickname, setCreateDate } = feedDetailSlice.actions;
 
 export default feedDetailSlice.reducer;

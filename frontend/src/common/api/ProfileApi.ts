@@ -3,9 +3,9 @@ import { getToken } from './JTW-Token';
 
 const BASE_URL = 'https://j6a505.p.ssafy.io/api/users';
 // const BASE_URL = 'http://localhost:8080/api/users';
-const token = getToken();
 
 const getProfile = async (nickname: string) => {
+  const token = getToken();
   console.log('nickname', nickname);
 
   console.log('this is get profile');
@@ -29,6 +29,7 @@ const getProfile = async (nickname: string) => {
 };
 
 const getProfileForUpdate = async (nickname: string) => {
+  const token = getToken();
   console.log('nickname', nickname);
   console.log('this is get profile for update');
 
@@ -51,6 +52,7 @@ const getProfileForUpdate = async (nickname: string) => {
 };
 
 const getMyFeeds = async (data: { nickname: string, page: number }) => {
+  const token = getToken();
   console.log(data);
   const result = await axios.get(`${BASE_URL}/${data.nickname}/feeds?page=${data.page}`,
     { headers: { Authorization: `${token}` } })
@@ -72,6 +74,7 @@ const getMyFeeds = async (data: { nickname: string, page: number }) => {
 };
 
 const getLikedFeeds = async (data: { nickname: string, page: number }) => {
+  const token = getToken();
   const result = await axios.get(`${BASE_URL}/${data.nickname}/liked?page=${data.page}`,
     { headers: { Authorization: `${token}` } })
     .then((response) => {
@@ -93,6 +96,7 @@ const getLikedFeeds = async (data: { nickname: string, page: number }) => {
 
 const getWishedFeeds = async (data: { nickname: string, page: number }) => {
   console.log(data);
+  const token = getToken();
   const result = await axios.get(`${BASE_URL}/${data.nickname}/wished?page=${data.page}`,
     { headers: { Authorization: `${token}` } })
     .then((response) => {
@@ -112,8 +116,9 @@ const getWishedFeeds = async (data: { nickname: string, page: number }) => {
   return result;
 };
 
-const updateProfile = async (nickname: string, data: { nickname: string; mbti: string; moods: string[] }) => {
-
+const updateProfile = async (nickname: string | null, data: { nickname: string; mbti: string; moods: string[] }) => {
+  const token = getToken();
+  if (nickname === null) return { status: 400, data: null };
   const result = await axios.patch(`${BASE_URL}/${nickname}`, data, { headers: { Authorization: `${token}` } })
     .then((response) => {
       const value = {
@@ -130,8 +135,9 @@ const updateProfile = async (nickname: string, data: { nickname: string; mbti: s
   return result;
 };
 
-const updateProfileImage = async (nickname: string, data: FormData) => {
-  if (token) {
+const updateProfileImage = async (nickname: string | null, data: FormData) => {
+  const token = getToken();
+  if (token && nickname !== null) {
     const result = await axios.patch(`${BASE_URL}/${nickname}/profileimg`, data, { headers: { Authorization: token, 'Content-type': "multipart/form-data" } })
       .then((response) => {
         const value = {
@@ -152,6 +158,7 @@ const updateProfileImage = async (nickname: string, data: FormData) => {
   return { status: 400, data: null };
 };
 const getPwdChangeResult = async (body: { userId: string, password: string }) => {
+  const token = getToken();
   const result = await axios.patch(`https://j6a505.p.ssafy.io/api/users/repwd`, body)
     .then((response) => {
       const value = {
@@ -170,6 +177,7 @@ const getPwdChangeResult = async (body: { userId: string, password: string }) =>
 
 
 const resign = (nickname: string) => {
+  const token = getToken();
   return axios({
     method: 'DELETE',
     url: `${BASE_URL}/${nickname}`,

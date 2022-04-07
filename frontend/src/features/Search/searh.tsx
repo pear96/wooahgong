@@ -7,7 +7,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { ReducerType } from 'app/rootReducer';
-import { Link, Routes, Route } from 'react-router-dom';
+import { Link, Routes, Route, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'app/store';
 // mui
 import Tabs from '@material-ui/core/Tabs';
@@ -17,30 +17,29 @@ import Tab from '@material-ui/core/Tab';
 import SearchApi from 'common/api/SearchApi';
 import SearchBar from './searchBar';
 import SearchHistory from './searchHistory';
-import SearchResultPlaces from './searchResultPlaces';
-import SearchResultNicknames from './searchResultNicknames';
 
 // actions
 
 import { setValues } from '../Search/searchSlice';
 
-const CustomTab = styled(Tab)`
-  &.Mui-selected {
-    background-color: #fafafa;
-    border-bottom-style: none;
-  }
-`;
 
-export const ListContainer = styled.ul`
-  margin-right: 20px;
-  margin-left: -20px;
-  margin-top: 20px;
+const ListContainer = styled.ul`
+  height : 580px;
+  overflow-y : auto;
+  padding : 0px;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
 `;
 
 // &는 자기 자신을 나타냄
 // 즉, 나 자신(li)들에서 마지막 요소 값을 제외한 값에 margin-bottom 속성 지정
-export const KeywordContainer = styled.li`
+const KeywordContainer = styled.li`
   overflow: hidden;
+  padding : 10px;
+  display : flex;
+  align-items : center;
   &:hover {
     background-color: #b8b2f8;
   }
@@ -49,14 +48,8 @@ export const KeywordContainer = styled.li`
   }
 `;
 
-export const RemoveButton = styled.div`
-  float: right;
-  color: #000000;
-  padding: 3px 5px;
-  font-size: 20px;
-`;
 
-export const Keyword = styled.span`
+const Keyword = styled.span`
   font-size: 18px;
   font-weight: bold;
 `;
@@ -68,19 +61,6 @@ function a11yProps(index: any) {
   };
 }
 
-function LinkTab(props: any) {
-  return (
-    <CustomTab
-      component={Link}
-      style={{ maxWidth: '35%', margin: 'auto', color: '#9088F3' }}
-      //   onClick={(event) => {
-      //     event.preventDefault();
-      //   }}
-      to={props.pathname}
-      {...props}
-    />
-  );
-}
 
 const search = () => {
   const [value, setValue] = useState(0);
@@ -88,7 +68,7 @@ const search = () => {
   const { isFocus } = useSelector((state: ReducerType) => state.search);
   const dispatch = useAppDispatch();
   const { getPlaceResults, getNicknameResults, postPlaceSearchResult, postUserSearchResult } = SearchApi;
-
+  const navigate = useNavigate();
   const { values } = useSelector((state: ReducerType) => state.search);
 
   console.log(values);
@@ -104,6 +84,7 @@ const search = () => {
       console.log(placeSeq, typeof placeSeq);
       const body = { placeSeq };
       postPlaceSearchResult(body);
+      navigate(`/place/${placeSeq}`);
     },
     [],
   );
@@ -113,6 +94,7 @@ const search = () => {
       console.log(nickname, typeof nickname);
       const body = { nickname };
       postUserSearchResult(body);
+      navigate(`/profile/${nickname}`);
     },
     [],
   );
@@ -139,11 +121,10 @@ const search = () => {
     if (text !== '') {
       const result = await getPlaceResults(text);
       const nicknames = await getNicknameResults(text);
-
-      setResult(result.data.results);
-      setTest(nicknames.data.results);
       console.log(result.data.results);
       console.log(nicknames.data.results);
+      setResult(result.data.results);
+      setTest(nicknames.data.results);
     } else {
       setResult([]);
       setTest([]);
@@ -162,7 +143,14 @@ const search = () => {
   // };
 
   return (
-    <>
+    <div style={{
+      display : "flex",
+      justifyContent : "center"
+    }}>
+    <div style={{
+      width : 360,
+      height : 720
+    }}>
       <SearchBar keyword={keyword} results={results} updateField={updateField} />
       {isFocus && <SearchHistory />}
 
@@ -171,10 +159,11 @@ const search = () => {
         value={value}
         onChange={handleChange}
         aria-label="nav tabs"
+        centered
         TabIndicatorProps={{ style: { backgroundColor: '#9088F3' } }}
       >
-        <LinkTab label="장소" pathname="/search/places" {...a11yProps(0)} />
-        <LinkTab label="사용자" pathname="/search/nicknames" {...a11yProps(1)} />
+        <Tab style={{ fontFamily: 'NotoSansKR' }} label="장소" {...a11yProps(0)}/>
+        <Tab style={{ fontFamily: 'NotoSansKR' }} label="사용자" {...a11yProps(1)} /> 
       </Tabs>
 
       <div style={{ position: 'relative', zIndex: 1 }}>
@@ -204,14 +193,9 @@ const search = () => {
             })}
           </ListContainer>
         )}
-
-        {/* <Outlet /> */}
       </div>
-      {/* 
-      <Routes>
-        <Route path="/places" element={<SearchResultPlaces />} />
-      </Routes> */}
-    </>
+    </div>
+    </div>
   );
 };
 

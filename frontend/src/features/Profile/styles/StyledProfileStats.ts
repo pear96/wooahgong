@@ -12,5 +12,5 @@ export const ProfileStat = styled.div`
   flex-direction: column;
   align-items: center;
   min-width: 70px;
-  cursor: pointer;
+  cursor: default;
 `;

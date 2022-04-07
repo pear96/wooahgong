@@ -4,10 +4,9 @@ import rootreducer, { ReducerType } from './rootReducer';
 
 const store = configureStore({
   reducer: rootreducer,
-  middleware : 
-  getDefaultMiddleware({
-    serializableCheck : false
-  })
+  middleware: getDefaultMiddleware({
+    serializableCheck: false,
+  }),
 });
 
 export default store;

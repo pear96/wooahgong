@@ -136,7 +136,7 @@ function SearchPlace() {
                 width : 25,
                 height : 25,
                 top : 7,
-                left : 320,
+                left : 330,
                 cursor : "pointer"
             }} onClick={handleSearch}/>
             <div style={{

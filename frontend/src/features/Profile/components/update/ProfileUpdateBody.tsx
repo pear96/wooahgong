@@ -11,7 +11,7 @@ import {
   RePwdButton,
 } from 'features/Profile/styles/update/StyledUpdateBody';
 import { UserOutlined } from '@ant-design/icons';
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReducerType } from 'app/rootReducer';
@@ -53,16 +53,16 @@ const moodOpts = [
 ];
 
 type MyProps = {
-  userId : string,
-  oldNickname : string,
-  oldMbti : string,
-  oldMoods : string[],
-  isProvider : boolean | undefined,
-  changeNickname : (e : React.ChangeEvent<HTMLInputElement>) => void,
-  error : string,
-  changeMbti : (mbti : string) => void,
-  changeMoods : (moods : string[]) => void
-}
+  userId: string;
+  oldNickname: string;
+  oldMbti: string;
+  oldMoods: string[];
+  isProvider: boolean | undefined;
+  changeNickname: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  error: string;
+  changeMbti: (mbti: string) => void;
+  changeMoods: (moods: string[]) => void;
+};
 
 function ProfileUpdateBody({
   userId,
@@ -87,39 +87,58 @@ function ProfileUpdateBody({
 
   const [showLeaveModal, setShowLeaveModal] = useState<boolean>(false);
   const [open, setIsOpen] = useState<boolean>(false);
+  const listRef = useRef<HTMLDivElement>(null);
 
+  useLayoutEffect(() => {
+      const detectMobileKeyboard = () =>{
+        if(document.activeElement?.tagName === "INPUT"){
+          console.log("??S?S?D?SSD?SD?SD?");
+          if(listRef.current !== null) {
+            console.log(listRef.current);
+            listRef.current.scrollIntoView({block : 'end'});
 
+          } 
+        }
+      }
+      window.addEventListener("resize", detectMobileKeyboard);
+      return () => window.removeEventListener("resize", detectMobileKeyboard);
+  }, []);
   const imageHandler = async (e: any) => {
     const formData = new FormData();
-    if(e.currentTarget.files){
+    if (e.currentTarget.files) {
       formData.append('image', e.currentTarget.files[0]);
-    // setTempImg(reader.result);
-      const result = await ProfileApi.updateProfileImage(nickname, formData);
-      if(result?.status === 200){
+      // setTempImg(reader.result);
+      console.log(nickname);
+      const result = await ProfileApi.updateProfileImage(window.localStorage.getItem("nickname"), formData);
+      if (result?.status === 200) {
         console.log(result.data);
+        window.localStorage.setItem('profileImg', result.data);
         dispatch(setProfileImg(result.data));
-      }
-      else{
-        console.log("error");
+      } else {
+        console.log('error');
       }
     }
   };
 
-  const handleClickPwdChange = (e : React.MouseEvent<HTMLButtonElement>) => {
+  const handleClickPwdChange = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setIsOpen(true);
-  }
-  const handleClosePwdModal = (e : React.MouseEvent) => {
+  };
+  const handleClosePwdModal = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsOpen(false);
-  }
+  };
 
   return (
-    <>
+    <div ref={listRef}>
       <StyledUpdateBody>
         <CenterAlignedSpace direction="vertical">
           {/* {loading && <Spin size="large" tip="로딩 중..." />} */}
-          {loading ? <Avatar size={80} icon={<UserOutlined />} /> : <Avatar size={80} src={image.profileImg} />}
+          {loading ? (
+            <Avatar size={80} icon={<UserOutlined />} />
+          ) : (
+            <Avatar size={80} src={window.localStorage.getItem('profileImg')} />
+          )}
           <input
             type="file"
             name="image-upload"
@@ -134,35 +153,26 @@ function ProfileUpdateBody({
         </CenterAlignedSpace>
       </StyledUpdateBody>
       <StyledUpdateInfo>
-        <StyledInfoRow align="middle">
+        {!isProvider ? (<StyledInfoRow align="middle">
           <StyledInfoTitle xs={10}>아이디</StyledInfoTitle>
           <Col xs={14}>{userId}</Col>
-        </StyledInfoRow>
+        </StyledInfoRow>) : (null)}
         {!isProvider ? (
-            <StyledInfoRow align="middle">
-              <StyledInfoTitle xs={10}>비밀번호</StyledInfoTitle>
-              <Col xs={14}>
-                <RePwdButton size="small" onClick={handleClickPwdChange}>
-                  비밀번호 변경
-                </RePwdButton>
-              </Col>
-            </StyledInfoRow>
-        ) : (null)}
+          <StyledInfoRow align="middle">
+            <StyledInfoTitle xs={10}>비밀번호</StyledInfoTitle>
+            <Col xs={14}>
+              <RePwdButton size="small" onClick={handleClickPwdChange}>
+                비밀번호 변경
+              </RePwdButton>
+            </Col>
+          </StyledInfoRow>
+        ) : null}
         <StyledInfoRow align="middle">
           <StyledInfoTitle xs={10}>닉네임</StyledInfoTitle>
           <Col xs={14}>
             <UnderlinedDiv>
-              <Input
-                bordered={false}
-                value={oldNickname}
-                onChange={changeNickname}
-              />
+              <Input bordered={false} value={oldNickname} onChange={changeNickname} />
             </UnderlinedDiv>
-            <span style={{
-              position : "absolute",
-              fontSize : 12,
-              color : "red"
-            }}>{error}</span>
           </Col>
         </StyledInfoRow>
         <StyledInfoRow align="middle">
@@ -218,9 +228,9 @@ function ProfileUpdateBody({
         </StyledInfoRow>
       </StyledUpdateInfo>
       <LeaveButton onClick={() => setShowLeaveModal(true)}>우아공 떠나기</LeaveButton>
-      <PasswordChange open = {open} id={userId} onClose={handleClosePwdModal}/>
+      <PasswordChange open={open} id={userId} onClose={handleClosePwdModal} />
       {showLeaveModal && <LeaveModal setShowModal={setShowLeaveModal} />}
-    </>
+    </div>
   );
 }
 

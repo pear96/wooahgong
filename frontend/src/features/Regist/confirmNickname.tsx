@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import ProgressBar from '@ramonak/react-progress-bar';
@@ -87,7 +87,7 @@ const ErrorMsg = styled.span`
   position: absolute;
   color: red;
   font-family: 'NotoSansKR';
-  font-size: 3px;
+  font-size: 11px;
   top: 450px;
   left: 0px;
   margin-left: 61px;
@@ -108,6 +108,24 @@ function ConfirmNickname({ progress }: MyProps) {
   const [nickName, setStatenickName] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [isnickName, setIsnickName] = useState<boolean>(false);
+
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+      const detectMobileKeyboard = () =>{
+        if(document.activeElement?.tagName === "INPUT"){
+          console.log("??S?S?D?SSD?SD?SD?");
+          if(listRef.current !== null) {
+            console.log(listRef.current);
+            listRef.current.scrollIntoView({block : 'end'});
+
+          } 
+        }
+      }
+      window.addEventListener("resize", detectMobileKeyboard);
+      return () => window.removeEventListener("resize", detectMobileKeyboard);
+  }, []);
+
   const navigate = useNavigate();
 
 
@@ -189,13 +207,14 @@ function ConfirmNickname({ progress }: MyProps) {
           </div>
           <Title>닉네임 설정</Title>
           <Desc>한글, 영어, 숫자, ., _ 만 사용 가능합니다.</Desc>
-          <Input onChange={handleInputNickname} placeholder="닉네임을 설정해주세요." />
+          <Input type="text" onChange={handleInputNickname} placeholder="닉네임을 설정해주세요." />
           <ConfirmBtn onClick={handleCheckDuplicationnickName} disabled={!isnickName}>
             중복확인
           </ConfirmBtn>
           <ErrorMsg>{errorMsg}</ErrorMsg>
 
           <div
+            ref={listRef}
             style={{
               position: 'absolute',
               marginLeft: '80px',

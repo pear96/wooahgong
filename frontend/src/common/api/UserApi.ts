@@ -67,13 +67,14 @@ const getCommonLoginResult = async (body: { userId: string; password: string }) 
   const result = await axios
     .post(`${BASE_URL}/login`, body)
     .then((response) => {
-      // console.log(response.data.token);
+      console.log(response);
       saveToken(response.data.token);
       const value = {
         status: 200,
         data: {
           nickname: response.data.nickname,
           profileImg: response.data.profileImg,
+          gender : response.data.gender
         },
       };
       return value;
@@ -84,15 +85,18 @@ const getCommonLoginResult = async (body: { userId: string; password: string }) 
         data: {
           nickname: '',
           profileImg: '',
+          gender : null
         },
       };
       return value;
     });
+
   // saveToken(result.data.token);
   return result;
 };
 const getKakaoLoginResult = async (code: string) => {
   const result = await axios.get(`${BASE_URL}/login/kakao?code=${code}`);
+  console.log(result);
   return result;
 };
 

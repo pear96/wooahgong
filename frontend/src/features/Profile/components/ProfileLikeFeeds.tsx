@@ -8,26 +8,33 @@ import {
 import { Spin } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 
-function ProfileLikeFeeds() {
+type MyProps = {
+  nickname : string
+}
+
+
+function ProfileLikeFeeds({nickname} : MyProps) {
   // const { feeds } = useSelector((state: ReducerType) => state.profileFeed);
-  const { nickname } = useParams<string>();
   const [feeds, setFeeds] = useState<{ feedSeq: number; imageUrl: string, placeSeq : number }[]>([]);
   const [target, setTarget] = useState<any>(null);
   const [page, setPage] = useState<number>(0);
   const [end, setEnd] = useState<boolean>(false);
+  const [curNick, setCurNick] = useState<string>('');
   const feedsRef = useRef(feeds);
   feedsRef.current = feeds;
   const endRef = useRef(end);
   endRef.current = end;
   const pageRef = useRef(page);
   pageRef.current = page;
+  const nickRef = useRef(curNick);
+  nickRef.current = curNick;
 
   const navigate = useNavigate();
 
   const getLikedFeedsApi = async () => {
     if (nickname !== undefined && !endRef.current) {
       const value = {
-        nickname,
+        nickname : nickRef.current,
         page : pageRef.current
       }
       console.log(feedsRef.current);
@@ -73,7 +80,13 @@ function ProfileLikeFeeds() {
     }
     return () => observer && observer.disconnect();
   }, [target]);
-  
+  useEffect(()=>{
+    console.log(nickname);
+    setCurNick(nickname);
+    setFeeds([]);
+    setPage(0);
+    setEnd(false);
+  }, [nickname]);
 
   return (
     <div>

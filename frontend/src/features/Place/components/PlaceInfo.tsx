@@ -72,13 +72,21 @@ function PlaceInfo({placeInfo}: MyProps) {
 
   return (
     <PlaceInfoWrapper>
-      <Row>
+      <Row style={{
+        // justifyContent : "center"
+        textAlign : "center",
+        // alignItems : "center"
+      }}>
         <Col xs={24} md={12}>
-          <PlaceName>{placeInfo.name}</PlaceName>
+          <PlaceName style={{marginBottom : 0}}>{placeInfo.name}</PlaceName>
         </Col>
-        <Col xs={24} md={12} style={{ display: 'flex' }}>
-          <Rate allowHalf disabled defaultValue={Math.round(placeInfo.avgRatings * 2) / 2} style={{ color: '#67A0E4' }} />
-          <AverageRatings>{placeInfo.avgRatings.toFixed(1)}</AverageRatings>
+        <Col style={{
+          display : "flex",
+          justifyContent : "center",
+          alignItems : "center"
+        }} xs={24} md={12}>
+          <Rate allowHalf disabled defaultValue={Math.round(placeInfo.avgRatings * 2) / 2} style={{ color: 'rgba(144, 136, 243, 1)' }} />
+          <AverageRatings style={{marginLeft : 10}}>{placeInfo.avgRatings.toFixed(1)}</AverageRatings>
         </Col>
         <Col xs={24} md={12}>
           <Address>{placeInfo.address}</Address>

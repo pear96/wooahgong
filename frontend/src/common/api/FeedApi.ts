@@ -2,11 +2,13 @@ import axios from "axios";
 import { saveToken, getToken } from "./JTW-Token";
 
 const BASE_URL = "https://j6a505.p.ssafy.io/api/feed";
-const PLACE_URL = "https://j6a505.p.ssafy.io//api/place";
-const token = getToken();
+const PLACE_URL = "https://j6a505.p.ssafy.io/api/place";
+
+
 
 const getPlaceAddReulst = async (body: { name: string, address: string, lat: number | undefined, lng: number | undefined }) => {
     // const token = getToken();
+    const token = getToken();
     console.log(body, token);
     if (token) {
         const result = await axios.post(`${PLACE_URL}`, body, { headers: { Authorization: token } })
@@ -32,6 +34,7 @@ const getFeedAddResult = async (data: FormData) => {
     // for (var pair of body.entries()) {
     //     console.log(pair[0]+ ', ' + pair[1]);
     // }
+    const token = getToken();
     if (token) {
         const result = await axios.post(`${BASE_URL}`, data, {
 

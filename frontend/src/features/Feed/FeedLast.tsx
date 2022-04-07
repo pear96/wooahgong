@@ -37,6 +37,7 @@ function FeedLast() {
   const [score, setScore] = useState<number>(1);
   const [open, setIsOpen] = useState<boolean>(false);
   const [position, setPosition] = useState<{ lat: number; lng: number }>();
+  const [checkLength, setCheckLength] = useState<boolean>(false);
   const feedstore = useSelector<ReducerType, Feed>((state) => state.feedReducer);
   
   const { getPlaceAddReulst, getFeedAddResult } = FeedApi;
@@ -72,7 +73,19 @@ function FeedLast() {
 
   const handleChangeDesc = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const word = e.currentTarget.value;
-    setDesc(word);
+    if(word.length > 250){
+      if(!checkLength){
+        toast.error(<div style={{ width: 'inherit', fontSize: '14px' }}>피드의 내용은 250자를 넘길 수 없습니다.</div>, {
+          position: toast.POSITION.TOP_CENTER,
+          role: 'alert',
+        });
+        setCheckLength(true);
+      }
+    }
+    else {
+      setDesc(word);
+      setCheckLength(false);
+    }
   };
   const handleInputAddress = (data: { latlng: { lat: number; lng: number }; addr: string }) => {
     console.log(data);
@@ -360,6 +373,15 @@ function FeedLast() {
         <h1 style={{ width: 280, fontSize: 16, fontWeight: 700, fontFamily: 'NotoSansKR', marginBottom: 0 }}>
           피드 내용
         </h1>
+        <span
+          style={{
+            position : "absolute",
+            top : 160,
+            left : 270,
+            textAlign : "right",
+            width : 60
+          }}
+        >{desc.length}/250</span>
         <textarea
           style={{
             width: 280,
@@ -374,6 +396,8 @@ function FeedLast() {
             resize: 'none',
             overflowY: 'auto',
           }}
+          value={desc}
+          maxLength = {250}
           onChange={handleChangeDesc}
           placeholder="피드에 대한 내용을 적어주세요"
         />

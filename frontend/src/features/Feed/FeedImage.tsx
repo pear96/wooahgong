@@ -211,6 +211,7 @@ function FeedImage() {
                                 slidesToScroll={1}
                                 speed ={500}>
                                 {preview.map((v, i)=>{
+                                    const idx = i;
                                     return (
                                         <>
                                         <button style={{
@@ -225,7 +226,7 @@ function FeedImage() {
                                                 cursor : "pointer" 
                                             }} type='button' onClick={()=>handleDeleteImage(i)}>X</button>
                                         <div>
-                                            <img key={1} src={v} style={{margin : "0 auto",width : 200, height : 200}} alt="images"/>
+                                            <img key={idx} src={v} style={{margin : "0 auto",width : 200, height : 200, objectFit : "cover"}} alt="images"/>
                                         </div>
                                         </>
                                     );

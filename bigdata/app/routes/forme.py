@@ -1,10 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from jose import jwt, JWTError
-from sklearn import neighbors
 from sqlalchemy.orm import Session
 from starlette.requests import Request
-from starlette.responses import Response
-from app.database.schema import User, Mood, UserMood, Place, PlaceWish, Feed, FeedLike, FeedMood
+from app.database.schema import User, Place
 from app.database.conn import db
 from app.common.config import Config
 from haversine import haversine
@@ -20,6 +18,7 @@ class ForMeReq(BaseModel):
     searchRadius : int
     lat : float
     lng : float
+    page : int
 
 
 router = APIRouter(prefix="/data/main")
@@ -32,23 +31,29 @@ CONN = Config.DB_URL
 # Header로 Authorization 받음
 @router.post("")
 async def forme(request: Request, for_me_request : ForMeReq, session: Session = Depends(db.session)):
+    # 1. feed를 dataframe으로 불러온다.
     df_feeds = pd.read_sql_table('feed', CONN)
 
+    # 2. JWT으로 email에 맞는 사용자를 찾는다.
     user = find_user(request, session)
     user_seq = user.user_seq
     print("추천해주는 사용자 : ", user.nickname)
-    # 해당 장소에 작성한 피드의 '평균' 평점으로 구성
+
+    # 3. 해당 장소에 작성한 피드의 '평균' 평점으로 구성(장소에 대해 여러개의 피드를 작성할 수 있기 때문에)
+    # 행 = 사용자 시퀀스, 컬럼 = 장소 시퀀스, 값 = 평점 평균값
     rating_matrix = df_feeds.pivot_table(index='user_seq', columns='place_seq', values='ratings', aggfunc=np.mean)
 
     # Nan값에 0을 넣으면 나중에 사용자의 평가 경향을 구할 때 적용되어버린다.
+    # Nan이 있는 버전과 0으로 대체한 버전 따로 사용
     rating_matrix_no_null = rating_matrix.copy().fillna(0)
     
-    # 코사인 유사도
+    # 4. 코사인 유사도 계산
     user_similarity = cosine_similarity(rating_matrix_no_null, rating_matrix_no_null)
+    # 5. 행, 열은 user_idx로 설정해서 유사도를 계산한다. 아무것도 평가한적이 없는 사람은 제외
     user_similarity = pd.DataFrame(user_similarity, index=rating_matrix.index, columns=rating_matrix.index)
 
-
     # 사용자의 평가 경향 고려
+    # 이제까지 내린 모든 평점의 평균을 구한뒤, 모든 평점에서 평균을 뺀다.
     rating_mean = rating_matrix.mean(axis=1)
     rating_bias = (rating_matrix.T - rating_mean).T
 
@@ -56,23 +61,28 @@ async def forme(request: Request, for_me_request : ForMeReq, session: Session = 
     rating_binary1 = np.array(rating_matrix > 0).astype(float)
     rating_binary2 = rating_binary1.T
 
+    # 사용자간 공통으로 평가한 개수를 계산합니다.
     count = np.dot(rating_binary1, rating_binary2)
     count = pd.DataFrame(count, index=rating_matrix.index, columns=rating_matrix.index).fillna(0)
 
     # 설정값
+    # 나와 유사한 사람을 얼마나 볼 것인지, 너무 적으면 너무 좁은 추천이고, 너무 많으면 인기와 다를바 없다.
     neighbors_size = 3
-    MIN_COMMON = 0
-    MIN_RATINGS = 1
+    # 최소 몇개를 공통으로 평가했는지를 기준으로 둔다.
+    MIN_COMMON = 4
+    # 최소 몇개를 평가했는지를 기준으로 둔다.
+    MIN_RATINGS = 4
 
     new_user = False
 
-    # 사용자가 이미 방문한 장소는 추천에서 제외
-    # 사용자가 신규 가입해서 평점이 없을 경우 Key Error 발생
+    
+    # 사용자가 신규 가입해서 평점이 없을 경우 Key Error 발생하기 때문이다.
     if user_seq in rating_matrix.index:
         user_places = rating_matrix.loc[user_seq].copy()
 
         # 장소를 하나씩 보면서 예상 평점을 계산해야해
         for place_seq in rating_bias.columns:
+            # 사용자가 이미 방문한 장소는 추천에서 제외
             if pd.notnull(user_places.loc[place_seq]):
                 user_places.loc[place_seq] = 0
             else:
@@ -84,9 +94,6 @@ async def forme(request: Request, for_me_request : ForMeReq, session: Session = 
                 
                 # 원하는 개수보다 적은 사람들은 false
                 low_significance = common_counts <= MIN_COMMON
-                print("지금 보는 장소 넘버 ", place_seq)
-                print("####################place ratings")
-                print(place_ratings)
                 # null 값들 제거하기, 평가를 안했거나 개수가 적은 사람들의 index 제거
                 none_rating_idx = place_ratings[place_ratings.isnull() | low_significance].index
 
@@ -112,6 +119,8 @@ async def forme(request: Request, for_me_request : ForMeReq, session: Session = 
 
                 user_places.loc[place_seq] = prediction
         # 예측 평점이 높은 순으로 place seq 정렬
+        print("당신의 상위 10개의 장소의 예측 평점은 다음과 같습니다.")
+        print( user_places.sort_values(ascending=False).head(10))
         sorted_places = user_places.sort_values(ascending=False).index
         sorted_places_idx = list(sorted_places)
     else:
@@ -119,6 +128,7 @@ async def forme(request: Request, for_me_request : ForMeReq, session: Session = 
         # 단순히 평점이 높으면 안된다. 1개라서 5점인거랑 10개라서 4점인건 다른거니까
         # 피드가 많은 순으로 반환해주도록 하자...
         new_user = True
+        print("신규 유저였네요. 인기 장소만 보내주겠어!")
         sorted_places = pd.read_sql_table('feed', CONN).groupby('place_seq').count()['feed_seq'].sort_values(ascending=False)
         sorted_places_idx = list(sorted_places.index)
 
@@ -146,8 +156,20 @@ async def forme(request: Request, for_me_request : ForMeReq, session: Session = 
                     "placeImageUrl" : place.feeds[0].thumbnail
                 }
                 recommend_places.append(place_dto)
-        data = {"places" : recommend_places}
-        # print("걸린 시간 : ", time.process_time())
+    page = for_me_request.page
+    end = len(recommend_places)
+    # 애초에 0개를 돌려주는 경우
+    limit = 18
+    if end < page * limit:
+        recommend_places = []
+    # 중간에서 잘리는 경우
+    elif end < (page + 1) * limit:
+        recommend_places = recommend_places[page*limit:end]
+    else:
+        recommend_places = recommend_places[page*limit:(page+1)*limit]
+    data = {"places" : recommend_places}
+
+    # print("걸린 시간 : ", time.process_time())
     return data
 
 

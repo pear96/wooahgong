@@ -11,8 +11,6 @@
 - ### 4. [ERD](https://www.erdcloud.com/p/mgRwsWeNbbJAFJBGu)
 - ### 5. [배포문서](exec/배포문서/배포가이드.pdf)
 
-<iframe width="600" height="336" src="https://www.erdcloud.com/p/mgRwsWeNbbJAFJBGu" frameborder="0" allowfullscreen></iframe>
-<hr/>
 
 ## 만든사람🛠
 
@@ -28,7 +26,11 @@
 ## 프로젝트 상세 설명
 - ### **진행 기간**: 2022.02.21 ~ 2022.04.08
 - ###  프로젝트 개요
+    1. 근처에 사진도 잘나오고 놀러 갈만한 곳 없을까?
+    2. 나는 왜이렇게 사진을 못찍을까.. 다른사람들은 어떻게 찍는지 궁금하다..
+    3. 여긴 진짜 명소다! 나만 알기 너무 아까운데.. 다른 사람들 한테 어떻게 알려주지?
 
+    "우리만 아는 공간"은 위의
     "인생샷", "사진명소"에 대한 사람들의 높아진 관심
 
 

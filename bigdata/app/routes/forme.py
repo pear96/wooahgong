@@ -33,6 +33,8 @@ CONN = Config.DB_URL
 async def forme(request: Request, for_me_request : ForMeReq, session: Session = Depends(db.session)):
     # 1. feed를 dataframe으로 불러온다.
     df_feeds = pd.read_sql_table('feed', CONN)
+    df_places = pd.read_sql_table('place', CONN)
+    # print(df_places)
 
     # 2. JWT으로 email에 맞는 사용자를 찾는다.
     user = find_user(request, session)
@@ -129,7 +131,7 @@ async def forme(request: Request, for_me_request : ForMeReq, session: Session = 
         # 피드가 많은 순으로 반환해주도록 하자...
         new_user = True
         print("신규 유저였네요. 인기 장소만 보내주겠어!")
-        sorted_places = pd.read_sql_table('feed', CONN).groupby('place_seq').count()['feed_seq'].sort_values(ascending=False)
+        sorted_places = df_feeds.groupby('place_seq').count()['feed_seq'].sort_values(ascending=False)
         sorted_places_idx = list(sorted_places.index)
 
     recommend_places = []
@@ -141,10 +143,11 @@ async def forme(request: Request, for_me_request : ForMeReq, session: Session = 
 
     if new_user:
         user_places = sorted_places
-    
+
+
     for place_seq in sorted_places_idx:
-        # 어차피 seq니까 한개임(one)
-        place = session.query(Place).filter(Place.place_seq == place_seq).one()
+        place = df_places.loc[df_places['place_seq'] == place_seq]
+        # place = session.query(Place).filter(Place.place_seq == place_seq).one()
         place_position = (place.latitude, place.longitude)
         # 0점인건 추천 목록에 넣지 않는다. -> 추후 최소 예상 평점 값을 정해서 필터링 가능
         if user_places[place_seq]:
@@ -152,8 +155,8 @@ async def forme(request: Request, for_me_request : ForMeReq, session: Session = 
             # 거리 내에 있는 경우에만 추가
             if distance <= search_radius:
                 place_dto = {
-                    "placeSeq" : place.place_seq,
-                    "placeImageUrl" : place.feeds[0].thumbnail
+                    "placeSeq" : place_seq,
+                    "placeImageUrl" : df_feeds.loc[df_feeds['place_seq'] == place_seq].iloc[0]['thumbnail']
                 }
                 recommend_places.append(place_dto)
     page = for_me_request.page

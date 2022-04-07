@@ -93,6 +93,8 @@ def find_trendy_places(request, trend_request, session):
                 'placeSeq': place.place_seq,
                 'placeImageUrl': place.feeds[0].thumbnail
             })
+            if len(result_places) >= 20:
+                break
 
     return result_places
 
@@ -159,6 +161,8 @@ def find_by_age_gender(request, trend_request, session):
                 'placeSeq': place.place_seq,
                 'placeImageUrl': place.feeds[0].thumbnail
             })
+            if len(result_places) >= 20:
+                break
 
     return {
         "ageGroup": int(age_group),
@@ -224,6 +228,8 @@ def find_by_MBTI(request, trend_request, session):
                 'placeSeq': place.place_seq,
                 'placeImageUrl': place.feeds[0].thumbnail
             })
+            if len(result_places) >= 20:
+                break
 
     return {
         "MBTI": user_mbti,
@@ -308,6 +314,8 @@ def find_by_moods(request, trend_request, session):
                     'placeSeq': place.place_seq,
                     'placeImageUrl': place.feeds[0].thumbnail
                 })
+                if len(result1_places) >= 20:
+                    break
 
     if user_moods_idx[1] != 9:
         for place_seq in sorted_places_idx2:
@@ -322,6 +330,8 @@ def find_by_moods(request, trend_request, session):
                     'placeSeq': place.place_seq,
                     'placeImageUrl': place.feeds[0].thumbnail
                 })
+                if len(result2_places) >= 20:
+                    break
 
     return {
         "mood1": user_mood1_str,

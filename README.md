@@ -9,7 +9,7 @@
 - ### 2. [Figma](https://www.figma.com/file/Nw2rXU8ah506LXmxyTyLRS/%EC%9A%B0%EC%95%84%EA%B3%B5?node-id=0%3A1)
 - ### 3. [api 명세서](https://haney0y.notion.site/API-eb4ac283430445a992a5be8d4675bf4a)
 - ### 4. [ERD](https://www.erdcloud.com/p/mgRwsWeNbbJAFJBGu)
-- ### 5. 배포문서
+- ### 5. [배포문서](exec/배포문서/배포가이드.pdf)
 
 <iframe width="600" height="336" src="https://www.erdcloud.com/p/mgRwsWeNbbJAFJBGu" frameborder="0" allowfullscreen></iframe>
 <hr/>

@@ -7,12 +7,14 @@ export const InputWrapper = styled.div`
   width: 250px;
 `;
 
-export const CustomInput = styled.input`
+export const CustomInput = styled.textarea`
   background-color: transparent;
   border: none;
   border-bottom: 1px solid #ccc;
   box-sizing: border-box;
   font-family: 'NotoSansKR';
+  resize: none;
+  overflow-y: auto;
   width: 250px;
   &:focus {
     outline: none;
@@ -52,6 +54,7 @@ export const CustomButton = styled.button`
 
 export const CustomForm = styled.form`
   display: flex;
+  align-items : center;
   margin: 0 auto;
   max-width: 400px;
 `;

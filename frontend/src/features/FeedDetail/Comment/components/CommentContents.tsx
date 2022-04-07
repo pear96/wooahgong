@@ -60,15 +60,25 @@ function CommentContents({
 
   return (
     <HeaderContainer>
-      <div style={{width: '64px', cursor : "pointer" }} onKeyDown={handleStopEvent} onClick={handleGotoProfile} role="img">
-        <Avatar size={64} src={userImage} icon={<UserOutlined />}/>
+      <div style={{
+        position : "relative",
+        width: '45px', 
+        cursor : "pointer" 
+        
+      }} onKeyDown={handleStopEvent} onClick={handleGotoProfile} role="img">
+        <Avatar 
+        style={{
+          // border : "1px solid black"
+          boxShadow : "0px 1px 1px 0px gray"
+        }}
+        size={45} src={userImage} icon={<UserOutlined />}/>
       </div>
-      <div style={{display: 'flex', flexDirection: 'column'}}>
+      <div style={{width : "60%",display: 'flex', flexDirection: 'column'}}>
         <NicknameContainer onClick={handleGotoProfile}>{nickname}</NicknameContainer>
         <ContentText>
           <CustomText>{content}</CustomText>
         </ContentText>
-        <BelowContainer style={{ marginLeft: '10px' }}>
+        <BelowContainer style={{marginBottom : 5}}>
           <p style={{ fontFamily: 'NotoSansKR', marginBottom : "0px" }}>
             {createDate} 좋아요 {numOfLikes}개
             {amIOwner && <CloseOutlined onClick={onClickDelete} style={{ marginLeft: '15px' }} />}

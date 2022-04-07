@@ -47,7 +47,7 @@ function CommentInput({ setIsWrite }: any) {
       <h3 style={{ fontWeight: 'bold', fontFamily: 'NotoSansKR' }}>댓글</h3>
       <CustomForm onSubmit={onSubmit}>
         <InputWrapper>
-          <CustomInput value={comment} onChange={onChangeComment} placeholder="댓글을 입력해주세요." type="text" />
+          <CustomInput value={comment} onChange={onChangeComment} placeholder="댓글을 입력해주세요." maxLength = {250}  />
         </InputWrapper>
         <ButtonContainer>
           <CustomButton type="submit">작성</CustomButton>

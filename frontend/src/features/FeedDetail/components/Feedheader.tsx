@@ -38,7 +38,7 @@ function Feedheader({ nickname, userImage, feedSeq, placeName, address, amIOwner
   console.log(userImage);
   const onClickDeleteFeedDetail = useCallback(async () => {
     await deleteFeedDetail(feedSeq);
-    navigate('/map');
+    navigate(`/profile/${nickname}`);
     // main만들어지면 main으로 가자
   }, []);
 

@@ -162,7 +162,7 @@ function Trends() {
             height : "140px"
           }}
         >
-          {popular?.map((props: any) => {
+          {age?.map((props: any) => {
             return (
               <SwiperSlide key={props.placeSeq}>
                 <ImgWrapper style={{

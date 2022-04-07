@@ -31,13 +31,14 @@ function Trends() {
   const [popular, setPopular] = useState([]);
   const [age, setAge] = useState([]);
   const [mbti, setMbti] = useState([]);
-  const [mood1, setMood1] = useState([]);
-  const [mood2, setMood2] = useState([]);
+  const [mood, setMood] = useState([]);
+  // const [mood1, setMood1] = useState([]);
+  // const [mood2, setMood2] = useState([]);
   const [mbtiName, setMbtiname] = useState('');
   const [ageName, setAgename] = useState('');
   const [genderName, setGendername] = useState('');
-  const [mood1Name, setMood1name] = useState('');
-  const [mood2Name, setMood2name] = useState('');
+  const [moodname, setMoodName] = useState<string>("");
+  const [isOk, setIsOk] = useState<boolean>(false);
 
   const [lat, setLat] = useState<number>();
   const [lng, setLng] = useState<number>();
@@ -68,11 +69,12 @@ function Trends() {
       setPopular(result.data.trendyPlaces);
       setAge(result.data.recByAgeGender.places);
       setMbti(result.data.recByMBTI.places);
-      setMood1(result.data.recByMoods.mood1Places);
-      setMood2(result.data.recByMoods.mood2Places);
+      // setMood1(result.data.recByMoods.mood1Places);
+      // setMood2(result.data.recByMoods.mood2Places);
       setMbtiname(result.data.recByMBTI.MBTI);
-      setMood1name(result.data.recByMoods.mood1);
-      setMood2name(result.data.recByMoods.mood2);
+      // setMood1name(result.data.recByMoods.mood1);
+      // setMood2name(result.data.recByMoods.mood2);
+      setMood(result.data.recByMoods);
       setAgename(result.data.recByAgeGender.ageGroup);
       console.log(window.localStorage.getItem('gender'));
       if (window.localStorage.getItem('gender') === 'true') {
@@ -89,7 +91,58 @@ function Trends() {
   // console.log(mood1, '분위기1');
   // console.log(mood2, '분위기2');
   // console.log(mood2Name);
-
+  const handleMoodPlace = (moodPlace : any, name : string) => {
+    if(moodPlace.length > 0){
+        return (
+          <Swiper
+            slidesPerView={2}
+            spaceBetween={10}
+            freeMode
+            pagination={{
+              clickable: true,
+            }}
+            modules = {[FreeMode]}
+            style = {{
+              width : "85%",
+              height : "140px"
+            }}
+          >
+            {moodPlace?.map((props: any, i : number) => {
+              const idx = i;
+              return (
+                <SwiperSlide key={idx}>
+                  <ImgWrapper style={{
+                    width : 140,
+                    height : 140
+                  }} onClick={onClickGotoPlace(props.placeSeq)} src={props.placeImageUrl} />
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+        )
+    }
+    return (
+      <div
+      style={{
+        fontFamily: 'NotoSansKR',
+        fontSize: '20px',
+        fontWeight: 'bold',
+        width: '85%',
+        height: '150px',
+        // textAlign: 'center',
+        display: 'flex',
+        justifyContent : "center",
+        alignItems : "center",
+        border : "2px dashed black",
+        borderRadius : 10,
+        margin : "0px auto"
+      }}
+      >
+        추천 장소가 없습니다😥
+      </div>
+    )
+  // console.log("???");  
+  }
   useEffect(() => {
     getAndTrendplace();
   }, [lat, lng, Changeradius]);
@@ -238,101 +291,16 @@ function Trends() {
           추천 장소가 없습니다😥
         </div>
       )}
-      <h2 style={{ fontFamily: 'NotoSansKR', fontWeight: 'bold', margin : "10px 10px"  }}>{mood1Name} 인기 장소🎈</h2>
-      {mood1.length > 0 ? (
-        <Swiper
-          slidesPerView={2}
-          spaceBetween={10}
-          freeMode
-          pagination={{
-            clickable: true,
-          }}
-          modules = {[FreeMode]}
-          style = {{
-            width : "85%",
-            height : "140px"
-          }}
-        >
-          {mood1?.map((props: any) => {
-            return (
-              <SwiperSlide key={props.placeSeq}>
-                <ImgWrapper style={{
-                  width : 140,
-                  height : 140
-                }} onClick={onClickGotoPlace(props.placeSeq)} src={props.placeImageUrl} />
-              </SwiperSlide>
-            );
-          })}
-        </Swiper>
-      ) : (
-        <div
-        style={{
-          fontFamily: 'NotoSansKR',
-          fontSize: '20px',
-          fontWeight: 'bold',
-          width: '85%',
-          height: '150px',
-          // textAlign: 'center',
-          display: 'flex',
-          justifyContent : "center",
-          alignItems : "center",
-          border : "2px dashed black",
-          borderRadius : 10,
-          margin : "0px auto"
-        }}
-        >
-          추천 장소가 없습니다😥
-        </div>
-      )}
-      <h2 style={{ fontFamily: 'NotoSansKR', fontWeight: 'bold', margin : "10px 10px" }}>{mood2Name} 인기 장소🎁</h2>
-      {mood2.length > 0 ? (
-        <Swiper
-          slidesPerView={2}
-          spaceBetween={10}
-          freeMode
-          pagination={{
-            clickable: true,
-          }}
-          modules = {[FreeMode]}
-          style = {{
-            width : "85%",
-            height : "140px",
-            marginBottom : 10
-          }}
-        >
-          {mood2?.map((props: any) => {
-            return (
-              <SwiperSlide key={props.placeSeq}>
-                <ImgWrapper style={{
-                  width : 140,
-                  height : 140
-                }} onClick={onClickGotoPlace(props.placeSeq)} src={props.placeImageUrl} />
-              </SwiperSlide>
-            );
-          })}
-        </Swiper>
-      ) : (
-        <div
-        style={{
-          fontFamily: 'NotoSansKR',
-          fontSize: '20px',
-          fontWeight: 'bold',
-          width: '85%',
-          height: '150px',
-          // textAlign: 'center',
-          display: 'flex',
-          justifyContent : "center",
-          alignItems : "center",
-          border : "2px dashed black",
-          borderRadius : 10,
-          margin : "0px auto",
-          marginBottom : 10
-          
-        }}
-        >
-          추천 장소가 없습니다😥
-        </div>
-      )}
+      {mood.map((v : {mood : string, moodPlaces : any}, i : number)=>{
+        const idx = i;
+        return(
+          <>
+          <h2 key={idx} style={{ fontFamily: 'NotoSansKR', fontWeight: 'bold', margin : "10px 10px"  }}>{v.mood} 인기 장소🎈</h2>
+            {handleMoodPlace(v.moodPlaces, v.mood)}
+          </>
+        )
+      })}
+      
     </>
   );
 }

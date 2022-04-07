@@ -10,8 +10,9 @@ const getFormeplace = async (body: {
   searchRadius: number | undefined;
   lat: number | undefined;
   lng: number | undefined;
+  page : number
 }) => {
-  // console.log(body);
+  console.log(body);
   const token = getToken();
 
   const result = await axios

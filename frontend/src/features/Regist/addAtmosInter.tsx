@@ -120,7 +120,7 @@ function AddAtmosInter({ progress }: MyProps) {
       );
       setCheckMax([...checkMax, index]);
     } else if (!checkMax.includes(index) && checkMax.length >= 2) {
-      toast.error(<div style={{ width: 'inherit', fontSize: '14px' }}>분위기는 두가지 이상 선택 할 수 없습니다.</div>, {
+      toast.error(<div style={{ width: 'inherit', fontSize: '14px' }}>분위기는 2개까지만 선택 가능합니다</div>, {
         position: toast.POSITION.TOP_CENTER,
         role: 'alert',
       });

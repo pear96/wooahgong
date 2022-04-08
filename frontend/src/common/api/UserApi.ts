@@ -74,7 +74,7 @@ const getCommonLoginResult = async (body: { userId: string; password: string }) 
         data: {
           nickname: response.data.nickname,
           profileImg: response.data.profileImg,
-          gender : response.data.gender
+          gender: response.data.gender
         },
       };
       return value;
@@ -85,7 +85,7 @@ const getCommonLoginResult = async (body: { userId: string; password: string }) 
         data: {
           nickname: '',
           profileImg: '',
-          gender : null
+          gender: null
         },
       };
       return value;
@@ -100,6 +100,34 @@ const getKakaoLoginResult = async (code: string) => {
   return result;
 };
 
+const leaveWooAhGong = async (nickname: string) => {
+  const token = getToken()
+  if (token !== null) {
+    const result = await axios({
+      method: 'DELETE',
+      url: `${BASE_URL}/${nickname}`,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => {
+        console.log(res);
+        const value = {
+          status: res.status
+
+        }
+        return value
+      })
+      .catch((err) => {
+        console.log(err);
+        const value = {
+          status: 401
+        }
+        return value
+      });
+    return result
+  }
+  return { status: 401 }
+};
+
 const UserApi = {
   getEmailCheckResult,
   getEmailCheckCodeResult,
@@ -108,6 +136,7 @@ const UserApi = {
   getSignupCompleteResult,
   getCommonLoginResult,
   getKakaoLoginResult,
+  leaveWooAhGong
 };
 
 export default UserApi;

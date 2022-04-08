@@ -11,27 +11,33 @@ import {
 } from 'features/Profile/styles/update/StyledLeaveModal';
 import { useSelector } from 'react-redux';
 import { ReducerType } from 'app/rootReducer';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import UserApi from '../../../../common/api/UserApi';
 
 function LeaveModal({ setShowModal }: any): any {
-  const loggedInUser = useSelector((state: ReducerType) => state.login);
-  const token = localStorage.getItem('Token');
-
+  const { leaveWooAhGong } = UserApi
   const [reason, setReason] = useState<number>(1);
+  const navigate = useNavigate()
 
-  const leaveWooAhGong = () => {
-    axios({
-      method: 'DELETE',
-      url: `/users/${loggedInUser.nickname}`,
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  const handleLeave = async () => {
+    const nickname = window.localStorage.getItem('nickname')
+    if (nickname !== null) {
+
+      const result = await leaveWooAhGong(nickname)
+
+      if (result.status === 200) {
+        window.localStorage.clear()
+        navigate(`/`)
+      }
+      else {
+        toast.error(<div style={{ width: 'inherit', fontSize: '14px' }}>올바른 닉네임이 아닙니다.</div>, {
+          position: toast.POSITION.TOP_CENTER,
+          role: 'alert',
+        });
+      }
+    }
+  }
 
   return (
     <ModalBackground>
@@ -61,7 +67,7 @@ function LeaveModal({ setShowModal }: any): any {
           </Space>
         </Body>
         <Footer>
-          <Button onClick={leaveWooAhGong}>Bye!</Button>
+          <Button onClick={handleLeave}>Bye!</Button>
           <Button onClick={() => setShowModal(false)}>Re-Hi!</Button>
         </Footer>
       </ModalContainer>

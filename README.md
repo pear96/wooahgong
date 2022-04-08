@@ -75,7 +75,7 @@
 <br/>
 
 ## ⭐ 주요기능 설명
-
+#### [상세 시연 시나리오](exec/시연 시나리오/scenario.pdf) 보러가기🚕🚕
 ### 1. 장소추천 기능
 <img src="https://imagedelivery.net/v7-TZByhOiJbNM9RaUdzSA/67ff4e81-4c56-4e6c-bbb9-58f169407300/public" width="230px" height="500px">
 <img src="https://imagedelivery.net/v7-TZByhOiJbNM9RaUdzSA/802f01a8-46b7-45bf-fff9-29aa787a7c00/public" width="230px" height="500px">

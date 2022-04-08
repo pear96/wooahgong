@@ -14,6 +14,8 @@ export interface InitialState {
   nickname: string;
   profileImg: string;
   gender : boolean | null;
+  lat : number;
+  lng : number;
   postkakaoCodeLoading: boolean;
   postkakaoCodeDone: boolean;
   postkakaoCodeError: string;
@@ -27,6 +29,8 @@ const initialState: InitialState = {
   nickname: '',
   profileImg: '',
   gender : null,
+  lat : 0,
+  lng : 0,
   postkakaoCodeLoading: false,
   postkakaoCodeDone: false,
   postkakaoCodeError: '',
@@ -38,10 +42,12 @@ const authSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<{ nickname: string; profileImg: string, gender : boolean }>) => {
+    setUser: (state, action: PayloadAction<{ nickname: string; profileImg: string, gender : boolean, lat : number, lng : number }>) => {
       state.nickname = action.payload.nickname;
       state.profileImg = action.payload.profileImg;
       state.gender = action.payload.gender;
+      state.lat = action.payload.lat;
+      state.lng = action.payload.lng;
     },
     testNum: (state, action: PayloadAction<number>) => {
       state.test = action.payload;

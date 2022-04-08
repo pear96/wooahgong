@@ -21,17 +21,20 @@ function Forme() {
   const navigate = useNavigate();
   const { Changeradius } = useAppSelector((state) => state.main);
   const [target, setTarget] = useState<any>(null);
-  const [state, setState] = useState([]);
-  const [lat, setLat] = useState<number>();
-  const [lng, setLng] = useState<number>();
-  const [real, setReal] = useState([]);
+  const [state, setState] = useState<any>([]);
   const [end, setEnd] = useState<boolean>(false);
   const [check, setCheck] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(0);
+  const [distance, setDistance] = useState<number>();
+
+  const distRef = useRef(distance);
+  distRef.current = distance;
+  const pageRef = useRef(page);
+  pageRef.current = page;
   const stateRef = useRef(state);
   stateRef.current = state;
-  const realRef = useRef(real);
-  realRef.current = real;
+
   const endRef = useRef(end);
   endRef.current = end;
 
@@ -42,95 +45,76 @@ function Forme() {
     },
     [],
   );
-
-  const getLocation = async () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setLat(37.557620);
-        setLng(126.923110);
-        // setLat(position.coords.latitude);
-        // setLng(position.coords.longitude);
-      });
-    }
-  };
-  const setArray = () => {
-    if (stateRef.current.length > 0) {
-      console.log(endRef.current, stateRef.current);
-      if (!endRef.current) {
-
-        const temp = stateRef.current.splice(0, 18);
-        console.log(temp);
-        if (temp.length < 18) {
-          setEnd(true);
-        }
-        if (realRef.current.length > 0) {
-          setReal([...realRef.current, ...temp]);
-        }
-        else {
-          setReal([...temp]);
-          setCheck(false);
-        }
-      }
-    }
-    else {
-      setLoading(true);
-    }
-  }
-  async function getAndFormeplace() {
+  const getAndFormeplace = async () => {
     // await getLocation();
-    const body = { searchRadius: Changeradius, lat, lng };
-    if (lat !== undefined && lng !== undefined) {
-      const result = await getFormeplace(body);
-      console.log(result);
-      setState(result.data.places);
+      const curlat = window.localStorage.getItem("lat");
+      const curlng = window.localStorage.getItem("lng");
+      if(curlat !== null && curlng !== null && !endRef.current){      
+      // console.log
+        const body = { searchRadius: distRef.current, lat : +curlat, lng : +curlng, page : pageRef.current };
+        const result = await getFormeplace(body);
+        console.log(result);
+        if(result.status === 200){
+          if(result.data.places.length === 0){
+            setEnd(true);
+          } else if(stateRef.current.length > 0){
+            setState([...stateRef.current, ...result.data.places]);
+            setPage(pageRef.current + 1);
+          } else {
+            setState([...result.data.places]);
+            setPage(pageRef.current + 1);
+          }
+        }
     }
   }
 
-  const checkLength = () => {
-    console.log(real.length);
-    if (real.length > 0) {
-      return (
-        <Grid>
-          {real.map((item: any, i) => {
-            const idx = i;
-            return (
-              <div style={{ width: 115, margin: "0px auto" }} key={idx}>
-                <img
-                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-                  src={item.placeImageUrl}
-                  alt="test"
-                  onClick={onClickGotoPlace(item.placeSeq)}
-                />
-              </div>
-            );
-          })}
+  // const checkLength = () => {
+  //   console.log(real.length);
+  //   if (state.length > 0) {
+  //     console.log(state);
+  //     setCheck(false);
+  //     return (
+  //       <Grid>
+  //         {state.map((item: any, i : number) => {
+  //           const idx = i;
+  //           return (
+  //             <div style={{ width: 115, margin: "0px auto" }} key={idx}>
+  //               <img
+  //                 style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+  //                 src={item.placeImageUrl}
+  //                 alt="test"
+  //                 onClick={onClickGotoPlace(item.placeSeq)}
+  //               />
+  //             </div>
+  //           );
+  //         })}
 
-          <div
-            ref={setTarget}
-            style={{
-              height: '15px',
-            }}
-          />
-        </Grid>
-      )
-    }
-    return (<div style={{
-      height: 400,
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      fontFamily: 'NotoSansKR',
-      fontSize: 30,
-      fontWeight: 700
-    }}>
-      추천 장소가 없습니다😥
-    </div>)
-  }
+  //         <div
+  //           ref={setTarget}
+  //           style={{
+  //             height: '15px',
+  //           }}
+  //         />
+  //       </Grid>
+  //     )
+  //   }
+  //   return (<div style={{
+  //     height: 400,
+  //     display: "flex",
+  //     justifyContent: "center",
+  //     alignItems: "center",
+  //     fontFamily: 'NotoSansKR',
+  //     fontSize: 30,
+  //     fontWeight: 700
+  //   }}>
+  //     추천 장소가 없습니다😥
+  //   </div>)
+  // }
 
   const onIntersect = async ([entry]: any, observer: any) => {
     if (entry.isIntersecting) {
       observer.unobserve(entry.target);
-      if (!endRef.current) setArray();
+      await getAndFormeplace();
       observer.observe(entry.target);
     }
   };
@@ -146,36 +130,58 @@ function Forme() {
   }, [target]);
 
   useEffect(() => {
-    setArray();
-  }, [state])
-
-  useEffect(() => {
-    if (loading) {
-      setCheck(false);
-    }
-  }, [loading])
-
-  useEffect(() => {
-    setReal([]);
+    console.log("????!?!?!?!?!?!?!?!?@!?!?#?#?@#?@?#!@?#!?#");
+    setDistance(Changeradius);
+    setState([]);
     setEnd(false);
     setCheck(true);
+    setPage(0);
     setLoading(false);
-    getAndFormeplace();
-  }, [lat, lng, Changeradius]);
+    // getAndFormeplace();
+  }, [Changeradius]);
 
-  useEffect(() => {
-    getLocation();
-  }, []);
+  // useEffect(() => {
+  //   getLocation();
+  // }, []);
 
   return (
     <>
       <h2 style={{ fontFamily: 'NotoSansKR', fontWeight: 'bold', marginLeft: 10 }}>
         {window.localStorage.getItem('nickname')}님을 위한 추천
       </h2>
-      {check === true ? (<CustomSpin>
+      {state.length > 0? (<Grid>
+          {state.map((item: any, i : number) => {
+            const idx = i;
+            return (
+              <div style={{ width: 115, margin: "0px auto" }} key={idx}>
+                <img
+                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                  src={item.placeImageUrl}
+                  alt="test"
+                  onClick={onClickGotoPlace(item.placeSeq)}
+                />
+              </div>
+            );
+          })}
+          <div
+            ref={setTarget}
+            style={{
+              height: '15px',
+            }}
+          />
+          
+        </Grid>) : (<CustomSpin>
+                        <Spin size="large" />
+                          <div
+                          ref={setTarget}
+                          style={{
+                            height: '15px',
+                          }}/>
+      </CustomSpin>)}
+      {/* {check === true ? (<CustomSpin>
         <Spin size="large" />
       </CustomSpin>
-      ) : (checkLength())}
+      ) : (checkLength())} */}
     </>
   );
 }

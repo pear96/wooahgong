@@ -26,7 +26,21 @@ function OAuth2RedirectHandler() {
       saveToken(result.data.token);
 
       // 추후 /main 으로 변경
-      dispatch(setUser({ nickname: result.data.nickname, profileImg: result.data.profileImg, gender : result.data.gender }));
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          dispatch(setUser({ nickname: result.data.nickname, 
+                              profileImg: result.data.profileImg, 
+                              gender : result.data.gender,
+                              lat : position.coords.latitude,
+                              lng : position.coords.longitude}));
+          window.localStorage.setItem('lat', position.coords.latitude.toString());
+          window.localStorage.setItem('lng', position.coords.longitude.toString());
+          // setLat(37.557620);
+          // setLng(126.923110);
+          // setLat(position.coords.latitude);
+          // setLng(position.coords.longitude);
+        });
+      }
       window.localStorage.setItem('nickname', result.data.nickname);
       window.localStorage.setItem('profileImg', result.data.profileImg);
       window.localStorage.setItem('gender', result.data.gender);

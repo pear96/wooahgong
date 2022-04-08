@@ -1,0 +1,8 @@
+@font-face {
+  font-family: 'NotoSansKR';
+  src: url('../assets/NotoSansKR-Regular.otf');
+}
+body {
+  margin: 0 auto;
+  /* overflow:hidden; */
+}

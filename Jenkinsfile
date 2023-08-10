@@ -103,16 +103,17 @@ pipeline {
     //         }
     //     }
     // }
-    // stage('clear image') {
-    //     agent any
-    //     steps {
-    //         sh 'docker image prune -f'
-    //     }
-    // }
-    }
-    post {
-        always {
-            sh 'docker image prune -f'
+    stage('Cleanup Docker Images') {
+        steps {
+            script {
+                // 빌드 중간 단계의 이미지와, 태그가 없는 이미지를 삭제
+                sh 'docker rmi $(docker images -f "dangling=true" -q) || echo "No images to delete"'
+    
+                // 이 명령은 모든 중지된 컨테이너, 모든 네트워크, 모든 빌드 중간 단계의 이미지, 모든 불필요한 볼륨을 삭제합니다.
+                // 주의: 필요한 데이터가 삭제되지 않도록 볼륨 및 컨테이너 사용을 검토해야 합니다.
+                // sh 'docker system prune -f'
+            }
         }
+    }
     }
 }

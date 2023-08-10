@@ -28,8 +28,6 @@ function Comment() {
       if (isWrite === true) {
         setIsWrite(false);
       }
-    } else {
-      
     }
   }
 

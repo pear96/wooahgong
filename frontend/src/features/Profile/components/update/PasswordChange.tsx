@@ -142,9 +142,6 @@ function PasswordChange({ open, id, onClose }: MyProps) {
             
             onClose(e);
         }
-        else{
-            
-        }
     
     }
 

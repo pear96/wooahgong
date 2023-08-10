@@ -114,8 +114,6 @@ function ProfileUpdateBody({
         
         window.localStorage.setItem('profileImg', result.data);
         dispatch(setProfileImg(result.data));
-      } else {
-        
       }
     }
   };

@@ -226,9 +226,6 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
     map.addListener('drag', handleDrag);
     map.addListener('touchend', handleEndTouch);
   }, [map]);
-  useEffect(() => {
-    
-  }, [markerList]);
   return (
     <div
       className={open ? `${style.openModal} ${style.modal}` : style.modal}

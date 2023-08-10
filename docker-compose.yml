@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - wooahgong_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - frontend_build:/build
+    networks:
+      - wooahgong_network
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - /home/haeun/wooahgong/nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - frontend_build:/usr/share/nginx/html
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - frontend
+    networks:
+      - wooahgong_network
+
+  bigdata:
+    build:
+      context: ./bigdata
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - wooahgong_network
+
+networks:
+  wooahgong_network:
+    driver: bridge
+
+volumes:
+  frontend_build

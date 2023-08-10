@@ -1,13 +1,12 @@
 import axios from "axios";
 import {saveToken, getToken} from "./JTW-Token";
 
-
-const BASE_URL = "https://j6a505.p.ssafy.io/api/main/map";
+const BASE_URL = `${process.env.REACT_APP_BASE_URL}/main/map`;
 
 
 const getResultPlaceDistance = async (data : {radius : number, lat : number, lng : number}) => {
     const token = getToken();
-    console.log(data);
+    
     if(token){
         const result = await axios.post(BASE_URL, data, {headers : {Authorization: token}})
                                 .then((response) => {

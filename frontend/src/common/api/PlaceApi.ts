@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getToken } from './JTW-Token';
 
-const BASE_URL = 'https://j6a505.p.ssafy.io/api/place';
+const BASE_URL = `${process.env.REACT_APP_BASE_URL}/place`;
 
 // 장소 상세정보
 const readPlace = async (placeSeq: string) => {

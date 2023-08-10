@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { getToken } from './JTW-Token';
 
-// const BASE_URL = 'http://localhost:8080/api/users';
-const BASE_URL = 'https://j6a505.p.ssafy.io/api/users';
+
+const BASE_URL = `${process.env.REACT_APP_BASE_URL}/users`;
 
 
 // 이메일로 회원 아이디 찾기

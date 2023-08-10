@@ -28,9 +28,9 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
   useLayoutEffect(() => {
       const detectMobileKeyboard = () =>{
         if(document.activeElement?.tagName === "INPUT"){
-          console.log("??S?S?D?SSD?SD?SD?");
+          
           if(listRef.current !== null) {
-            console.log(listRef.current);
+            
             listRef.current.scrollIntoView({block : 'end'});
 
           } 
@@ -48,7 +48,7 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
   };
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
-    console.log(address);
+    
     setAddress(e.currentTarget.value);
   };
   const CreateMap = () => {
@@ -71,7 +71,7 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
           }),
         );
 
-        console.log('???실행');
+        
         setPosition({ lat, lng });
       });
     }
@@ -92,9 +92,9 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
       const result = response.data.searchPoiInfo.pois.poi;
       const lat = +result['0'].frontLat;
       const lng = +result['0'].frontLon;
-      // console.log(name);
+      // 
       const { name } = result['0'];
-      console.log(result['0'].newAddressList.newAddress[0].fullAddressRoad);
+      
 
       axios({
         method: 'GET',
@@ -107,9 +107,9 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
           lat,
         },
       }).then((newresponse) => {
-        console.log(markerRef.current);
+        
         if (markerRef.current !== null) {
-          console.log('???????????????????');
+          
           markerRef.current.setMap(null);
         }
         const newresult = newresponse.data.addressInfo;
@@ -119,11 +119,11 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
         if (lastLegal === '읍' || lastLegal === '면') {
           resAdr = `${resAdr}${newresult.legalDong} `;
         } else if (newresult.eup_myun !== '') {
-          console.log('????왜 실행됨??', lastLegal);
+          
           resAdr = `${resAdr}${newresult.eup_myun} `;
         }
         resAdr = `${resAdr}${newresult.roadName} ${newresult.buildingIndex}`;
-        console.log(newresult, resAdr);
+        
         const marker = new window.Tmapv2.Marker({
           position: new window.Tmapv2.LatLng(lat, lng),
           icon: My,
@@ -152,9 +152,9 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
         lat,
       },
     }).then((response) => {
-      console.log(markerRef.current);
+      
       if (markerRef.current !== null) {
-        console.log('???????????????????');
+        
         markerRef.current.setMap(null);
       }
       const result = response.data.addressInfo;
@@ -164,11 +164,11 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
       if (lastLegal === '읍' || lastLegal === '면') {
         resAdr = `${resAdr}${result.legalDong} `;
       } else if (result.eup_myun !== '') {
-        console.log('????왜 실행됨??', lastLegal);
+        
         resAdr = `${resAdr}${result.eup_myun} `;
       }
       resAdr = `${resAdr}${result.roadName} ${result.buildingIndex}`;
-      console.log(result, resAdr);
+      
       const marker = new window.Tmapv2.Marker({
         position: new window.Tmapv2.LatLng(lat, lng),
         icon: My,
@@ -181,7 +181,7 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
     });
   };
   const submit = (e: React.MouseEvent) => {
-    console.log('????????!?!?!?!?!?!?');
+    
     if (check === false) {
       toast.error(<div style={{ width: 'inherit', fontSize: '14px' }}>주소를 입력해주세요</div>, {
         position: toast.POSITION.TOP_CENTER,
@@ -197,12 +197,12 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
     }
   };
   const handleDrag = (e : any) => {
-    console.log(e.screenPoint.x);
+    
     endx = e.screenPoint.x;
     endy = e.screenPoint.y;
   }
   const handleStartTouch = (e : any) => {
-    console.log(e);
+    
     latlng = e.latLng;
     startx = e.screenPoint.x;
     starty = e.screenPoint.y;
@@ -210,7 +210,7 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
     endy = starty;
   }
   const handleEndTouch = (e : any) => {
-    // console.log(e.screenPoint);
+    // 
     if(startx === endx && starty === endy) {
       e.latLng = latlng;
       handleClickMap(e);
@@ -227,7 +227,7 @@ function FindAddress({ open, onClose, handleInput }: MyProps) {
     map.addListener('touchend', handleEndTouch);
   }, [map]);
   useEffect(() => {
-    console.log(markerList);
+    
   }, [markerList]);
   return (
     <div

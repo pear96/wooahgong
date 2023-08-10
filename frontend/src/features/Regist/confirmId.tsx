@@ -109,9 +109,9 @@ function ConfirmId({ progress }: MyProps) {
   useLayoutEffect(() => {
       const detectMobileKeyboard = () =>{
         if(document.activeElement?.tagName === "INPUT"){
-          console.log("??S?S?D?SSD?SD?SD?");
+          
           if(listRef.current !== null) {
-            console.log(listRef.current);
+            
             listRef.current.scrollIntoView({block : 'end'});
 
           } 
@@ -126,13 +126,13 @@ function ConfirmId({ progress }: MyProps) {
   const {getIdDuplicateCheck} = UserApi;
   const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
   const dispatch = useDispatch();
-  // console.log(regist);
+  // 
 
   const handleCheckId = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const idPattern = /^[a-zA-Z0-9]*$/;
     const idCurrent = e.currentTarget.value;
     setStateId(idCurrent);
-    console.log(id);
+    
     if (idCurrent === '') {
       setErrorMsg('아이디를 입력해주세요.');
       setIsId(false);

@@ -57,12 +57,12 @@ function FeedLast() {
     { title: '기타', check: false },
   ]);
 
-  console.log(feedstore);
+  
   const handleOpenModal = (e: React.MouseEvent) => {
     setIsOpen(true);
   };
   const handleCloseModal = (e: React.MouseEvent) => {
-    console.log('미쳤냐 진짜?');
+    
     setIsOpen(false);
   };
 
@@ -88,7 +88,7 @@ function FeedLast() {
     }
   };
   const handleInputAddress = (data: { latlng: { lat: number; lng: number }; addr: string }) => {
-    console.log(data);
+    
     setPosition(data.latlng);
     setPlaceAddress(data.addr);
   };
@@ -100,9 +100,9 @@ function FeedLast() {
   const handleStar = (e: any) => {
     const doc = document.getElementById('star');
     if (doc instanceof HTMLElement) {
-      console.log(e.target.value);
+      
       if (+e.target.value === 0) {
-        console.log('???');
+        
         doc.style.width = `20%`;
       } else {
         doc.style.width = `${e.target.value * 10}%`;
@@ -148,7 +148,7 @@ function FeedLast() {
         };
         formData.append('data', new Blob([JSON.stringify(data)], { type: 'application/json' }));
         const res = await getFeedAddResult(formData);
-        console.log(res);
+        
         dispatch(setInitState());
         navigate(`/place/${feedstore.place.placeSeq}/feeds/${res?.FeedSeq}`);
         // 리턴값 가지고 피드 상세로 이동 시켜야함
@@ -187,7 +187,7 @@ function FeedLast() {
           lng: position?.lng,
         };
         const result = await getPlaceAddReulst(body);
-        console.log(result?.status);
+        
         if (result?.status === 409) {
           toast.error(
             <div style={{ width: 'inherit', fontSize: '14px' }}>
@@ -199,7 +199,7 @@ function FeedLast() {
             },
           );
         } else if (result?.status === 201) {
-          console.log('된거니?!?!?!?!');
+          
           const formData = new FormData();
           const select = [];
           for(let i = 0; i < atmos.length; i+=1){

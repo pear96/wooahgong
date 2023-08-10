@@ -15,14 +15,14 @@ function OAuth2RedirectHandler() {
   const { getKakaoLoginResult } = UserApi;
 
   const code = new URL(window.location.href).searchParams.get('code');
-  console.log(code);
+  
   const apiResult = async () => {
     const result = await getKakaoLoginResult(code as string);
     if (result.data.email) {
       dispatch(setEmail(result.data.email));
       navigate('/regist/confirmetc');
     } else {
-      // console.log(result.data);
+      // 
       saveToken(result.data.token);
 
       // 추후 /main 으로 변경

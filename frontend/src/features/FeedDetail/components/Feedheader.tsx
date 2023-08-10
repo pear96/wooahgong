@@ -33,9 +33,9 @@ function Feedheader({ nickname, userImage, feedSeq, placeName, address, amIOwner
   const dispatch = useAppDispatch();
   const { deleteFeedDetail } = FeedDetailApi;
   const [isUpdate, setIsUpdate] = useState(false);
-  console.log(feedSeq);
-  console.log(amIOwner);
-  console.log(userImage);
+  
+  
+  
   const onClickDeleteFeedDetail = useCallback(async () => {
     await deleteFeedDetail(feedSeq);
     navigate(`/profile/${nickname}`);

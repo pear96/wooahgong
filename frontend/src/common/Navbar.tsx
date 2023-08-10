@@ -24,7 +24,7 @@ function Navbar() {
     navigate(`/main`);
   }
   const handleClickstop = (e : React.KeyboardEvent) => {
-    console.log(e);
+    // 
   }
   return (
     <>

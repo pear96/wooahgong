@@ -97,7 +97,7 @@ const searchHistory = () => {
   useEffect(() => {
     async function getAndRecentSearches() {
       const result = await getRecentSearchs();
-      console.log(result);
+      
       setRecentSearches(result.data.recentSearches);
     }
 
@@ -106,7 +106,7 @@ const searchHistory = () => {
   const onClickDelete = async (e : React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     const result = await deleteSeacrhHistory(e.currentTarget.value);
-    console.log(result.data.recentSearches);
+    
     setRecentSearches(result.data.recentSearches);
   }
 
@@ -114,13 +114,13 @@ const searchHistory = () => {
   const onClickAllDelete = useCallback(async () => {
     const result = await deleteAllSeacrhHistory();
     setRecentSearches([]);
-    console.log(result);
+    
   }, [recentSearches]);
 
   // 장소랑, 사용자 별로 분기해서 라우팅해야 된다
   const onClickgoToRecentSearch = useCallback(
     (props) => () => {
-      console.log(props.type);
+      
       if (props.type === 'place') {
         navigate(`/place/${props.placeSeq}`);
       } else {
@@ -134,7 +134,7 @@ const searchHistory = () => {
     e.stopPropagation();
   }, []);
 
-  console.log(recentSearches);
+  
   return (
     <HistoryContainer>
       <div style={{

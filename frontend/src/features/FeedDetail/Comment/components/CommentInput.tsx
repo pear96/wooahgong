@@ -16,10 +16,10 @@ function CommentInput({ setIsWrite }: any) {
   const onSubmit = useCallback(
     async (e) => {
       e.preventDefault();
-      console.log('hello');
-      console.log(comment);
+      
+      
       if (!comment || !comment.trim()) {
-        console.log(e.target[0].value);
+        
 
         return toast.info(
           <div style={{ width: 'inherit', fontSize: '10px' }}>

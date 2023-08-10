@@ -63,7 +63,7 @@ function ProfileUpdateHeader({ newNickname, newMbti, newMoods, isNick }: MyProps
         }
         navigate(`/profile/${newNickname}`);
       } else {
-        console.log('infoResult', result);
+        
         toast.error(<div style={{ width: 'inherit', fontSize: '14px' }}>사용불가능한 닉네임 입니다.</div>, {
           position: toast.POSITION.TOP_CENTER,
           role: 'alert',

@@ -29,11 +29,11 @@ function Feedfooter({
 
   const naviate = useNavigate();
   const { postFeedLike } = FeedDetailApi;
-  console.log('렌더링 확인용');
+  
 
   const onClickLike = useCallback(async () => {
     const result = await postFeedLike(feedSeq);
-    console.log(result.data);
+    
 
     setCnt((prev) => prev + 1);
     setLike(result.data);
@@ -41,7 +41,7 @@ function Feedfooter({
 
   const onClickDisLike = useCallback(async () => {
     const result = await postFeedLike(feedSeq);
-    console.log(result.data);
+    
     setCnt((prev) => prev - 1);
     setLike(result.data);
   }, []);

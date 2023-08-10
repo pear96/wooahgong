@@ -20,7 +20,7 @@ function Comment() {
   async function getAndFeedComment() {
     if (feedSeq !== undefined) {
       const result = await getFeedComment(feedSeq);
-      console.log(result);
+      
       setComments(result.data);
       if (isDelete === true) {
         setIsDelete(false);
@@ -29,7 +29,7 @@ function Comment() {
         setIsWrite(false);
       }
     } else {
-      console.log('error');
+      
     }
   }
 

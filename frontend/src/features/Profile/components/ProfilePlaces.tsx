@@ -10,7 +10,7 @@ type MyProps = {
 }
 function ProfilePlaces({nickname} : MyProps) {
   // const { places } = useSelector((state: ReducerType) => state.profilePlace);
-  console.log('??????????');
+  
 
   const [places, setPlaces] = useState<{ placeSeq: number; thumbnail: string }[]>([]);
   const [target, setTarget] = useState<any>(null);
@@ -72,7 +72,7 @@ function ProfilePlaces({nickname} : MyProps) {
     }
   }, [target]);
   useEffect(()=>{
-    console.log(nickname);
+    
     setCurNick(nickname);
     setPlaces([]);
     setPage(0);

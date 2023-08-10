@@ -24,16 +24,16 @@ const Container = styled.div`
 
 function Regist() {
   const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
-  console.log(regist);
+  
   const dispatch = useDispatch();
   // dispatch(setId("sterr"))
   // dispatch(setPwd("123456"))
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     dispatch(setId('sterr'));
     dispatch(setPwd('123456'));
-    console.log(regist);
+    
   };
-  console.log(regist);
+  
   return (
     <Container>
       <Routes>

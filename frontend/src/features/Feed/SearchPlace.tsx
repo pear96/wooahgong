@@ -53,18 +53,18 @@ function SearchPlace() {
     const {getPlaceResults} = SearchApi;
     const feedstore = useSelector<ReducerType, Feed>((state) => state.feedReducer);
     const dispatch = useDispatch();
-    console.log(feedstore);
+    
     
     const handleSearch = async(e : React.MouseEvent | React.KeyboardEvent) => {
         // api 통신 부분
         if(word !== ""){
-            console.log(word);
+            
             const result = await getPlaceResults(word);
-            console.log(result);
+            
             const resultdata = [];
-            console.log(result.data);
+            
             if(result.data.results.length > 0){
-                console.log("???");
+                
                 for(let i = 0; i < result.data.results.length; i+=1){
                     const temp = {
                         placeSeq : result.data.results[i].placeSeq,
@@ -84,13 +84,13 @@ function SearchPlace() {
             }
         }
         else{
-            console.log("???");
+            
             const reset : {name : string, address : string}[] = places;
                 // reset = places;
             setPlaces(places.filter(v=> v));
             setIsPlaces(false);
         }
-        // console.log(result);
+        // 
 
     }
     const handlePressEnter = (e : React.KeyboardEvent<HTMLInputElement>) => {
@@ -99,7 +99,7 @@ function SearchPlace() {
         }
     }
     const handleChangeWord = (e : React.ChangeEvent<HTMLInputElement>) => {
-        console.log(e.currentTarget.value);
+        
         setWord(e.currentTarget.value);
     }
     const handleClickPlace = (value : any) => {

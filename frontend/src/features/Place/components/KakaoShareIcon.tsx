@@ -8,7 +8,7 @@ declare global {
 }
 function KakaoShareIcon({ placeSeq, placeName, placeImg }: any) {
   const kakaoShare = () => {
-    console.log('카카오톡 공유하기');
+    
 
     if (window.Kakao) {
       const kakao = window.Kakao;

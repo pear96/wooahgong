@@ -71,7 +71,7 @@ const search = () => {
   const navigate = useNavigate();
   const { values } = useSelector((state: ReducerType) => state.search);
 
-  console.log(values);
+  
 
   const handleChange = (event: any, newValue: any) => {
     setValue(newValue);
@@ -81,7 +81,7 @@ const search = () => {
   const onClickserchResult = useCallback(
     (placeSeq) => () => {
       // 상세페이지 이동페이지 만들어지면 navigate 추가해서 넣자
-      console.log(placeSeq, typeof placeSeq);
+      
       const body = { placeSeq };
       postPlaceSearchResult(body);
       navigate(`/place/${placeSeq}`);
@@ -91,7 +91,7 @@ const search = () => {
   const onClickserchResult2 = useCallback(
     (nickname) => () => {
       // 상세페이지 이동페이지 만들어지면 navigate 추가해서 넣자
-      console.log(nickname, typeof nickname);
+      
       const body = { nickname };
       postUserSearchResult(body);
       navigate(`/profile/${nickname}`);
@@ -105,7 +105,7 @@ const search = () => {
   const [test, setTest] = useState<any>([]);
   // 필드를 업데이트
   const updateField = useCallback((field: any, value: any, update = true) => {
-    console.log(value);
+    
 
     if (update) onSearch(value);
     if (field === 'keyword') {
@@ -121,8 +121,8 @@ const search = () => {
     if (text !== '') {
       const result = await getPlaceResults(text);
       const nicknames = await getNicknameResults(text);
-      console.log(result.data.results);
-      console.log(nicknames.data.results);
+      
+      
       setResult(result.data.results);
       setTest(nicknames.data.results);
     } else {

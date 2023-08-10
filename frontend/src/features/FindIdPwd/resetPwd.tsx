@@ -107,11 +107,11 @@ function ResetPwd() {
     e.preventDefault();
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{5,10}$/;
     const curPwd = e.currentTarget.value;
-    // console.log(pwd);
+    // 
     if (!passwordRegex.test(curPwd)) {
       setPwdErrorMsg('숫자+영문자+특수문자 조합으로 8자리 이상 입력!');
     } else {
-      console.log(curPwd);
+      
       setPwdErrorMsg('');
     }
     setPwd(curPwd);
@@ -120,7 +120,7 @@ function ResetPwd() {
   const handleCheckCheckPwd = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const curPwd = e.currentTarget.value;
-    console.log(curPwd);
+    
 
     if (pwd !== curPwd) {
       setPwdCheckErrorMsg('비밀번호가 일치하지 않습니다.');

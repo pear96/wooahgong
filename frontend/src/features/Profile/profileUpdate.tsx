@@ -29,7 +29,7 @@ function ProfileUpdate() {
         setNewMbti(result.data.mbti);
         setNewMoods(result.data.moods);
         setProvider(result.data.provider);
-        console.log(newNickname, newMbti, newMoods);
+        
         setMounted(true);
       } else {
         navigate('/not-found');
@@ -44,7 +44,7 @@ function ProfileUpdate() {
     const numberRegex = /[0-9]/;
 
     const curWord = e.currentTarget.value;
-    console.log(curWord);
+    
     if ((curWord.length < 5 || curWord.length > 8) && 
               (hanRegex.test(curWord) || alphaRegex.test(curWord))) {
       setErrorMsg("5글자 이상 8글자 이하, 한글 영문 숫자만 사용가능합니다");

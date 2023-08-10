@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import { testNum } from '../authSlice';
 import Logo from '../../../assets/Logo.png';
 import KaKao from '../../../assets/kakao_login_medium_narrow.png';
-import * as kakalogin from '../../../assets/kakaoLogo/kakao_login_large_wide.png';
+// import * as kakalogin from '../../../assets/kakaoLogo/kakao_login_large_wide.png';
 import { ReactComponent as Title } from '../../../assets/main/Title.svg';
 
 // kakao socail login
@@ -103,7 +103,7 @@ function socialLogin() {
         <Title width="222px" />
       </TitleContainer>
       <ActiveButton onClick={onClickGotoLoginPage}>로그인</ActiveButton>
-      <a href={KAKAO_AUTH_URL}>
+      {/* <a href={KAKAO_AUTH_URL}>
       <img
         src={KaKao}
         style = {
@@ -117,7 +117,7 @@ function socialLogin() {
         }
         alt = "Kakao"
         />
-        </a>
+        </a> */}
       <div style={{ width: 221, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-evenly', marginTop: 20 }}>
           <SmallMenu role="button" onClick={onClickGotoSignupPage}>

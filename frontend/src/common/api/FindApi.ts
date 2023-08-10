@@ -11,14 +11,12 @@ const findIdByEmail = async (email: string) => {
   const res = await axios.get(`${BASE_URL}/id?email=${email}`
     // headers: { Authorization: `${token}` },
   ).then((response) => {
-    console.log("성공")
     const value = {
       data: response.data,
       status: response.status
     }
     return value;
   }).catch((e) => {
-    console.log("실패")
     const value = {
       data: null,
       status: 404
@@ -31,14 +29,12 @@ const findIdByEmail = async (email: string) => {
 const findPwSendEmail = async (body: { userId: string, email: string }) => {
   const res = await axios.patch(`${BASE_URL}/pwd`, body
   ).then((response) => {
-    console.log("성공")
     const value = {
       data: response.data,
       status: response.status
     }
     return value;
   }).catch((e) => {
-    console.log("실패")
     const value = {
       data: null,
       status: 404
@@ -52,14 +48,12 @@ const findPwInsertCode = async (body: { userId: string, authCode: string }) => {
   const res = await axios.post(`${BASE_URL}/pwd`, body
     // headers: { Authorization: `${token}` },
   ).then((response) => {
-    console.log("성공")
     const value = {
       data: response.data,
       status: response.status
     }
     return value;
   }).catch((e) => {
-    console.log("실패")
     const value = {
       data: null,
       status: 404
@@ -74,14 +68,12 @@ const resetPwd = async (body: { userId: string, password: string }) => {
   const res = await axios.patch(`${BASE_URL}/repwd`, body
     // headers: { Authorization: `${token}` },
   ).then((response) => {
-    console.log("성공")
     const value = {
       data: response.data,
       status: response.status
     }
     return value;
   }).catch((e) => {
-    console.log("실패")
     const value = {
       data: null,
       status: 404

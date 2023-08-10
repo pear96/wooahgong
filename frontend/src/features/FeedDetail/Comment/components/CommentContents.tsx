@@ -33,20 +33,20 @@ function CommentContents({
 
   const onclickLike = useCallback(async () => {
     const result = await postCommentLike(feedSeq, commentSeq);
-    console.log(result.data);
+    
     setNumofLikes((prev) => prev + 1);
     setIsLike(result.data);
   }, []);
 
   const onclickDisLike = useCallback(async () => {
     const result = await postCommentLike(feedSeq, commentSeq);
-    console.log(result.data);
+    
     setNumofLikes((prev) => prev - 1);
     setIsLike(result.data);
   }, []);
 
   const onClickDelete = useCallback(async () => {
-    console.log('삭제');
+    
     setIsDelete(true);
     await deleteComment(feedSeq, commentSeq);
   }, []);

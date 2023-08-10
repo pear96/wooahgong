@@ -151,7 +151,7 @@ function ConfirmTOS({ progress }: MyProps) {
       setPrivacy(!privacy);
       setTotal(!total);
     }
-    console.log(TOS, privacy);
+    
   };
   const handleClick = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault();

@@ -26,7 +26,7 @@ function Place() {
         const result = await PlaceApi.readPlace(placeSeq);
         console.log(result)
         if (result?.status === 200) {
-            console.log(result);
+            
             setPlace(result.data);
         }
     }

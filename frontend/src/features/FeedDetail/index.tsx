@@ -28,13 +28,12 @@ function FeedDetail() {
   const getAndFeedDetail = async () => {
     if (feedSeq !== undefined) {
       const result = await getFeedDetail(feedSeq);
-      console.log(result.data);
       setFeedDetails(result.data);
-      setLoadingFinsh(true);
-    } else {
-      console.log('error');
-      // 여기 토스트 메세지 써줘야 할듯 => ok
-    }
+      return result.data; // 이 데이터를 반환합니다.
+    } 
+      
+      return null; // null 또는 다른 오류 값을 반환할 수 있습니다.
+    
   };
 
   // 정리.. 신의 한수,,,
@@ -57,13 +56,16 @@ function FeedDetail() {
 
   // 렌더링 오류를 해결,,,
 
+
   useEffect(() => {
-    getAndFeedDetail().then(() => {
-      setLoadingFinsh(true);
-      dispatch(setContent(FeedDetails.content));
-      dispatch(setUserImage(FeedDetails.userImageUrl));
-      dispatch(setUesrNickname(FeedDetails.nickname));
-      dispatch(setCreateDate(FeedDetails.createDate));
+    getAndFeedDetail().then(data => {
+      if (data) {
+        setLoadingFinsh(true);
+        dispatch(setContent(data.content));
+        dispatch(setUserImage(data.userImageUrl));
+        dispatch(setUesrNickname(data.nickname));
+        dispatch(setCreateDate(data.createDate));
+      }
     });
   }, [loadingFinsh]);
 

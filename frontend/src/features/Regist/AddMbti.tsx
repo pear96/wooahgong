@@ -135,7 +135,7 @@ function AddMbti({ progress }: MyProps) {
   };
   useEffect(() => {
     if (selectedmbti.length > 0) {
-      console.log(selectedmbti);
+      
       setIsOk(true);
     } else {
       setIsOk(false);
@@ -154,7 +154,7 @@ function AddMbti({ progress }: MyProps) {
     let month;
     let day;
     if(+regist.birth.month < 10){
-      console.log("???");
+      
       month = `0${regist.birth.month}`;
     }
     else{
@@ -181,7 +181,7 @@ function AddMbti({ progress }: MyProps) {
       mbti : selectedmbti
     }
     const result = await getSignupCompleteResult(body);
-    console.log(result);
+    
     if(result.status === 200){
       dispatch(setInitState());
       navigate('/regist/complete');

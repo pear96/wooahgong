@@ -31,12 +31,12 @@ function ProfileFeeds({nickname} : MyProps) {
         nickname : nickRef.current,
         page: pageRef.current,
       };
-      console.log(feedsRef.current);
+      
       const result = await ProfileApi.getMyFeeds(value);
 
       if (result.status === 200) {
-        console.log('?!?!?!?!?!');
-        console.log(result.data);
+        
+        
         if (result.data.length === 0) {
           setEnd(true);
         } else if (feedsRef.current.length > 0) {
@@ -74,7 +74,7 @@ function ProfileFeeds({nickname} : MyProps) {
     return () => observer && observer.disconnect();
   }, [target]);
   useEffect(()=>{
-    console.log(nickname);
+    
     setCurNick(nickname);
     setFeeds([]);
     setPage(0);

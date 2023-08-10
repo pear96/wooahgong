@@ -40,7 +40,7 @@ function Forme() {
 
   const onClickGotoPlace = useCallback(
     (placeSeq) => () => {
-      console.log(placeSeq);
+      
       navigate(`/place/${placeSeq}`);
     },
     [],
@@ -53,7 +53,7 @@ function Forme() {
       // console.log
         const body = { searchRadius: distRef.current, lat : +curlat, lng : +curlng, page : pageRef.current };
         const result = await getFormeplace(body);
-        console.log(result);
+        
         if(result.status === 200){
           if(result.data.places.length === 0){
             setEnd(true);
@@ -69,9 +69,9 @@ function Forme() {
   }
 
   // const checkLength = () => {
-  //   console.log(real.length);
+  //   
   //   if (state.length > 0) {
-  //     console.log(state);
+  //     
   //     setCheck(false);
   //     return (
   //       <Grid>
@@ -130,7 +130,7 @@ function Forme() {
   }, [target]);
 
   useEffect(() => {
-    console.log("????!?!?!?!?!?!?!?!?@!?!?#?#?@#?@?#!@?#!?#");
+    
     setDistance(Changeradius);
     setState([]);
     setEnd(false);

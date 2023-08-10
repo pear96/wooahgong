@@ -13,7 +13,6 @@ import useInput from '../../common/hooks/useInput';
 // reducers
 import { setUser } from './authSlice';
 // styled component
-// import { LogoContainer } from './kakaosocialLogin/socialLogin';
 
 // logo
 import Logo from '../../assets/Logo.png';
@@ -100,9 +99,9 @@ const mainLogin = () => {
   useLayoutEffect(() => {
     const detectMobileKeyboard = () =>{
       if(document.activeElement?.tagName === "INPUT"){
-        console.log("??S?S?D?SSD?SD?SD?");
+        
         if(inputRef.current !== null) {
-          console.log(inputRef.current);
+          
           inputRef.current.scrollIntoView({block : 'end'});
 
         } 
@@ -116,12 +115,12 @@ const mainLogin = () => {
 
   
   const handleLogin = async () => {
-    // console.log(result);
+    // 
   };
   const onSubmit = useCallback(
     async (e) => {
       e.preventDefault();
-      console.log(e.target[0].value, e.target[1].value);
+      
       if (!id || !id.trim()) {
         return toast.info(
           <div style={{ width: 'inherit', fontSize: '10px' }}>

@@ -24,7 +24,7 @@ function CommentHeader() {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location?.state as locState;
-  // console.log(state);
+  // 
   const {placeSeq, feedSeq} = useParams();
   
   const handleRedirect = () => {
@@ -35,7 +35,7 @@ function CommentHeader() {
   }
   useEffect(() => {
     if(settingEnd){
-      console.log("???????????????????????????????????????");
+      
       const iamge = window.localStorage.getItem('userImage');
       const name = window.localStorage.getItem('userNickname');
       const content = window.localStorage.getItem('updateContent');
@@ -64,7 +64,7 @@ function CommentHeader() {
 
   useEffect(()=>{
     if(myState !== null){
-      console.log(myState);
+      
       window.localStorage.setItem('userImage', myState.userImage);
       window.localStorage.setItem('userNickname', myState.nickname);
       window.localStorage.setItem('updateContent', myState.content);
@@ -74,7 +74,7 @@ function CommentHeader() {
   },[myState])
 
   useEffect(()=>{
-    console.log(state);
+    
     if(state !== null){
       setMyState(state.myState);
     }

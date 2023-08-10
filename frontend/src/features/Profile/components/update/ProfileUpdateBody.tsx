@@ -92,9 +92,9 @@ function ProfileUpdateBody({
   useLayoutEffect(() => {
       const detectMobileKeyboard = () =>{
         if(document.activeElement?.tagName === "INPUT"){
-          console.log("??S?S?D?SSD?SD?SD?");
+          
           if(listRef.current !== null) {
-            console.log(listRef.current);
+            
             listRef.current.scrollIntoView({block : 'end'});
 
           } 
@@ -108,14 +108,14 @@ function ProfileUpdateBody({
     if (e.currentTarget.files) {
       formData.append('image', e.currentTarget.files[0]);
       // setTempImg(reader.result);
-      console.log(nickname);
+      
       const result = await ProfileApi.updateProfileImage(window.localStorage.getItem("nickname"), formData);
       if (result?.status === 200) {
-        console.log(result.data);
+        
         window.localStorage.setItem('profileImg', result.data);
         dispatch(setProfileImg(result.data));
       } else {
-        console.log('error');
+        
       }
     }
   };

@@ -112,9 +112,9 @@ function Checkmail({ progress }: MyProps) {
   useLayoutEffect(() => {
       const detectMobileKeyboard = () =>{
         if(document.activeElement?.tagName === "INPUT"){
-          console.log("??S?S?D?SSD?SD?SD?");
+          
           if(listRef.current !== null) {
-            console.log(listRef.current);
+            
             listRef.current.scrollIntoView({block : 'end'});
 
           } 
@@ -136,7 +136,7 @@ function Checkmail({ progress }: MyProps) {
     const emailRegex =
       /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
     const emailCurrent = e.currentTarget.value;
-    console.log(emailCurrent);
+    
     setStateEmail(emailCurrent);
 
     if (!emailRegex.test(emailCurrent)) {
@@ -150,7 +150,7 @@ function Checkmail({ progress }: MyProps) {
   }, []);
   const handleCodeOk = (e: React.ChangeEvent<HTMLInputElement>) => {
     const curCode = e.currentTarget.value;
-    console.log(curCode);
+    
     setCode(curCode);
   };
 
@@ -161,7 +161,7 @@ function Checkmail({ progress }: MyProps) {
     const body = {
       "email" : email
     }
-    console.log(body);
+    
     const result = await getEmailCheckResult(body);
     
     if(result.status === 200){

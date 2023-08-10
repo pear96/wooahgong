@@ -45,7 +45,7 @@ function Trends() {
 
   const onClickGotoPlace = useCallback(
     (placeSeq) => () => {
-      console.log(placeSeq);
+      
       navigate(`/place/${placeSeq}`);
     },
     [],
@@ -65,7 +65,7 @@ function Trends() {
     const body = { searchRadius: Changeradius, lat, lng };
     if (lat !== undefined && lng !== undefined) {
       const result = await getTrendplace(body);
-      console.log(result);
+      
       setPopular(result.data.trendyPlaces);
       setAge(result.data.recByAgeGender.places);
       setMbti(result.data.recByMBTI.places);
@@ -85,12 +85,12 @@ function Trends() {
     }
   }
 
-  // console.log(popular, '인기 있는 장소');
-  // console.log(age, '나이');
-  // console.log(mbti, 'mbti');
-  // console.log(mood1, '분위기1');
-  // console.log(mood2, '분위기2');
-  // console.log(mood2Name);
+  // 
+  // 
+  // 
+  // 
+  // 
+  // 
   const handleMoodPlace = (moodPlace : any, name : string) => {
     if(moodPlace.length > 0){
         return (
@@ -141,7 +141,7 @@ function Trends() {
         추천 장소가 없습니다😥
       </div>
     )
-  // console.log("???");  
+  //   
   }
   useEffect(() => {
     getAndTrendplace();

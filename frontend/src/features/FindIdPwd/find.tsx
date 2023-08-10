@@ -19,12 +19,12 @@ const Container = styled.div`
 
 function Find() {
   // const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
-  // console.log(regist);
+  // 
   const dispatch = useDispatch();
   // const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
   //   dispatch(setId('sterr'));
   //   dispatch(setPwd('123456'));
-  //   console.log(regist);
+  //   
   // };
   return (
     <Container>

@@ -102,14 +102,14 @@ function FormeAndTrends() {
       </Menu.Item>
     </Menu>
   );
-  console.log(value);
+  
 
   return (
     <div style={{ position : "relative", width : "100%",  height : "30px",marginTop: '1rem'}}>
       <div style={{position : "absolute", top : "45%", left : "65%", display : 'flex', alignItems : "center"}}>
         <div
           onClick={() => {
-            console.log('여기');
+            
           }}
           style={{ zIndex: 1 }}
         >

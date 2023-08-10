@@ -3,6 +3,6 @@ FROM openjdk:11 as build-stage
 COPY . .
 RUN chmod +x ./gradlew
 RUN ./gradlew build
-RUN cp /homepage/build/libs/*.jar /homepage/
+RUN cp /build/libs/*.jar .
 EXPOSE 8080
 CMD java -jar backend-1.0-SNAPSHOT.jar

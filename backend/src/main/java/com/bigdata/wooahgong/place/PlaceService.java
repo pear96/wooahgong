@@ -3,6 +3,7 @@ package com.bigdata.wooahgong.place;
 
 import com.bigdata.wooahgong.common.exception.CustomException;
 import com.bigdata.wooahgong.common.exception.ErrorCode;
+import com.bigdata.wooahgong.feed.ImageService;
 import com.bigdata.wooahgong.feed.entity.Feed;
 import com.bigdata.wooahgong.feed.entity.FeedLikesComparator;
 import com.bigdata.wooahgong.feed.repository.FeedRepository;
@@ -30,6 +31,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PlaceService {
     private final UserService userService;
+    private final ImageService imageService;
     private final PlaceRepository placeRepository;
     private final PlaceWishRepository placeWishRepository;
     private final FeedRepository feedRepository;
@@ -103,7 +105,8 @@ public class PlaceService {
         // 우선 최신순 정렬
         for (int i = foundFeeds.size() - 1; i >= 0; i--) {
             Feed feed = foundFeeds.get(i);
-            CustomFeedDto customFeed = new CustomFeedDto(feed.getFeedSeq(), feed.getThumbnail());
+            CustomFeedDto customFeed = new CustomFeedDto(feed.getFeedSeq(),
+                    imageService.getImage(feed.getThumbnail()));
             customFeeds.add(customFeed);
             sumRating += feed.getRatings();
         }
@@ -117,7 +120,7 @@ public class PlaceService {
                 .name(place.getName())
                 .address(place.getAddress())
                 .avgRatings(avgRating).latitude(place.getLatitude()).longitude(place.getLongitude())
-                .placeImageUrl(placeImageUrl)
+                .placeImageUrl(imageService.getImage(placeImageUrl))
                 .feeds(customFeeds)
                 .isWished(isWished)
                 .build();
@@ -154,7 +157,8 @@ public class PlaceService {
 
         for (int i = foundFeeds.size() - 1; i >= 0; i--) {
             Feed feed = foundFeeds.get(i);
-            CustomFeedDto customFeed = new CustomFeedDto(feed.getFeedSeq(), feed.getThumbnail());
+            CustomFeedDto customFeed = new CustomFeedDto(feed.getFeedSeq(),
+                    imageService.getImage(feed.getThumbnail()));
             customFeeds.add(customFeed);
         }
 

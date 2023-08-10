@@ -8,7 +8,5 @@ export const getToken = () => {
   return window.localStorage.getItem('token');
 };
 export const deleteToken = () => {
-  console.log("????실행");
   window.localStorage.clear();
-  console.log(window.localStorage)
 };

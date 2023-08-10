@@ -122,13 +122,13 @@ function FindId() {
     e.preventDefault();
     e.stopPropagation();
     const result = await findIdByEmail();
-    console.log(result);
+    
     navigate('/find/email', { state: { email, userId: result.userId, provider: result.provider } });
   };
   const pressEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === `Enter`) {
       const result = await findIdByEmail();
-      console.log(result);
+      
       navigate('/find/email', { state: { email, userId: result.userId, provider: result.provider } });
     }
 

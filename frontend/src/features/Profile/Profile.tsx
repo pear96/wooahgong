@@ -27,7 +27,7 @@ function Profile() {
     const getProfileApi = async () => {
         if (nickname !== undefined) {
         const result = await ProfileApi.getProfile(nickname);
-        console.log(result.data);
+        
         if (result.status === 200) {
             setUserProps(result.data);
             setProfileLoading(true);
@@ -42,7 +42,7 @@ function Profile() {
         // getMyFeedsApi();
     }, []);
     useEffect(() => {
-        console.log(nickname);
+        
         getProfileApi();
     }, [nickname])
 

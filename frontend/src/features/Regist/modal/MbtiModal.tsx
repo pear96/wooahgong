@@ -62,7 +62,7 @@ function MbtiModal({ open, onClose, handleMbti, mbti }: MyProps) {
           <main>
             <div className={style.configForm}>
               {mbti.map((v: { type: string; check: boolean; color: string }, i: number) => {
-                // console.log(v);
+                // 
                 const index = i;
                 if (v.check) {
                   return (

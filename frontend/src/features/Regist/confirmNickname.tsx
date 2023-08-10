@@ -114,9 +114,9 @@ function ConfirmNickname({ progress }: MyProps) {
   useLayoutEffect(() => {
       const detectMobileKeyboard = () =>{
         if(document.activeElement?.tagName === "INPUT"){
-          console.log("??S?S?D?SSD?SD?SD?");
+          
           if(listRef.current !== null) {
-            console.log(listRef.current);
+            
             listRef.current.scrollIntoView({block : 'end'});
 
           } 

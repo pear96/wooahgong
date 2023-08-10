@@ -118,12 +118,12 @@ function FeedImage() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    console.log(feedstore);
+    
     const handleUploadImage = (e : React.ChangeEvent<HTMLInputElement>) =>{
         if(preview.length >= 5){
 
             // toastfy 써야함
-            console.log("불가");
+            
         }
         else if(e.currentTarget.files && preview.length < 5){
             if((e.currentTarget.files[0] !== undefined)){
@@ -134,7 +134,7 @@ function FeedImage() {
     }
 
     const handleDeleteImage = (index : number) =>{
-        console.log(index);
+        
         setPreview(preview.filter((v,i)=> i !== index));
         setUploadImage(images.filter((v,i)=> i !== index));
     }
@@ -154,7 +154,7 @@ function FeedImage() {
         }
         else{
             navigate(`/report/searchplace`);
-            console.log(images, preview);
+            
         }
     }
     useEffect(()=>{

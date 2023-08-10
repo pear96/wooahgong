@@ -2,6 +2,7 @@ package com.bigdata.wooahgong.search;
 
 import com.bigdata.wooahgong.common.exception.CustomException;
 import com.bigdata.wooahgong.common.exception.ErrorCode;
+import com.bigdata.wooahgong.feed.ImageService;
 import com.bigdata.wooahgong.place.entity.Place;
 import com.bigdata.wooahgong.place.repository.PlaceRepository;
 import com.bigdata.wooahgong.search.dtos.response.SearchHistoriesRes;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +30,7 @@ import java.util.Optional;
 public class SearchService {
 
     private final UserService userService;
+    private final ImageService imageService;
     private final SearchHistoryRepository searchHistoryRepository;
     private final PlaceRepository placeRepository;
     private final UserRepository userRepository;
@@ -60,7 +63,7 @@ public class SearchService {
                     .historySeq(searchHistory.getHistorySeq())
                     .type(searchHistory.getType())
                     .searchWord(searchHistory.getSearchWord())
-                    .imageUrl(searchHistory.getImageUrl())
+                    .imageUrl(imageService.getImage(searchHistory.getImageUrl()))
                     .placeSeq(searchHistory.getPlaceSeq())
                     .build();
             recentSearchHistoriesExceptUser.add(customSearchHistory);
@@ -93,7 +96,7 @@ public class SearchService {
                     .placeSeq(place.getPlaceSeq())
                     .address(place.getAddress())
                     .name(place.getName())
-                    .imageUrl(place.getFeeds().get(0).getThumbnail())
+                    .imageUrl(imageService.getImage(place.getFeeds().get(0).getThumbnail()))
                     .build();
             results.add(searchedPlace);
         }
@@ -122,7 +125,7 @@ public class SearchService {
         for (User user : searchedUsers) {
             SearchUserDto searchedUser = SearchUserDto.builder()
                     .nickname(user.getNickname())
-                    .imageUrl(user.getImageUrl())
+                    .imageUrl(imageService.getImage(user.getImageUrl()))
                     .build();
             results.add(searchedUser);
         }
@@ -229,7 +232,7 @@ public class SearchService {
                     .historySeq(searchHistory.getHistorySeq())
                     .type(searchHistory.getType())
                     .searchWord(searchHistory.getSearchWord())
-                    .imageUrl(searchHistory.getImageUrl())
+                    .imageUrl(imageService.getImage(searchHistory.getImageUrl()))
                     .placeSeq(searchHistory.getPlaceSeq())
                     .build();
             recentSearchHistoriesExceptUser.add(customSearchHistory);

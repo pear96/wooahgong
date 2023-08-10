@@ -45,10 +45,10 @@ function PlaceFeeds({ placeFeeds }: MyProps) {
 
   const sortFeeds = async (value: string) => {
     // TODO: axios
-    console.log(`selected ${value}`);
+    
     if (placeSeq !== undefined) {
       const result = await PlaceApi.getFeedsSortResult(placeSeq, value);
-      console.log(result);
+      
       if (result?.status === 200) {
         setFeeds(result.data.feeds);
         if(value === "latest") setType("최신순");

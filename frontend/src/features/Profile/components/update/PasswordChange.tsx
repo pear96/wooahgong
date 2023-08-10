@@ -110,11 +110,11 @@ function PasswordChange({ open, id, onClose }: MyProps) {
         const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{5,15}$/;
         const curPwd = e.currentTarget.value;
         setStatePwd(curPwd);
-        console.log(pwd);
+        
         if (!passwordRegex.test(curPwd)) {
             setPwdErrorMsg('숫자+영문자+특수문자 조합으로 8자리 이상 입력!');
         } else {
-            console.log(curPwd);
+            
             // setStatePwd(curPwd);
             setPwdErrorMsg('');
         }
@@ -122,7 +122,7 @@ function PasswordChange({ open, id, onClose }: MyProps) {
     const handleCheckCheckPwd = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         const curPwd = e.currentTarget.value;
-        console.log(curPwd);
+        
         setPwdCheck(curPwd);
         if (pwd !== curPwd) {
             setPwdCheckErrorMsg('비밀번호가 일치하지 않습니다.');
@@ -139,11 +139,11 @@ function PasswordChange({ open, id, onClose }: MyProps) {
         }
         const result = await getPwdChangeResult(body);
         if(result.status === 200){
-            console.log("완료");
+            
             onClose(e);
         }
         else{
-            console.log("에러");
+            
         }
     
     }

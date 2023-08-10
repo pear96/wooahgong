@@ -28,30 +28,30 @@ public class LoginController {
         return new ResponseEntity<>(commonLoginRes, HttpStatus.OK);
     }
 
-    // 카카오 로그인
-    // 인가코드를 받아온 후 부터 진행
-    @GetMapping("/kakao")
-    public ResponseEntity<Map<String, Object>> kakaoLogin(@RequestParam String code) {
-        // 1. 인가 코드로 액세스 토큰을 받아온다.
-        String accessToken = loginService.getAccessToken(code);
-        // 2. 액세스 토큰으로 카카오 정보를 가져온다.
-        KakaoProfile kakaoProfile = loginService.getProfileByToken(accessToken);
-        // 3. 카카오 정보로 회원인지 아닌지 검사한다.
-        User user = userRepository.findByEmail(kakaoProfile.getKakao_account().getEmail()).orElseGet(User::new);
-        // 3-1. 회원이 아니라면 회원가입 절차 진행
-        Map<String, Object> map = new HashMap<>();
-        if (user.getUserSeq() == null) {
-            map.put("email", kakaoProfile.getKakao_account().getEmail());
-        }
-        // 3-2. 회원이라면 커스텀 토큰 발급
-        else {
-            map.put("token", "Bearer "+JwtTokenUtil.getToken(user.getEmail()));
-            map.put("nickname", user.getNickname());
-            map.put("profileImg", user.getImageUrl());
-            map.put("provider", user.isProvider());
-            map.put("gender", user.isGender());
-        }
-        return new ResponseEntity<>(map, HttpStatus.OK);
-    }
+//    // 카카오 로그인
+//    // 인가코드를 받아온 후 부터 진행
+//    @GetMapping("/kakao")
+//    public ResponseEntity<Map<String, Object>> kakaoLogin(@RequestParam String code) {
+//        // 1. 인가 코드로 액세스 토큰을 받아온다.
+//        String accessToken = loginService.getAccessToken(code);
+//        // 2. 액세스 토큰으로 카카오 정보를 가져온다.
+//        KakaoProfile kakaoProfile = loginService.getProfileByToken(accessToken);
+//        // 3. 카카오 정보로 회원인지 아닌지 검사한다.
+//        User user = userRepository.findByEmail(kakaoProfile.getKakao_account().getEmail()).orElseGet(User::new);
+//        // 3-1. 회원이 아니라면 회원가입 절차 진행
+//        Map<String, Object> map = new HashMap<>();
+//        if (user.getUserSeq() == null) {
+//            map.put("email", kakaoProfile.getKakao_account().getEmail());
+//        }
+//        // 3-2. 회원이라면 커스텀 토큰 발급
+//        else {
+//            map.put("token", "Bearer "+JwtTokenUtil.getToken(user.getEmail()));
+//            map.put("nickname", user.getNickname());
+//            map.put("profileImg", user.getImageUrl());
+//            map.put("provider", user.isProvider());
+//            map.put("gender", user.isGender());
+//        }
+//        return new ResponseEntity<>(map, HttpStatus.OK);
+//    }
 
 }

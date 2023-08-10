@@ -4,9 +4,9 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.bigdata.wooahgong.common.exception.CustomException;
 import com.bigdata.wooahgong.common.exception.ErrorCode;
-import com.bigdata.wooahgong.common.s3.S3Service;
 import com.bigdata.wooahgong.common.util.JwtTokenUtil;
 import com.bigdata.wooahgong.email.EmailService;
+import com.bigdata.wooahgong.feed.ImageService;
 import com.bigdata.wooahgong.feed.entity.Feed;
 import com.bigdata.wooahgong.feed.repository.FeedRepository;
 import com.bigdata.wooahgong.mood.entity.Mood;
@@ -48,7 +48,8 @@ public class UserService {
     private final PlaceWishRepository placeWishRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
-    private final S3Service s3Service;
+//    private final S3Service s3Service;
+    private final ImageService imageService;
 
     public String getEmailByToken(String token) {
         JWTVerifier verifier = JwtTokenUtil.getVerifier();
@@ -174,7 +175,7 @@ public class UserService {
         return GetUserInfoRes.builder()
                 .isOwner(isOwner).feedsCnt(feedsCnt)
                 .likedCnt(likedCnt).bookmarkedCnt(bookmark)
-                .moods(moods).mbti(Owner.getMbti()).image(Owner.getImageUrl()).build();
+                .moods(moods).mbti(Owner.getMbti()).image(imageService.getImage(Owner.getImageUrl())).build();
     }
 
     public GetMyInfoRes getMyInfo(String token, String nickname) {
@@ -186,7 +187,7 @@ public class UserService {
             moods.add(userMood.getMood().getMood());
         }
         return GetMyInfoRes.builder()
-                .userId(user.getUserId()).nickname(user.getNickname()).profileImg(user.getImageUrl())
+                .userId(user.getUserId()).nickname(user.getNickname()).profileImg(imageService.getImage(user.getImageUrl()))
                 .mbti(user.getMbti()).moods(moods).provider(user.isProvider()).build();
     }
 
@@ -201,7 +202,7 @@ public class UserService {
         for (Feed feed : pages) {
             String image = null;
             if (feed.getFeedImages().size() != 0) {
-                image = feed.getFeedImages().get(0).getImageUrl();
+                image = imageService.getImage(feed.getFeedImages().get(0).getImageUrl());
             }
             getMyFeedsResList.add(GetMyFeedsRes.builder()
                     .feedSeq(feed.getFeedSeq())
@@ -224,7 +225,7 @@ public class UserService {
             Feed feed = feedLike.getFeed();
             String image = null;
             if (feed.getFeedImages().size() != 0) {
-                image = feed.getFeedImages().get(0).getImageUrl();
+                image = imageService.getImage(feed.getFeedImages().get(0).getImageUrl());
             }
             getMyFeedsResList.add(GetMyFeedsRes.builder()
                     .feedSeq(feed.getFeedSeq())
@@ -251,7 +252,7 @@ public class UserService {
             if (place.getFeeds().size() != 0) {
                 Feed feed = place.getFeeds().get(0);
                 // 피드에 사진이 있을 경우에만
-                image = feed.getThumbnail();
+                image = imageService.getImage(feed.getThumbnail());
             }
             getMyPlacesResList.add(GetMyPlacesRes.builder()
                     .placeSeq(place.getPlaceSeq()).thumbnail(image).build());
@@ -300,14 +301,10 @@ public class UserService {
         List<MultipartFile> images = new ArrayList<>();
         images.add(image);
         List<String> urls = null;
-        try {
-            urls = s3Service.uploadImg(images, "/profile");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        urls = imageService.uploadImg(user.getUserId(), images);
         String url = urls.get(0);
         user.setImageUrl(url);
-        return url;
+        return imageService.getImage(url);
     }
 
     @Transactional

@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { getToken } from './JTW-Token';
 
-const BASE_URL = 'https://j6a505.p.ssafy.io/api/users';
-// const BASE_URL = 'http://localhost:8080/api/users';
+
+const BASE_URL = `${process.env.REACT_APP_BASE_URL}/users`;
 
 const getProfile = async (nickname: string) => {
   const token = getToken();
-  console.log('nickname', nickname);
+  
 
-  console.log('this is get profile');
+  
 
   const result = await axios.get(`${BASE_URL}/${nickname}`, { headers: { Authorization: `${token}` } })
     .then((response) => {
@@ -30,8 +30,8 @@ const getProfile = async (nickname: string) => {
 
 const getProfileForUpdate = async (nickname: string) => {
   const token = getToken();
-  console.log('nickname', nickname);
-  console.log('this is get profile for update');
+  
+  
 
   const result = await axios.get(`${BASE_URL}/${nickname}/update`, { headers: { Authorization: `Bearer ${token}` } })
     .then((response) => {
@@ -53,7 +53,7 @@ const getProfileForUpdate = async (nickname: string) => {
 
 const getMyFeeds = async (data: { nickname: string, page: number }) => {
   const token = getToken();
-  console.log(data);
+  
   const result = await axios.get(`${BASE_URL}/${data.nickname}/feeds?page=${data.page}`,
     { headers: { Authorization: `${token}` } })
     .then((response) => {
@@ -69,7 +69,7 @@ const getMyFeeds = async (data: { nickname: string, page: number }) => {
       }
       return value;
     })
-  console.log(result);
+  
   return result;
 };
 
@@ -90,12 +90,12 @@ const getLikedFeeds = async (data: { nickname: string, page: number }) => {
       }
       return value;
     });
-  console.log(result);
+  
   return result;
 };
 
 const getWishedFeeds = async (data: { nickname: string, page: number }) => {
-  console.log(data);
+  
   const token = getToken();
   const result = await axios.get(`${BASE_URL}/${data.nickname}/wished?page=${data.page}`,
     { headers: { Authorization: `${token}` } })
@@ -112,7 +112,7 @@ const getWishedFeeds = async (data: { nickname: string, page: number }) => {
       }
       return value;
     })
-  console.log(result);
+  
   return result;
 };
 

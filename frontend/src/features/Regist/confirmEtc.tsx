@@ -108,9 +108,9 @@ function ConfirmEtc({ progress }: MyProps) {
   const dispatch = useDispatch();
 
   const handleInputBirthday = useCallback((date) => {
-    console.log(date);
+    
     setBirthday(date);
-    console.log(birthday);
+    
     setBirthdayCheck(true);
     setIsOk(true);
   }, []);

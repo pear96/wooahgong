@@ -70,7 +70,9 @@
     ]
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/loadable__component": "^5.13.4",
+    "@types/react-router-dom": "^5.3.3",
     "@types/react-slick": "^0.23.8",
     "@types/styled-components": "^5.1.24",
     "@typescript-eslint/eslint-plugin": "^5.14.0",

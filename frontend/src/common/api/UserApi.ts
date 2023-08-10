@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { saveToken, getToken } from './JTW-Token';
 
-const BASE_URL = 'https://j6a505.p.ssafy.io/api/users';
-// const BASE_URL = 'http://localhost:8080/api/users';
+const BASE_URL = `${process.env.REACT_APP_BASE_URL}/users`;
+
 
 const getEmailCheckResult = (body: { email: string }) => {
   const result = axios.post(`${BASE_URL}/signup/email`, body).catch((e: any) => {
@@ -23,7 +23,7 @@ const getEmailCheckCodeResult = async (data: { email: string; code: string }) =>
   return result;
 };
 const getIdDuplicateCheck = async (id: string) => {
-  console.log(id);
+  
   const result = await axios.get(`${BASE_URL}/signup?userId=${id}`).catch((e: any) => {
     const value = {
       status: 409,
@@ -33,7 +33,7 @@ const getIdDuplicateCheck = async (id: string) => {
   return result;
 };
 const getNickDuplicateCheck = async (nick: string) => {
-  console.log(nick);
+  
   const result = await axios.get(`${BASE_URL}/signup?nickname=${nick}`).catch((e: any) => {
     const value = {
       status: 409,
@@ -53,9 +53,9 @@ const getSignupCompleteResult = async (body: {
   moods: string[];
   mbti: string;
 }) => {
-  console.log(body);
+  
   const result = await axios.post(`${BASE_URL}/signup`, body).catch((e: any) => {
-    console.log(e);
+    
     const value = {
       status: 400,
     };
@@ -67,7 +67,7 @@ const getCommonLoginResult = async (body: { userId: string; password: string }) 
   const result = await axios
     .post(`${BASE_URL}/login`, body)
     .then((response) => {
-      console.log(response);
+      
       saveToken(response.data.token);
       const value = {
         status: 200,
@@ -96,7 +96,7 @@ const getCommonLoginResult = async (body: { userId: string; password: string }) 
 };
 const getKakaoLoginResult = async (code: string) => {
   const result = await axios.get(`${BASE_URL}/login/kakao?code=${code}`);
-  console.log(result);
+  
   return result;
 };
 
@@ -109,7 +109,7 @@ const leaveWooAhGong = async (nickname: string) => {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
-        console.log(res);
+        
         const value = {
           status: res.status
 
@@ -117,7 +117,7 @@ const leaveWooAhGong = async (nickname: string) => {
         return value
       })
       .catch((err) => {
-        console.log(err);
+        
         const value = {
           status: 401
         }

@@ -128,7 +128,7 @@ function AddAtmosInter({ progress }: MyProps) {
   };
   useEffect(() => {
     if (selectedAtmos.length > 0) {
-      console.log(selectedAtmos);
+      
       setIsOk(true);
     } else {
       setIsOk(false);
@@ -182,7 +182,7 @@ function AddAtmosInter({ progress }: MyProps) {
                     }}
           >
             {atmos.map((v: { type: string; check: boolean; color: string }, i: number) => {
-              // console.log(v);
+              // 
               const index = i;
               if (v.check) {
                 return (

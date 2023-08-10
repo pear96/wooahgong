@@ -98,7 +98,7 @@ function SummarySpot({spot, isSearch, total,searchWay, clearRoute} : MyProps){
     
     const [open, setIsOpen] = useState<boolean>(false);
     const navigate = useNavigate();
-    console.log(spot);
+    
 
     const handleOpenModal = (e : React.MouseEvent<HTMLButtonElement>) =>{
         e.stopPropagation();

@@ -7,7 +7,6 @@ function Main() {
   const dispatch = useAppDispatch();
   useEffect(()=>{
     return () => {
-      console.log("???");
       dispatch(setRadius(300000000000000));
     }
   });

@@ -120,9 +120,9 @@ function ConfirmPwd({ progress }: MyProps) {
   useLayoutEffect(() => {
       const detectMobileKeyboard = () =>{
         if(document.activeElement?.tagName === "INPUT"){
-          console.log("??S?S?D?SSD?SD?SD?");
+          
           if(listRef.current !== null) {
-            console.log(listRef.current);
+            
             listRef.current.scrollIntoView({block : 'end'});
 
           } 
@@ -136,18 +136,18 @@ function ConfirmPwd({ progress }: MyProps) {
 
   const regist = useSelector<ReducerType, Register>((state) => state.registerReducer);
   const dispatch = useDispatch();
-  console.log(regist);
+  
 
   const handleCheckPwd = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{5,10}$/;
     const curPwd = e.currentTarget.value;
     setStatePwd(curPwd);
-    console.log(pwd);
+    
     if (!passwordRegex.test(curPwd)) {
       setPwdErrorMsg('숫자+영문자+특수문자 조합으로 8자리 이상 입력!');
     } else {
-      console.log(curPwd);
+      
       // setStatePwd(curPwd);
       setPwdErrorMsg('');
     }
@@ -155,7 +155,7 @@ function ConfirmPwd({ progress }: MyProps) {
   const handleCheckCheckPwd = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const curPwd = e.currentTarget.value;
-    console.log(curPwd);
+    
     setPwdCheck(curPwd);
 
     if (pwd !== curPwd) {
@@ -163,7 +163,7 @@ function ConfirmPwd({ progress }: MyProps) {
       setPwdCheckErrorMsg('비밀번호가 일치하지 않습니다.');
       setIsOk(false);
     } else {
-      console.log('????');
+      
       setPwdCheckErrorMsg('');
       setIsOk(true);
     }

@@ -89,7 +89,7 @@ function Map() {
   };
   // 경로찾기 api 요청 함수
   const SearchWay = (type: boolean, end: { name: string; lat: number; lng: number }) => {
-    console.log(type, end);
+    
 
     // 일단 있는 마커들을 지도에서 때어줌, 마커리스트 초기화x, 지도에서 내리는거임
     markerlist.map((v) => v.setMap(null));
@@ -143,7 +143,7 @@ function Map() {
 
         // 이미 지도 상에 경로가 있으면 지워 버림
         if (resultdrawArr !== null) {
-          console.log('여기니?', resultdrawArr);
+          
           resultdrawArr.setMap(null);
           setResultDrawArr(null);
         }
@@ -151,10 +151,10 @@ function Map() {
         const drawInfoArr = [];
         const traffic = [];
         const polyline = [];
-        console.log('여긴 아닌거같아');
+        
 
         if (trafficInfochk !== null) {
-          console.log('들어오셨나요?');
+          
           for (let i = 0; i < resultData.length; i += 1) {
             const { geometry } = resultData[i];
             if (geometry.type === 'LineString') {
@@ -174,7 +174,7 @@ function Map() {
               polyline.push(...line);
             }
           }
-          console.log(polyline);
+          
           setResultDrawCarArr([...polyline]);
         } else {
           for (let i = 0; i < resultData.length; i += 1) {
@@ -235,7 +235,7 @@ function Map() {
   const drawCarRoute = (arrPoint: any[], traffic: any, chkt: any) => {
     const line = [];
     if (chkt.length !== 0) {
-      console.log(traffic, resultdrawCarArr);
+      
       if (traffic !== '0') {
         if (traffic.length === 0) {
           const polyline = new window.Tmapv2.Polyline({
@@ -325,7 +325,7 @@ function Map() {
             }),
           );
 
-          console.log('???실행');
+          
           setMyPosition({ lat, lng });
         } else {
           const data = {
@@ -333,7 +333,7 @@ function Map() {
             lat,
             lng,
           };
-          console.log('???');
+          
           const result = await getResultPlaceDistance(data);
           const value: { seq: number; img: string; name: string; avgRating: number; lat: number; lng: number }[] = [];
           if (result.status === 200) {
@@ -370,7 +370,7 @@ function Map() {
                 httpsMode: true,
               }),
             );
-            console.log('???실행');
+            
             setPoint([...value]);
             setMyPosition({ lat, lng });
           }
@@ -388,9 +388,9 @@ function Map() {
     const result = await getResultPlaceDistance(data);
     const value: { seq: number; img: string; name: string; avgRating: number; lat: number; lng: number }[] = [];
     if (result.status === 200) {
-      console.log(result);
+      
       if (markerlist.length > 0) {
-        console.log('???????');
+        
         markerlist.map((v) => v.setMap(null));
         setMarkerList(markerlist.splice(0, markerlist.length));
       }
@@ -422,7 +422,7 @@ function Map() {
           });
         },
       );
-      console.log('???실행');
+      
       const bounds = new window.Tmapv2.LatLngBounds();
       const markertemp = [];
       for (let i = 0; i < value.length; i += 1) {
@@ -436,12 +436,12 @@ function Map() {
         marker.addListener('click', () => {
           setSpot(value[i]);
           setisOpen(true);
-          console.log('안녕');
+          
         });
         marker.addListener('touchend', () => {
           setSpot(point[i]);
           setisOpen(true);
-          console.log('안녕');
+          
         });
         markertemp.push(marker);
       }
@@ -485,7 +485,7 @@ function Map() {
 
   // 처음 실행시 map이 null이면 map 생성, 반대 경우 return
   useEffect(() => {
-    console.log(state);
+    
     if (map !== null) return;
     CreateMap();
   }, []);
@@ -497,7 +497,7 @@ function Map() {
     map.addListener('touchstart', closeModal);
     // 마커가 존재하는 경우 다 지워 버림
     if (markerlist.length > 0) {
-      console.log('???????');
+      
       markerlist.map((v) => v.setMap(null));
       setMarkerList(markerlist.splice(0, markerlist.length));
     }
@@ -527,12 +527,12 @@ function Map() {
       marker.addListener('click', () => {
         setSpot(data);
         setisOpen(true);
-        console.log('안녕');
+        
       });
       marker.addListener('touchend', () => {
         setSpot(data);
         setisOpen(true);
-        console.log('안녕');
+        
       });
       markertemp.push(marker);
       const marker2 = new window.Tmapv2.Marker({
@@ -559,12 +559,12 @@ function Map() {
         marker.addListener('click', () => {
           setSpot(point[i]);
           setisOpen(true);
-          console.log('안녕');
+          
         });
         marker.addListener('touchend', () => {
           setSpot(point[i]);
           setisOpen(true);
-          console.log('안녕');
+          
         });
         markertemp.push(marker);
       }

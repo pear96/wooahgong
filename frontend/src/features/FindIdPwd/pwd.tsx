@@ -99,7 +99,7 @@ function FindPwd() {
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      console.log(e.target[0].value, e.target[1].value);
+      
       if (!id || !id.trim()) {
         return toast.info(
           <div style={{ width: 'inherit', fontSize: '10px' }}>

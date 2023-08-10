@@ -2,8 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getToken } from './JTW-Token';
 
-const BASE_URL = 'https://j6a505.p.ssafy.io/data/main';
-
+const BASE_URL = `${process.env.REACT_APP_DATA_URL}/main`;
 
 // main For me api
 const getFormeplace = async (body: {
@@ -12,17 +11,17 @@ const getFormeplace = async (body: {
   lng: number | undefined;
   page : number
 }) => {
-  console.log(body);
+  // 
   const token = getToken();
 
   const result = await axios
     .post(`${BASE_URL}`, body, { headers: { Authorization: `${token}` } })
     .then((res) => {
-      // console.log(res);
+      // 
       return res;
     })
     .catch((err: any) => {
-      console.dir(err);
+      // console.dir(err);
       return err;
     });
 
@@ -36,12 +35,12 @@ const getTrendplace = async (body: {
   lat: number | undefined;
   lng: number | undefined;
 }) => {
-  // console.log(body);
+  // 
   const token = getToken();
   const result = await axios
     .post(`${BASE_URL}/trend`, body, { headers: { Authorization: `${token}` } })
     .then((res) => {
-      // console.log(res);
+      // 
       return res;
     })
     .catch((err: any) => {

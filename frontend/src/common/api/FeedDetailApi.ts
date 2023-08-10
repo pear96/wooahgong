@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getToken } from './JTW-Token';
 
-const BASE_URL = 'https://j6a505.p.ssafy.io/api/feed';
+const BASE_URL = `${process.env.REACT_APP_BASE_URL}/feed`;
 
 // 피드 상세 정보 조회
 
@@ -10,11 +10,11 @@ const getFeedDetail = async (seq: number | string) => {
   const result = await axios
     .get(`${BASE_URL}/${seq}`, { headers: { Authorization: `${token}` } })
     .then((res) => {
-      console.log(res);
+      // 
       return res;
     })
     .catch((err) => {
-      console.dir(err);
+      // console.dir(err);
       return err;
     });
   return result;
@@ -22,15 +22,15 @@ const getFeedDetail = async (seq: number | string) => {
 // 피드 좋아요 => 정리 axios 형식에 따른,,, body,, {}를 넣어야만 했었따.
 const postFeedLike = async (feedSeq: number | string) => {
   const token = getToken();
-  console.log(feedSeq);
+  // 
   const result = await axios
     .post(`${BASE_URL}/${feedSeq}`, {}, { headers: { Authorization: `${token}` } })
     .then((res) => {
-      console.log(res);
+      // 
       return res;
     })
     .catch((err: any) => {
-      console.dir(err);
+      // console.dir(err);
       return err;
     });
 
@@ -40,8 +40,8 @@ const postFeedLike = async (feedSeq: number | string) => {
 
 const patchFeedDetail = async (feedSeq: string | number, data: { content: string }) => {
   const token = getToken();
-  console.log(feedSeq);
-  console.log(data);
+  // 
+  // 
   await axios({
     method: 'PATCH',
     url: `${BASE_URL}/${feedSeq}`,
@@ -49,11 +49,11 @@ const patchFeedDetail = async (feedSeq: string | number, data: { content: string
     data,
   })
     .then((res) => {
-      console.log(res);
+      // 
       return res;
     })
     .catch((err) => {
-      console.dir(err);
+      // console.dir(err);
       return err;
     });
 };
@@ -68,7 +68,7 @@ const deleteFeedDetail = async (feedSeq: string | number) => {
     headers: { Authorization: `${token}` },
   })
     .then((res) => {
-      console.log(res);
+      
       return res;
     })
     .catch((err) => {

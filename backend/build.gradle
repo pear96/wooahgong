@@ -22,7 +22,7 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
     // file upload
     implementation 'commons-io:commons-io:2.6'
-    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
+//    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
     // jwt
     implementation 'com.auth0:java-jwt:3.10.3'
     // lombok
@@ -32,11 +32,6 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
-    // db driver
-//    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client' // MariaDB
-//    implementation("org.mariadb.jdbc:mariadb-java-client")
-    // https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
-    implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.4'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'

@@ -4,7 +4,6 @@ import com.bigdata.wooahgong.comment.entity.Comment;
 import com.bigdata.wooahgong.comment.repository.CommentRepository;
 import com.bigdata.wooahgong.common.exception.CustomException;
 import com.bigdata.wooahgong.common.exception.ErrorCode;
-import com.bigdata.wooahgong.common.s3.S3Service;
 import com.bigdata.wooahgong.feed.dtos.request.CreateFeedReq;
 import com.bigdata.wooahgong.feed.dtos.response.DetailFeedRes;
 import com.bigdata.wooahgong.feed.dtos.response.GetCommentsRes;
@@ -27,19 +26,17 @@ import com.bigdata.wooahgong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class FeedService {
-    private final S3Service s3Service;
+    private final ImageService imageService;
     private final UserService userService;
     private final FeedRepository feedRepository;
     private final UserRepository userRepository;
@@ -61,11 +58,7 @@ public class FeedService {
                 new CustomException(ErrorCode.NOT_OUR_USER));
         // 파일 업로드 후 urls 저장
         List<String> urls = null;
-        try {
-            urls = s3Service.uploadImg(images, "/feed");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        urls = imageService.uploadImg(user.getUserId(), images);
         System.out.println("첫번째 사진 : " + urls.get(0));
         // moods
         List<String> moods = createFeedReq.getMoods();
@@ -88,12 +81,13 @@ public class FeedService {
                             new CustomException(ErrorCode.MOOD_NOT_FOUND))).build();
             feedMoodRepository.save(feedMood);
         }
-        // 피드_사진 테이블에 저장
+        // 피드_사진 테이블에 저장 (피드가 생성 되어야 피드 이미지들과 연결지을 수 있음)
         for (String url : urls) {
             System.out.println("사진 url = " + url);
             FeedImage feedImage = FeedImage.builder()
                     .feed(feed)
-                    .imageUrl(url).build();
+                    .imageUrl(url)
+                    .build();
             feedImageRepository.save(feedImage);
         }
         HashMap<String, Long> hm = new HashMap<>();
@@ -116,21 +110,19 @@ public class FeedService {
         // 장소 찾기
         Place place = feed.getPlace();
         // 사진 찾기
-        List<FeedImage> feedImages = feedImageRepository.findAllByFeed(feed).orElseThrow(() ->
+        List<String> feedImages = feedImageRepository.findImageUrlAllByFeed(feed.getFeedSeq()).orElseThrow(() ->
                 new CustomException(ErrorCode.DATA_NOT_FOUND));
-        List<String> urls = new ArrayList<>();
-        for (FeedImage feedImage : feedImages) {
-            urls.add(feedImage.getImageUrl());
-        }
+        List<String> images = imageService.getImages(feedImages);
+
         // DTO 만들기
         List<String> moods = new ArrayList<>();
         for (FeedMood feedMood : feed.getFeedMoods()) {
             moods.add(feedMood.getMood().getMood());
         }
         return DetailFeedRes.builder()
-                .feedSeq(feedSeq).userSeq(owner.getUserSeq()).userImageUrl(owner.getImageUrl())
+                .feedSeq(feedSeq).userSeq(owner.getUserSeq()).userImageUrl(imageService.getImage(owner.getImageUrl()))
                 .nickname(feed.getUser().getNickname()).placeSeq(place.getPlaceSeq()).placeName(place.getName())
-                .address(place.getAddress()).images(urls)
+                .address(place.getAddress()).images(images)
                 .content(feed.getContent()).amIOwner(owner.getEmail().equals(user.getEmail()))
                 .ratings(feed.getRatings()).createDate(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(feed.getCreatedDate()))
                 .moods(moods).amILike(amIPressedLike(feed, user))
@@ -198,11 +190,11 @@ public class FeedService {
             CommentLike commentLike = commentLikeRepository.findByCommentAndUser(comment, user).orElseGet(CommentLike::new);
             boolean amILike = commentLike.getCommentLikeSeq() != null;
             // 댓글 주인인지
-            boolean amIOwner = true ? user.getUserSeq() == CommentOwner.getUserSeq() : false;
+            boolean amIOwner = Objects.equals(user.getUserSeq(), CommentOwner.getUserSeq());
 
             getCommentsResList.add(GetCommentsRes.builder()
                     .commentSeq(comment.getCommentSeq()).userSeq(CommentOwner.getUserSeq())
-                    .userImage(CommentOwner.getImageUrl()).nickname(CommentOwner.getNickname())
+                    .userImage(imageService.getImage(CommentOwner.getImageUrl())).nickname(CommentOwner.getNickname())
                     .content(comment.getContent())
                     .amILike(amILike).amIOwner(amIOwner)
                     .createDate(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(comment.getCreatedDate()))

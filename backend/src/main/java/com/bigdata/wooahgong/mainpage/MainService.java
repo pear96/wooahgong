@@ -1,5 +1,6 @@
 package com.bigdata.wooahgong.mainpage;
 
+import com.bigdata.wooahgong.feed.ImageService;
 import com.bigdata.wooahgong.feed.entity.Feed;
 import com.bigdata.wooahgong.mainpage.dtos.request.GetMapReq;
 import com.bigdata.wooahgong.place.entity.Place;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MainService {
     private final PlaceRepository placeRepository;
+    private final ImageService imageService;
 
     public List<SearchPlaceDto> getMap(GetMapReq getMapReq) {
         int radius = getMapReq.getRadius();
@@ -40,7 +42,7 @@ public class MainService {
                 answers.add(SearchPlaceDto.builder()
                         .address(place.getAddress()).placeSeq(place.getPlaceSeq()).ratings(ratings).lat(place.getLatitude())
                                 .lng(place.getLongitude())
-                        .name(place.getName()).imageUrl(url).build());
+                        .name(place.getName()).imageUrl(imageService.getImage(url)).build());
             }
         }
         return answers;

@@ -11,9 +11,9 @@ pipeline {
     stage('copy settings') {
         agent any
         steps {
-            sh 'cp /home/haeun/wooahgong/secrets/.env /frontend'
-            sh 'cp /home/haeun/wooahgong/secrets/secret.json /bigdata'
-            sh 'cp /home/haeun/wooahgong/secrets/application-*.yml /backend/src/main/resources'
+            sh 'cp /home/haeun/wooahgong/secrets/.env frontend/'
+            sh 'cp /home/haeun/wooahgong/secrets/secret.json bigdata/'
+            sh 'cp /home/haeun/wooahgong/secrets/application-*.yml backend/src/main/resources/'
         }
     }
     stage('Docker-Compose') {

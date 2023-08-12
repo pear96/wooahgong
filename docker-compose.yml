@@ -5,33 +5,35 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    volumes:
+      - /home/haeun/wooahgong/upload_images:/upload_images
     ports:
       - "8080:8080"
     networks:
       - wooahgong_network
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    volumes:
-      - frontend_build:/build
-    networks:
-      - wooahgong_network
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - frontend_build:/build
+  #   networks:
+  #     - wooahgong_network
 
-  nginx:
-    image: nginx:latest
-    volumes:
-      - /home/haeun/wooahgong/nginx.conf:/etc/nginx/conf.d/nginx.conf
-      - frontend_build:/usr/share/nginx/html
-      - /etc/letsencrypt:/etc/letsencrypt
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - frontend
-    networks:
-      - wooahgong_network
+  # nginx:
+  #   image: nginx:latest
+  #   volumes:
+  #     - /home/haeun/wooahgong/nginx.conf:/etc/nginx/conf.d/nginx.conf
+  #     - frontend_build:/usr/share/nginx/html
+  #     - /etc/letsencrypt:/etc/letsencrypt
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   depends_on:
+  #     - frontend
+  #   networks:
+  #     - wooahgong_network
 
   bigdata:
     build:

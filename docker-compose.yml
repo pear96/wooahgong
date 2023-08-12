@@ -17,7 +17,11 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     volumes:
-      - /home/haeun/wooahgong/build:/build
+      - /home/haeun/wooahgong/wooahgong.conf:/etc/nginx/conf.d/wooahgong.conf 
+      - /etc/letsencrypt:/etc/letsencrypt
+    ports:
+      - "80:80"
+      - "443:443"
     networks:
       - wooahgong_network
 

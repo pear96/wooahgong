@@ -5,6 +5,7 @@ pipeline {
     stage('git pull') {
         agent any
         steps {
+            echo "Current branch is: ${env.GIT_BRANCH}"
             checkout scm
         }
     }

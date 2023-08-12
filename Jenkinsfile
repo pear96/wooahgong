@@ -109,5 +109,51 @@ pipeline {
     //         }
     //     }
     // }
+    // stage('Build & Test') {
+    //         parallel {
+    //             stage('Frontend') {
+    //                 steps {
+    //                     script {
+    //                         // Frontend 빌드 및 테스트
+    //                         sh 'docker-compose -f docker-compose.frontend.yml build'
+    //                         sh 'docker-compose -f docker-compose.frontend.yml up -d'
+    //                         sh './run-frontend-tests.sh'
+    //                     }
+    //                 }
+    //             }
+                
+    //             stage('Backend') {
+    //                 steps {
+    //                     script {
+    //                         // Backend 빌드 및 테스트
+    //                         sh 'docker-compose -f docker-compose.backend.yml build'
+    //                         sh 'docker-compose -f docker-compose.backend.yml up -d'
+    //                         sh './run-backend-tests.sh'
+    //                     }
+    //                 }
+    //             }
+                
+    //             stage('Data') {
+    //                 steps {
+    //                     script {
+    //                         // Data 서비스 빌드 및 테스트
+    //                         sh 'docker-compose -f docker-compose.data.yml build'
+    //                         sh 'docker-compose -f docker-compose.data.yml up -d'
+    //                         sh './run-data-tests.sh'
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+
+    // post {
+    //     always {
+    //         // 항상 실행: 모든 컨테이너와 리소스 정리
+    //         sh 'docker-compose -f docker-compose.frontend.yml down -v'
+    //         sh 'docker-compose -f docker-compose.backend.yml down -v'
+    //         sh 'docker-compose -f docker-compose.data.yml down -v'
+    //     }
+    // }
     }
 }

@@ -17,7 +17,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     volumes:
-      - /home/haeun/wooahgong/wooahgong.conf:/etc/nginx/conf.d/wooahgong.conf 
+      - /home/haeun/wooahgong/wooahgong.conf:/etc/nginx/conf.d/default.conf 
       - /etc/letsencrypt:/etc/letsencrypt
     ports:
       - "80:80"

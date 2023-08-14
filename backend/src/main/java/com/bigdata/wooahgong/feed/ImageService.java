@@ -52,7 +52,7 @@ public class ImageService {
     }
 
     public String getImage(String imageUrl) {
-        return encodeImageToBase64(imageUrl);
+        return encodeImageToBase64(IMG_DIR + imageUrl);
     }
 
 

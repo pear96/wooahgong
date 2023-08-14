@@ -32,7 +32,7 @@ public class ImageService {
                     // getBytes()는 MultipartFile의 내용을 바이트 배열로 변환한다.
                     byte[] bytes = img.getBytes();
                     // 주어진 경로 문자열로 Path 객체를 생성한다.
-                    Path path = Paths.get(IMG_DIR + UUID.randomUUID().toString() + "_" + userId + "_" + img.getOriginalFilename());
+                    Path path = Paths.get(UUID.randomUUID().toString() + "_" + img.getOriginalFilename());
                     savedUrls.add(path.toString());
                     Files.write(path, bytes);
                 } catch (IOException e) {
@@ -46,7 +46,7 @@ public class ImageService {
     public List<String> getImages(List<String> imageUrls) {
         List<String> images = new ArrayList<>();
         for(String imageUrl : imageUrls) {
-            images.add(encodeImageToBase64(imageUrl));
+            images.add(encodeImageToBase64(IMG_DIR + imageUrl));
         }
         return images;
     }

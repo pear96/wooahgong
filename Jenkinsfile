@@ -16,6 +16,12 @@ pipeline {
                 sh 'cp /home/haeun/wooahgong/secrets/application-*.yml backend/src/main/resources/'
             }
         }
+        stage('Shutdown Previous Containers') {
+            agent any
+            steps {
+                sh 'docker-compose -f docker-compose.yml down || echo "No containers to shutdown"'
+            }
+        }
         stage('Docker-Compose Build') {
             parallel {
                 stage('Frontend Docker Image Build') {

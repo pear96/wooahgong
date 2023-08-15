@@ -21,8 +21,6 @@ public class SignUpReq {
     private List<String> moods;
     private String mbti;
 
-    @Value("${image.dir}")
-    private String IMG_DIR;
 
     public User toEntity() {
         return User.builder()
@@ -33,7 +31,7 @@ public class SignUpReq {
                 .birth(birth)
                 .gender(gender)
                 .provider(provider)
-                .imageUrl(IMG_DIR + "logo.png")
+                .imageUrl("logo.png")
                 .mbti(mbti).build();
     }
 }

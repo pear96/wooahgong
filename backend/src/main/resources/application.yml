@@ -11,11 +11,12 @@ spring:
 logging:
   level:
     org:
+      springframework: ERROR
       hibernate:
         type:
           descriptor:
             sql:
-              BasicBinder: trace
+              BasicBinder: error
 
 server:
   error:

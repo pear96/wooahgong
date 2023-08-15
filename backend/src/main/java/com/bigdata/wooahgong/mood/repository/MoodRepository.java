@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface MoodRepository extends JpaRepository<Mood, Long> {
     Optional<Mood> findByMoodContaining(String mood);
+    Mood findByMoodSeq(Long moodSeq);
 }

@@ -25,9 +25,9 @@ public class Place extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long placeSeq;
 
-    @ManyToOne
-    @JoinColumn(name = "user_seq")
-    private User user;
+//    @ManyToOne
+//    @JoinColumn(name = "user_seq")
+//    private User user;
 
     @Column(nullable = false)
     private String name;
@@ -49,8 +49,8 @@ public class Place extends BaseTimeEntity {
     private List<PlaceWish> placeWishes = new ArrayList<>();
 
     @Builder
-    public Place(User user, String name, String address, Double latitude, Double longitude) {
-        this.user = user;
+    public Place(String name, String address, Double latitude, Double longitude) {
+//        this.user = user;
         this.name = name;
         this.address = address;
         this.latitude = latitude;

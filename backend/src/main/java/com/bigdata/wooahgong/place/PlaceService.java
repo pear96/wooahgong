@@ -58,7 +58,7 @@ public class PlaceService {
 
         // 장소를 생성한다.
         Place newPlace = Place.builder()
-                .user(user)
+//                .user(user)
                 .name(name)
                 .address(address)
                 .latitude(lat)
@@ -84,7 +84,7 @@ public class PlaceService {
         Place place = findPlace.get();
 
         // 찜한 장소인지 확인한다.
-        Boolean isWished = false;
+        boolean isWished = false;
         Optional<PlaceWish> wished = placeWishRepository.findByUserAndPlace(user, place);
         if (wished.isPresent()) {
             isWished = true;
@@ -147,7 +147,7 @@ public class PlaceService {
             throw new CustomException(ErrorCode.FEED_NOT_FOUND);
         }
         // feed 객체의 모든 내용이 아닌, seq와 이미지만 담아서 보내야 한다.
-        List<CustomFeedDto> customFeeds = new ArrayList<CustomFeedDto>();
+        List<CustomFeedDto> customFeeds = new ArrayList<>();
 
 
         if ("popular".equals(sort)) {
@@ -184,7 +184,7 @@ public class PlaceService {
 
         Optional<PlaceWish> wished = placeWishRepository.findByUserAndPlace(user, place);
         // 찜한 적이 없다면 -> 찜
-        Boolean isWished = true;
+        boolean isWished = true;
         if (wished.isEmpty()) {
             PlaceWish newPlaceWish = PlaceWish.builder()
                     .user(user)

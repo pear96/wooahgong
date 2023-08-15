@@ -23,10 +23,10 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userSeq;
 
-    @Column(nullable = true, unique = true)
+    @Column(unique = true)
     private String userId;
 
-    @Column(nullable = true)
+    @Column()
     private String password;
 
     @Column(nullable = false, unique = true)
@@ -73,9 +73,9 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<FeedLike> feedLikes = new ArrayList<>();
 
-    @JsonManagedReference // 순환 참조 방어
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Place> places = new ArrayList<>();
+//    @JsonManagedReference // 순환 참조 방어
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//    private List<Place> places = new ArrayList<>();
 
     @JsonManagedReference // 순환 참조 방어
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

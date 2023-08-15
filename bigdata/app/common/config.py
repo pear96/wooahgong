@@ -17,7 +17,9 @@ class Config:
     DB_ECHO: bool = True
     SECRET_FILE = path.join(path.dirname(path.dirname(path.dirname(path.abspath(__file__)))), 'secret.json')
     # SECRET_FILE = path.join(path.dirname(path.dirname(path.dirname(path.abspath(__file__)))), 'local.json')
-    secrets = json.loads(open(SECRET_FILE, encoding='utf-8').read())
+    with open(SECRET_FILE, encoding='utf-8') as f:
+        secrets = json.load(f)
+
     DB = secrets["DB"]
     DB_URL: str = f"mysql+pymysql://{DB['USER']}:{DB['PASSWORD']}@{DB['HOST']}:{DB['PORT']}/{DB['NAME']}"
     

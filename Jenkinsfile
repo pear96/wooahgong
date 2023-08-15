@@ -2,159 +2,69 @@ pipeline {
     agent none
     options { skipDefaultCheckout(true) }
     stages {
-    stage('git pull') {
-        agent any
-        steps {
-            echo "Current branch is: ${env.GIT_BRANCH}"
-            checkout scm
+        stage('git pull') {
+            agent any
+            steps {
+                checkout scm
+            }
         }
-    }
-    stage('copy settings') {
-        agent any
-        steps {
-            sh 'cp /home/haeun/wooahgong/secrets/.env frontend/'
-            sh 'cp /home/haeun/wooahgong/secrets/secret.json bigdata/'
-            sh 'cp /home/haeun/wooahgong/secrets/application-*.yml backend/src/main/resources/'
+        stage('copy settings') {
+            agent any
+            steps {
+                sh 'cp /home/haeun/wooahgong/secrets/.env frontend/'
+                sh 'cp /home/haeun/wooahgong/secrets/secret.json bigdata/'
+                sh 'cp /home/haeun/wooahgong/secrets/application-*.yml backend/src/main/resources/'
+            }
         }
-    }
-    stage('Docker-Compose') {
-        agent any
-        steps {
-            sh 'docker-compose up --build -d'
+        stage('Docker-Compose Build') {
+            parallel {
+                stage('Frontend Docker Image Build') {
+                    agent any
+                    steps {
+                        sh 'docker-compose -f docker-compse.yml build frontend'
+                    }
+                }
+                stage('Backend Docker Image Build') {
+                    agent any
+                    steps {
+                        sh 'docker-compose -f docker-compse.yml build backend'
+                    }
+                }
+                stage('BigData Docker Image Build') {
+                    agent any
+                    steps {
+                        sh 'docker-compose -f docker-compse.yml build bigdata'
+                    }
+                }
+            }
         }
-    }
-    stage('clear image') {
-        agent any
-        steps {
-            sh 'docker rmi $(docker images -f "dangling=true" -q) || echo "No images to delete"'
+        stage('Docker-Compose Run') {
+            parallel {
+                stage('Frontend Docker Container') {
+                    agent any
+                    steps {
+                        sh 'docker-compose -f docker-compse.yml up -d frontend'
+                    }
+                }
+                stage('Backend Docker Container') {
+                    agent any
+                    steps {
+                        sh 'docker-compose -f docker-compse.yml up -d backend'
+                    }
+                }
+                stage('BigData Docker Container') {
+                    agent any
+                    steps {
+                        sh 'docker-compose -f docker-compse.yml up -d bigdata'
+                    }
+                }
+            }
         }
-    }
-    // stage('Docker build') {
-    //     parallel {
-    //     // stage는 각각의 Job을 의미합니다. Job 내부의 단계를 의미하는 steps를 포함해야합니다.
-    //         stage('Front image') {
-    //             agent any
-    //             steps {
-    //                 sh 'pwd'
-    //                 dir("frontend") {
-    //                 // 
-    //                     sh 'docker build -t wooahgong-front:latest /var/jenkins_home/workspace/wooahgong/frontend'
-    //                 }
-    //             }
-    //         }
-    //         stage('Back image') {
-    //           // agent = 이 파이프라인 스크립트를 실행할 executor를 지정합니다. any로 두면 어떤 executor도 실행할 수 있다는 의미가 됩니다.
-    //             agent any
-    //           // steps에선 실제로 실행할 쉘이나 syntax를 입력해주면 됩니다.
-    //             steps {
-    //                 dir("backend") {
-    //                 sh 'pwd'
-    //                 sh 'echo backend 빌드를 실행합니다.'
-    //                 sh 'docker build -t wooahgong-back:latest /var/jenkins_home/workspace/wooahgong/backend'
-    //                 }
-    //             }
-    //         }
-    //         stage('Bigdata image') {
-    //           // agent = 이 파이프라인 스크립트를 실행할 executor를 지정합니다. any로 두면 어떤 executor도 실행할 수 있다는 의미가 됩니다.
-    //             agent any
-    //           // steps에선 실제로 실행할 쉘이나 syntax를 입력해주면 됩니다.
-    //             steps {
-    //                 dir("bigdata") {
-    //                 sh 'pwd'
-    //                 sh 'echo 파이썬 빌드를 실행합니다.'
-    //                 sh 'docker build -t wooahgong-bigdata:latest /var/jenkins_home/workspace/wooahgong/bigdata'
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-    // stage('Docker run') {
-    //     parallel {
-    //         stage('Front Container') {
-    //             agent any
-    //             steps {
-    //             dir("frontend") {
-    //                 sh 'docker ps -f name=wooahgong-front -q | xargs --no-run-if-empty docker container stop'
-    //                 sh 'docker container ls -a -f name=wooahgong-front -q | xargs -r docker container rm'
-    //                 sh 'docker run -d --name wooahgong-front -p 80:80 -p 443:443 \
-    //                 -v /home/ubuntu/sslkey/:/var/jenkins_home/workspace/wooahgong/sslkey/ \
-    //                 -v /etc/letsencrypt/:/etc/letsencrypt/ \
-    //                 -e TZ=Asia/Seoul \
-    //                 wooahgong-front:latest'
-    //             }
-    //             }
-    //         }
-    //         stage('Back Container') {
-    //             agent any
-    //             steps {
-    //                 dir("backend"){
-    //                 sh 'docker ps -f name=wooahgong-back -q | xargs --no-run-if-empty docker container stop'
-    //                 sh 'docker container ls -a -f name=wooahgong-back -q | xargs -r docker container rm'
-    //                 sh 'docker run -d --name wooahgong-back -p 8080:8080 \
-    //                 -e TZ=Asia/Seoul \
-    //                 wooahgong-back:latest'
-    //             }
-    //             }
-    //         }
-    //         stage('Bigdata Container') {
-    //             agent any
-    //             steps {
-    //                 dir("bigdata"){
-    //                 sh 'docker ps -f name=wooahgong-bigdata -q | xargs --no-run-if-empty docker container stop'
-    //                 sh 'docker container ls -a -f name=wooahgong-bigdata -q | xargs -r docker container rm'
-    //                 sh 'docker run -d --name wooahgong-bigdata -p 8000:8000 \
-    //                 -e TZ=Asia/Seoul \
-    //                 wooahgong-bigdata:latest'
-    //             }
-    //             }
-    //         }
-    //     }
-    // }
-    // stage('Build & Test') {
-    //         parallel {
-    //             stage('Frontend') {
-    //                 steps {
-    //                     script {
-    //                         // Frontend 빌드 및 테스트
-    //                         sh 'docker-compose -f docker-compose.frontend.yml build'
-    //                         sh 'docker-compose -f docker-compose.frontend.yml up -d'
-    //                         sh './run-frontend-tests.sh'
-    //                     }
-    //                 }
-    //             }
-                
-    //             stage('Backend') {
-    //                 steps {
-    //                     script {
-    //                         // Backend 빌드 및 테스트
-    //                         sh 'docker-compose -f docker-compose.backend.yml build'
-    //                         sh 'docker-compose -f docker-compose.backend.yml up -d'
-    //                         sh './run-backend-tests.sh'
-    //                     }
-    //                 }
-    //             }
-                
-    //             stage('Data') {
-    //                 steps {
-    //                     script {
-    //                         // Data 서비스 빌드 및 테스트
-    //                         sh 'docker-compose -f docker-compose.data.yml build'
-    //                         sh 'docker-compose -f docker-compose.data.yml up -d'
-    //                         sh './run-data-tests.sh'
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
-    // post {
-    //     always {
-    //         // 항상 실행: 모든 컨테이너와 리소스 정리
-    //         sh 'docker-compose -f docker-compose.frontend.yml down -v'
-    //         sh 'docker-compose -f docker-compose.backend.yml down -v'
-    //         sh 'docker-compose -f docker-compose.data.yml down -v'
-    //     }
-    // }
+        stage('clear image') {
+            agent any
+            steps {
+                sh 'docker rmi $(docker images -f "dangling=true" -q) || echo "No images to delete"'
+            }
+        }
     }
 }

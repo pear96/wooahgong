@@ -5,9 +5,9 @@ from starlette.requests import Request
 from app.database.schema import User, Place
 from app.database.conn import db
 from app.common.config import Config
+from app.common.image import get_image
 from haversine import haversine
 from pydantic import BaseModel
-import time
 
 import pandas as pd
 import numpy as np
@@ -156,7 +156,7 @@ async def forme(request: Request, for_me_request : ForMeReq, session: Session = 
             if distance <= search_radius:
                 place_dto = {
                     "placeSeq" : place_seq,
-                    "placeImageUrl" : df_feeds.loc[df_feeds['place_seq'] == place_seq].iloc[0]['thumbnail']
+                    "placeImageUrl" : get_image(df_feeds.loc[df_feeds['place_seq'] == place_seq].iloc[0]['thumbnail'])
                 }
                 recommend_places.append(place_dto)
     page = for_me_request.page

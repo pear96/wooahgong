@@ -15,8 +15,8 @@ class Config:
     # DB 환경설정
     DB_POOL_RECYCLE: int = 900
     DB_ECHO: bool = True
-    SECRET_FILE = path.join(path.dirname(path.dirname(path.dirname(path.abspath(__file__)))), 'secret.json')
-    secrets = json.loads(open(SECRET_FILE).read())
+    SECRET_FILE = path.join(path.dirname(path.dirname(path.dirname(path.abspath(__file__)))), 'local.json')
+    secrets = json.loads(open(SECRET_FILE, encoding='utf-8').read())
     DB = secrets["DB"]
     DB_URL: str = f"mysql+pymysql://{DB['USER']}:{DB['PASSWORD']}@{DB['HOST']}:{DB['PORT']}/{DB['NAME']}"
     
@@ -24,6 +24,10 @@ class Config:
     JWT = secrets["JWT"]
     JWT_SECRET = JWT["SECRET_KEY"]
     JWT_ALGORITHM = JWT["ALGORITHM"]
+
+    # 이미 경로 설정
+    IMG = secrets["IMG"]
+    IMG_DIR = IMG["DIR"]
 
 @dataclass
 class LocalConfig(Config):

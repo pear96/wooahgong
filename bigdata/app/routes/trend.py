@@ -6,6 +6,7 @@ from starlette.responses import Response
 from app.database.schema import User, Mood, UserMood, Place, PlaceWish, Feed, FeedLike, FeedMood
 from app.database.conn import db
 from app.common.config import Config
+from app.common.image import get_image
 from pydantic import BaseModel
 from haversine import haversine
 import pandas as pd
@@ -92,7 +93,7 @@ def find_trendy_places(request, trend_request, session):
         if distance <= search_radius:
             result_places.append({
                 'placeSeq': place.place_seq,
-                'placeImageUrl': place.feeds[0].thumbnail
+                'placeImageUrl': get_image(place.feeds[0].thumbnail)
             })
             if len(result_places) >= 20:
                 break
@@ -160,7 +161,7 @@ def find_by_age_gender(request, trend_request, session):
         if distance <= search_radius:
             result_places.append({
                 'placeSeq': place.place_seq,
-                'placeImageUrl': place.feeds[0].thumbnail
+                'placeImageUrl': get_image(place.feeds[0].thumbnail)
             })
             if len(result_places) >= 20:
                 break
@@ -227,7 +228,7 @@ def find_by_MBTI(request, trend_request, session):
         if distance <= search_radius:
             result_places.append({
                 'placeSeq': place.place_seq,
-                'placeImageUrl': place.feeds[0].thumbnail
+                'placeImageUrl': get_image(place.feeds[0].thumbnail)
             })
             if len(result_places) >= 20:
                 break
@@ -329,7 +330,7 @@ def find_by_moods(request, trend_request, session):
                 if distance <= search_radius:
                     result_places[i].append({
                         'placeSeq': place.place_seq,
-                        'placeImageUrl': place.feeds[0].thumbnail
+                        'placeImageUrl': get_image(place.feeds[0].thumbnail)
                     })
                     if len(result_places[i]) >= 20:
                         break

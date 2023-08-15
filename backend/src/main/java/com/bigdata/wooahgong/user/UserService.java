@@ -199,6 +199,7 @@ public class UserService {
                 new CustomException(ErrorCode.NOT_OUR_USER));
         Page<Feed> pages = feedRepository.findByUserOrderByModifiedDateDesc(Owner, pageable);
         List<GetMyFeedsRes> getMyFeedsResList = new ArrayList<>();
+
         for (Feed feed : pages) {
             String image = null;
             if (feed.getFeedImages().size() != 0) {
@@ -207,7 +208,7 @@ public class UserService {
             getMyFeedsResList.add(GetMyFeedsRes.builder()
                     .feedSeq(feed.getFeedSeq())
                     .imageUrl(image)
-                    .placeSeq(feed.getPlace().getPlaceSeq())
+                    .placeSeq(feed.getPlaceSeq())
                     .build());
         }
         return getMyFeedsResList;
@@ -230,7 +231,7 @@ public class UserService {
             getMyFeedsResList.add(GetMyFeedsRes.builder()
                     .feedSeq(feed.getFeedSeq())
                     .imageUrl(image)
-                    .placeSeq(feed.getPlace().getPlaceSeq())
+                    .placeSeq(feed.getPlaceSeq())
                     .build());
         }
         return getMyFeedsResList;

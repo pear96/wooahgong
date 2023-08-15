@@ -40,6 +40,9 @@ public class Feed extends BaseTimeEntity {
     @JsonBackReference // 순환 참조 방어
     private User user;
 
+    @Column(name = "place_seq", insertable = false, updatable = false)
+    private Long placeSeq;
+
     @ManyToOne
     @JoinColumn(name = "place_seq") // 외래키 매핑
     @JsonBackReference // 순환 참조 방어

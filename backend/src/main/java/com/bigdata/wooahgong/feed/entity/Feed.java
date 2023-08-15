@@ -24,31 +24,40 @@ public class Feed extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long feedSeq;
+
     @Column(nullable = false)
     private String content;
+
     @Column(nullable = false)
     private Double ratings;
+
     @Column(nullable = false)
     private String thumbnail;
+
     // 외래키 설정
     @ManyToOne
     @JoinColumn(name = "user_seq") // 외래키 매핑
     @JsonBackReference // 순환 참조 방어
     private User user;
+
     @ManyToOne
     @JoinColumn(name = "place_seq") // 외래키 매핑
     @JsonBackReference // 순환 참조 방어
     private Place place;
+
     // 중간 테이블 설정
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<FeedLike> feedLikes = new ArrayList<>();
+
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<FeedImage> feedImages = new ArrayList<>();
+
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
+
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<FeedMood> feedMoods = new ArrayList<>();

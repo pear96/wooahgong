@@ -22,48 +22,65 @@ public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userSeq;
-    @Column(nullable = true)
+
+    @Column(nullable = true, unique = true)
     private String userId;
+
     @Column(nullable = true)
     private String password;
-    @Column(nullable = false)
+
+    @Column(nullable = false, unique = true)
     private String nickname;
+
     @Column(nullable = false)
     private String email;
+
     @Column(nullable = false)
     private LocalDate birth;
+
     @Column(nullable = false)
     private boolean provider;
+
     @Column
     private String authCode;
+
     @Column(nullable = false)
     private String imageUrl;
+
     @Column(nullable = false)
     private boolean gender;
+
     @Column(nullable = false)
     private String mbti;
 
     @JsonManagedReference // 순환 참조 방어
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Feed> feeds = new ArrayList<>();
+
     @JsonManagedReference // 순환 참조 방어
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserMood> userMoods = new ArrayList<>();
+
     @JsonManagedReference // 순환 참조 방어
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
+
     @JsonManagedReference // 순환 참조 방어
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<CommentLike> commentLikes = new ArrayList<>();
+
     @JsonManagedReference // 순환 참조 방어
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<FeedLike> feedLikes = new ArrayList<>();
+
     @JsonManagedReference // 순환 참조 방어
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Place> places = new ArrayList<>();
+
     @JsonManagedReference // 순환 참조 방어
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<PlaceWish> placeWishes = new ArrayList<>();
+
     @JsonManagedReference // 순환 참조 방어
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<SearchHistory> searchHistories = new ArrayList<>();
@@ -75,6 +92,9 @@ public class User extends BaseTimeEntity {
     public void setNickname(String nickname) { this.nickname = nickname;}
     public void setMbti(String mbti){this.mbti = mbti;}
     public void setImageUrl(String url){this.imageUrl = url;}
+    public String toString() {
+        return userSeq + "번] 아이디 : "+ userId + ", 닉네임 : " + nickname + ", 생년월일 : " + birth + ", MBTI : " + mbti;
+    }
 
 }
 

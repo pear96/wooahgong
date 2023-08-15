@@ -27,18 +27,24 @@ pipeline {
                 stage('Frontend Docker Image Build') {
                     agent any
                     steps {
+                        sh 'pwd'
+                        sh 'ls -al'
                         sh 'docker-compose -f docker-compose.yml build frontend'
                     }
                 }
                 stage('Backend Docker Image Build') {
                     agent any
                     steps {
+                        sh 'pwd'
+                        sh 'ls -al'
                         sh 'docker-compose -f docker-compose.yml build backend'
                     }
                 }
                 stage('BigData Docker Image Build') {
                     agent any
                     steps {
+                        sh 'pwd'
+                        sh 'ls -al'
                         sh 'docker-compose -f docker-compose.yml build bigdata'
                     }
                 }
@@ -49,18 +55,24 @@ pipeline {
                 stage('Frontend Docker Container') {
                     agent any
                     steps {
+                        sh 'pwd'
+                        sh 'ls -al'
                         sh 'docker-compose -f docker-compose.yml up -d frontend'
                     }
                 }
                 stage('Backend Docker Container') {
                     agent any
                     steps {
+                        sh 'pwd'
+                        sh 'ls -al'
                         sh 'docker-compose -f docker-compose.yml up -d backend'
                     }
                 }
                 stage('BigData Docker Container') {
                     agent any
                     steps {
+                        sh 'pwd'
+                        sh 'ls -al'
                         sh 'docker-compose -f docker-compose.yml up -d bigdata'
                     }
                 }

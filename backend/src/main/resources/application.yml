@@ -8,6 +8,18 @@ spring:
       - classpath:application-db.yml
       - classpath:application-email.yml
 
+springdoc:
+  packages-to-scan: com.bigdata.wooahgong
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /swagger-ui
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: alpha
+
+
+
 logging:
   level:
     org:

@@ -3,6 +3,7 @@ package com.bigdata.wooahgong.place;
 
 import com.bigdata.wooahgong.common.exception.CustomException;
 import com.bigdata.wooahgong.common.exception.ErrorCode;
+import com.bigdata.wooahgong.common.util.JwtTokenUtil;
 import com.bigdata.wooahgong.feed.ImageService;
 import com.bigdata.wooahgong.feed.entity.Feed;
 import com.bigdata.wooahgong.feed.entity.FeedLikesComparator;
@@ -38,7 +39,7 @@ public class PlaceService {
 
     public ResponseEntity<HashMap<String, Long>> createPlace(String token, CreatePlaceReq createPlaceReq) {
         // token이 유효한지 검사한다.
-        User user = userService.getUserByToken(token);
+        JwtTokenUtil.verifyToken(token);
 
         // 요청이 정상인지 검사한다.
         String name = createPlaceReq.getName();
@@ -129,7 +130,8 @@ public class PlaceService {
 
     public ResponseEntity<PlaceFeedsRes> getPlaceFeedsBySorting(String token, Long placeSeq, String sort) {
         // token이 유효한지 검사한다.
-        userService.getUserByToken(token);
+        JwtTokenUtil.verifyToken(token);
+
         // 정렬 방식 점검
         if ("".equals(sort)){
             throw new CustomException(ErrorCode.WRONG_DATA);
@@ -149,12 +151,12 @@ public class PlaceService {
         // feed 객체의 모든 내용이 아닌, seq와 이미지만 담아서 보내야 한다.
         List<CustomFeedDto> customFeeds = new ArrayList<>();
 
-
+        // 장소를 가져와서 정렬하는 것 vs 정렬해서 장소를 가져오는 것
         if ("popular".equals(sort)) {
             foundFeeds.sort(new FeedLikesComparator());
         }
-        // 피드의 시퀀스 넘버, 썸네일만 가져와서 반환할 리스트를 만든다.
 
+        // 피드의 시퀀스 넘버, 썸네일만 가져와서 반환할 리스트를 만든다.
         for (int i = foundFeeds.size() - 1; i >= 0; i--) {
             Feed feed = foundFeeds.get(i);
             CustomFeedDto customFeed = new CustomFeedDto(feed.getFeedSeq(),

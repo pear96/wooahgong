@@ -2,6 +2,7 @@ package com.bigdata.wooahgong.search;
 
 import com.bigdata.wooahgong.common.exception.CustomException;
 import com.bigdata.wooahgong.common.exception.ErrorCode;
+import com.bigdata.wooahgong.common.util.JwtTokenUtil;
 import com.bigdata.wooahgong.feed.ImageService;
 import com.bigdata.wooahgong.place.entity.Place;
 import com.bigdata.wooahgong.place.repository.PlaceRepository;
@@ -35,6 +36,29 @@ public class SearchService {
     private final PlaceRepository placeRepository;
     private final UserRepository userRepository;
 
+
+    public SearchHistoriesRes getSearchHistoryOrderedByRecent(User user) {
+        List<SearchHistory> recentSearchHistories = searchHistoryRepository.findSearchHistoriesByUser(user);
+        List<SearchHistoryDto> recentSearchHistoriesExceptUser = new ArrayList<>();
+
+        // 사용자 정보를 제외하고 최신순 정렬
+        for (int i = recentSearchHistories.size() - 1; i >= 0; i--) {
+            SearchHistory searchHistory = recentSearchHistories.get(i);
+            SearchHistoryDto customSearchHistory = SearchHistoryDto.builder()
+                    .historySeq(searchHistory.getHistorySeq())
+                    .type(searchHistory.getType())
+                    .searchWord(searchHistory.getSearchWord())
+                    .imageUrl(imageService.getImage(searchHistory.getImageUrl()))
+                    .placeSeq(searchHistory.getPlaceSeq())
+                    .build();
+            recentSearchHistoriesExceptUser.add(customSearchHistory);
+        }
+
+        return SearchHistoriesRes.builder()
+                .recentSearches(recentSearchHistoriesExceptUser)
+                .build();
+    }
+
     // 검색창 진입 -> 최근 검색어 전달
     @Transactional
     public ResponseEntity<SearchHistoriesRes> getRecentSearchHistory(String token) {
@@ -52,33 +76,13 @@ public class SearchService {
                 searchHistoryRepository.deleteByHistorySeq(delHistorySeq);
             }
         }
-
-        List<SearchHistory> recentSearchHistories = searchHistoryRepository.findSearchHistoriesByUser(user);
-        List<SearchHistoryDto> recentSearchHistoriesExceptUser = new ArrayList<>();
-
-        // 사용자 정보를 제외하고 최신순 정렬
-        for (int i = recentSearchHistories.size() - 1; i >= 0; i--) {
-            SearchHistory searchHistory = recentSearchHistories.get(i);
-            SearchHistoryDto customSearchHistory = SearchHistoryDto.builder()
-                    .historySeq(searchHistory.getHistorySeq())
-                    .type(searchHistory.getType())
-                    .searchWord(searchHistory.getSearchWord())
-                    .imageUrl(imageService.getImage(searchHistory.getImageUrl()))
-                    .placeSeq(searchHistory.getPlaceSeq())
-                    .build();
-            recentSearchHistoriesExceptUser.add(customSearchHistory);
-        }
-        SearchHistoriesRes searchHistoriesRes = SearchHistoriesRes.builder()
-                .recentSearches(recentSearchHistoriesExceptUser)
-                .build();
-
-        return ResponseEntity.status(200).body(searchHistoriesRes);
+        return ResponseEntity.status(200).body(getSearchHistoryOrderedByRecent(user));
     }
 
     // 검색 결과 - 장소
     public ResponseEntity<HashMap<String, List<SearchPlaceDto>>> searchPlaces(String token, String searchWord) {
         // token이 유효한지 검사한다.
-        userService.getUserByToken(token);
+        JwtTokenUtil.verifyToken(token);
 
         // 검색어가 유효한지 검사한다.
         if("".equals(searchWord)) {
@@ -100,16 +104,16 @@ public class SearchService {
                     .build();
             results.add(searchedPlace);
         }
-        HashMap<String, List<SearchPlaceDto>> data = new HashMap<>();
-        data.put("results", results);
+        HashMap<String, List<SearchPlaceDto>> searchedPlacesDto = new HashMap<>();
+        searchedPlacesDto.put("results", results);
 
-        return ResponseEntity.status(200).body(data);
+        return ResponseEntity.status(200).body(searchedPlacesDto);
     }
 
     // 검색 결과 - 사용자
     public ResponseEntity<HashMap<String, List<SearchUserDto>>> searchUsers(String token, String searchWord) {
         // token이 유효한지 검사한다.
-        userService.getUserByToken(token);
+        JwtTokenUtil.verifyToken(token);
 
         // 검색어가 유효한지 검사한다.
         if("".equals(searchWord)) {
@@ -129,20 +133,22 @@ public class SearchService {
                     .build();
             results.add(searchedUser);
         }
-        HashMap<String, List<SearchUserDto>> data = new HashMap<>();
-        data.put("results", results);
+        HashMap<String, List<SearchUserDto>> searchedUsersDto = new HashMap<>();
+        searchedUsersDto.put("results", results);
 
-        return ResponseEntity.status(200).body(data);
+        return ResponseEntity.status(200).body(searchedUsersDto);
     }
 
-    // 검색 선택 - 장소
+    @Transactional
     public ResponseEntity<String> selectPlaceSearch(String token, Long placeSeq) {
         // token이 유효한지 검사한다.
         User user = userService.getUserByToken(token);
+
         Optional<Place> foundPlace = placeRepository.findByPlaceSeq(placeSeq);
         if (foundPlace.isEmpty()){
             throw new CustomException(ErrorCode.PLACE_NOT_FOUND);
         }
+
         Place searchPlace = foundPlace.get();
 
         // 이미 검색한 적 있다면 pass
@@ -163,9 +169,11 @@ public class SearchService {
     }
 
     // 검색 선택 - 사용자
+    @Transactional
     public ResponseEntity<String> selectUserSearch(String token, String nickname) {
         // token이 유효한지 검사한다.
         User user = userService.getUserByToken(token);
+
         Optional<User> foundUser = userRepository.findByNickname(nickname);
         if (foundUser.isEmpty()){
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
@@ -220,27 +228,10 @@ public class SearchService {
         if (!isMine) {
             throw new CustomException(ErrorCode.INVALID_DATA);
         }
+        // 정말 이게 필요한 과정일까??
 
         searchHistoryRepository.deleteByHistorySeq(historySeq);
 
-        List<SearchHistoryDto> recentSearchHistoriesExceptUser = new ArrayList<>();
-
-        // 사용자 정보를 제외하고 최신순 정렬
-        for (int i = searchHistories.size() - 1; i >= 0; i--) {
-            SearchHistory searchHistory = searchHistories.get(i);
-            SearchHistoryDto customSearchHistory = SearchHistoryDto.builder()
-                    .historySeq(searchHistory.getHistorySeq())
-                    .type(searchHistory.getType())
-                    .searchWord(searchHistory.getSearchWord())
-                    .imageUrl(imageService.getImage(searchHistory.getImageUrl()))
-                    .placeSeq(searchHistory.getPlaceSeq())
-                    .build();
-            recentSearchHistoriesExceptUser.add(customSearchHistory);
-        }
-        SearchHistoriesRes searchHistoriesRes = SearchHistoriesRes.builder()
-                .recentSearches(recentSearchHistoriesExceptUser)
-                .build();
-
-        return ResponseEntity.status(200).body(searchHistoriesRes);
+        return ResponseEntity.status(200).body(getSearchHistoryOrderedByRecent(user));
     }
 }

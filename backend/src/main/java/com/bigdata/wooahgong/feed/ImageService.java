@@ -23,7 +23,7 @@ public class ImageService {
     @Value("${image.dir}")
     private String IMG_DIR;
 
-    public List<String> uploadImg(String userId, List<MultipartFile> images){
+    public List<String> uploadImages(String userId, List<MultipartFile> images){
         List<String> savedUrls = new ArrayList<>();
         for(MultipartFile img : images) {
             if(!img.isEmpty()) {
@@ -32,7 +32,7 @@ public class ImageService {
                     // getBytes()는 MultipartFile의 내용을 바이트 배열로 변환한다.
                     byte[] bytes = img.getBytes();
                     // 주어진 경로 문자열로 Path 객체를 생성한다.
-                    Path path = Paths.get(UUID.randomUUID().toString() + "_" + img.getOriginalFilename());
+                    Path path = Paths.get(UUID.randomUUID() + "_" + img.getOriginalFilename());
                     savedUrls.add(path.toString());
                     Files.write(path, bytes);
                 } catch (IOException e) {
@@ -42,6 +42,23 @@ public class ImageService {
         }
         return savedUrls;
     }
+
+    public String uploadImage(String userId, MultipartFile image){
+        try {
+            // 모든 파일은 byte의 연속으로 저장된다. images에는 업로드한 파일의 내용, 메타데이터를 포합한다.
+            // getBytes()는 MultipartFile의 내용을 바이트 배열로 변환한다.
+            byte[] bytes = image.getBytes();
+            // 주어진 경로 문자열로 Path 객체를 생성한다.
+            Path path = Paths.get(UUID.randomUUID() + "_" + image.getOriginalFilename());
+            Files.write(path, bytes);
+            return path.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+    }
+
+
 
     public List<String> getImages(List<String> imageUrls) {
         List<String> images = new ArrayList<>();

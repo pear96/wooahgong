@@ -9,8 +9,6 @@ services:
       - /home/haeun/wooahgong/upload_images:/upload_images
     ports:
       - "8080:8080"
-    networks:
-      - wooahgong_network
 
   frontend:
     build:
@@ -22,8 +20,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    networks:
-      - wooahgong_network
 
   bigdata:
     build:
@@ -33,9 +29,3 @@ services:
       - /home/haeun/wooahgong/upload_images:/upload_images
     ports:
       - "8000:8000"
-    networks:
-      - wooahgong_network
-
-networks:
-  wooahgong_network:
-    driver: bridge

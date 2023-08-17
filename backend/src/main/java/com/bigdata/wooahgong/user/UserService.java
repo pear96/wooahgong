@@ -32,7 +32,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,21 +47,17 @@ public class UserService {
     private final PlaceWishRepository placeWishRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
-//    private final S3Service s3Service;
     private final ImageService imageService;
+//    private final S3Service s3Service;
 
-    public String getEmailByToken(String token) {
-        JWTVerifier verifier = JwtTokenUtil.getVerifier();
-        if ("".equals(token)) {
-            throw new CustomException(ErrorCode.NOT_OUR_USER);
-        }
-        JwtTokenUtil.handleError(token);
-        DecodedJWT decodedJWT = verifier.verify(token.replace(JwtTokenUtil.TOKEN_PREFIX, ""));
-        return decodedJWT.getSubject();
-    }
-
+    /**
+     * Token으로 사용자 조회하는 함수.
+     * Token으로 이메일을 추출하고, 해당 이메일을 가진 사용자를 찾는다.
+     * @param token JWT
+     * @return 사용자 객체
+     */
     public User getUserByToken(String token) {
-        String email = getEmailByToken(token);
+        String email = JwtTokenUtil.verifyToken(token);
         Optional<User> foundUser = userRepository.findByEmail(email);
         if (foundUser.isEmpty()) {
             throw new CustomException(ErrorCode.NOT_OUR_USER);
@@ -70,15 +65,17 @@ public class UserService {
         return foundUser.get();
     }
 
-
     @Transactional
     public void signUp(SignUpReq commonSignUpReq) {
         commonSignUpReq.setPassword(passwordEncoder.encode(commonSignUpReq.getPassword()));
         User user = userRepository.findByEmail(commonSignUpReq.getEmail()).orElseGet(User::new);
-        // 에러 핸들링
+
+        // 같은 이메일을 가진 유저가 존재한다.
         if (user.getUserSeq() != null) {
             throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
         }
+
+        // 사용자 이메일이 유효하지 않다.
         if ("".equals(commonSignUpReq.getEmail()) || commonSignUpReq.getEmail() == null) {
             throw new CustomException(ErrorCode.INVALID_DATA);
         }
@@ -130,17 +127,13 @@ public class UserService {
         String email = findPwSendEmailReq.getEmail();
 
         // 에러 핸들링
-        userRepository.findByEmail(email).orElseThrow(() ->
+        User user = userRepository.findByUserIdOrEmail(userId, email).orElseThrow(() ->
                 new CustomException(ErrorCode.EMAIL_NOT_FOUND));
-        userRepository.findByUserId(userId).orElseThrow(() ->
-                new CustomException(ErrorCode.USER_NOT_FOUND));
-        // 에러 없이 지나왔다면
-        User user = userRepository.findByEmail(email).get();
         emailService.sendEmailForPassword(user, email);
     }
 
     // 비밀번호 찾기2 인증코드 확인
-    public ResponseEntity findPwInsertCode(FindPwInsertCodeReq findPwInsertCodeReq) {
+    public ResponseEntity<String> findPwInsertCode(FindPwInsertCodeReq findPwInsertCodeReq) {
         String userId = findPwInsertCodeReq.getUserId();
         String authCode = findPwInsertCodeReq.getAuthCode();
         User user = userRepository.findByUserId(userId).orElseThrow(() ->
@@ -159,12 +152,15 @@ public class UserService {
 
     public GetUserInfoRes getUserInfo(String token, String nickname) {
         // 토큰으로 유저 찾기
-        User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_OUR_USER));
+        User user = getUserByToken(token);
         // 닉네임으로 유저 찾기
         User Owner = userRepository.findByNickname(nickname).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_OUR_USER));
+
+        // 프로필 주인인지 확인
         boolean isOwner = user.getNickname().equals(nickname);
+
+        // 프로필 정보 생성
         int feedsCnt = Owner.getFeeds().size();
         int likedCnt = Owner.getFeedLikes().size();
         int bookmark = Owner.getPlaceWishes().size();
@@ -172,32 +168,48 @@ public class UserService {
         for (UserMood userMood : Owner.getUserMoods()) {
             moods.add(userMood.getMood().getMood());
         }
+
         return GetUserInfoRes.builder()
-                .isOwner(isOwner).feedsCnt(feedsCnt)
-                .likedCnt(likedCnt).bookmarkedCnt(bookmark)
-                .moods(moods).mbti(Owner.getMbti()).image(imageService.getImage(Owner.getImageUrl())).build();
+                .isOwner(isOwner)
+                .feedsCnt(feedsCnt).likedCnt(likedCnt).bookmarkedCnt(bookmark)
+                .moods(moods)
+                .mbti(Owner.getMbti())
+                .image(imageService.getImage(Owner.getImageUrl()))
+                .build();
     }
 
-    public GetMyInfoRes getMyInfo(String token, String nickname) {
+    /**
+     * 프로필 수정 페이지로 갈 때, 사용자의 정보 가져가서 미리 입력해둬야함
+     * 닉네임은 왜 보내주는거지..??(지웠음)
+     * @param token JWT
+     * @return 사용자 정보
+     */
+    public GetMyInfoRes getMyInfoForUpdate(String token) {
         // 토큰으로 유저 찾기
-        User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_OUR_USER));
+        User user = getUserByToken(token);
+
         List<String> moods = new ArrayList<>();
         for (UserMood userMood : user.getUserMoods()) {
             moods.add(userMood.getMood().getMood());
         }
+
         return GetMyInfoRes.builder()
-                .userId(user.getUserId()).nickname(user.getNickname()).profileImg(imageService.getImage(user.getImageUrl()))
-                .mbti(user.getMbti()).moods(moods).provider(user.isProvider()).build();
+                .userId(user.getUserId())
+                .nickname(user.getNickname())
+                .profileImg(imageService.getImage(user.getImageUrl()))
+                .mbti(user.getMbti()).moods(moods).provider(user.isProvider())
+                .build();
     }
 
-    public List<GetMyFeedsRes> getMyFeeds(String token, String nickname, Pageable pageable) {
-        // 토큰으로 유저 찾기
-        User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_OUR_USER));
+    public List<GetMyFeedsRes> getUserUploadedFeeds(String token, String nickname, Pageable pageable) {
+        JwtTokenUtil.verifyToken(token);
+
         User Owner = userRepository.findByNickname(nickname).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_OUR_USER));
+
         Page<Feed> pages = feedRepository.findByUserOrderByModifiedDateDesc(Owner, pageable);
+
+        // DTO에 정제해서 담아 반환하려고
         List<GetMyFeedsRes> getMyFeedsResList = new ArrayList<>();
 
         for (Feed feed : pages) {
@@ -214,13 +226,14 @@ public class UserService {
         return getMyFeedsResList;
     }
 
-    public List<GetMyFeedsRes> getMyLikeFeeds(String token, String nickname, Pageable pageable) {
-        // 토큰으로 유저 찾기
-        User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_OUR_USER));
+    public List<GetMyFeedsRes> getUserLikeFeeds(String token, String nickname, Pageable pageable) {
+        JwtTokenUtil.verifyToken(token);
+
         User Owner = userRepository.findByNickname(nickname).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_OUR_USER));
+
         Page<FeedLike> pages = feedLikeRepository.findByUserOrderByModifiedDateDesc(Owner, pageable);
+
         List<GetMyFeedsRes> getMyFeedsResList = new ArrayList<>();
         for (FeedLike feedLike : pages) {
             Feed feed = feedLike.getFeed();
@@ -237,14 +250,14 @@ public class UserService {
         return getMyFeedsResList;
     }
 
-    @Transactional
-    public List<GetMyPlacesRes> getMyWishedPlaces(String token, String nickname, Pageable pageable) {
-        // 토큰으로 유저 찾기
-        User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_OUR_USER));
+    public List<GetMyPlacesRes> getUserWishedPlaces(String token, String nickname, Pageable pageable) {
+        JwtTokenUtil.verifyToken(token);
+
         User Owner = userRepository.findByNickname(nickname).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_OUR_USER));
+
         Page<PlaceWish> pages = placeWishRepository.findByUserOrderByModifiedDateDesc(Owner, pageable);
+
         List<GetMyPlacesRes> getMyPlacesResList = new ArrayList<>();
         for (PlaceWish placeWish : pages) {
             Place place = placeWish.getPlace();
@@ -264,9 +277,9 @@ public class UserService {
     @Transactional
     public String updateProfile(String token, UpdateProfileReq updateProfileReq) {
         // 토큰으로 유저 찾기
-        User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_OUR_USER));
-        // 2. 유저가 닉네임을 변경
+        User user = getUserByToken(token);
+
+        // 닉네임 변경
         if (!user.getNickname().equals(updateProfileReq.getNickname())) {
             // 해당 닉네임을 가진 유저를 찾는다.
             User nickUser = userRepository.findByNickname(updateProfileReq.getNickname()).orElseGet(User::new);
@@ -279,6 +292,7 @@ public class UserService {
                 throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
             }
         }
+        // MBTI 변경
         if (!user.getMbti().equals(updateProfileReq.getMbti())) {
             user.setMbti(updateProfileReq.getMbti());
         }
@@ -295,24 +309,16 @@ public class UserService {
     }
 
     @Transactional
-    public String updateProfileImg(String token, String nickname, MultipartFile image) {
+    public String updateProfileImg(String token, MultipartFile image) {
         // 토큰으로 유저 찾기
-        User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_OUR_USER));
-        List<MultipartFile> images = new ArrayList<>();
-        images.add(image);
-        List<String> urls = null;
-        urls = imageService.uploadImg(user.getUserId(), images);
-        String url = urls.get(0);
-        user.setImageUrl(url);
-        return imageService.getImage(url);
+        User user = getUserByToken(token);
+        user.setImageUrl(imageService.uploadImage(user.getUserId(), image));
+        return imageService.getImage(user.getImageUrl());
     }
 
     @Transactional
-    public String deleteUser(String token, String nickname) {
-        // 토큰으로 유저 찾기
-        User user = userRepository.findByEmail(getEmailByToken(token)).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_OUR_USER));
+    public String deleteUser(String token) {
+        User user = getUserByToken(token);
         userRepository.delete(user);
         return "회원 탈퇴 성공";
     }

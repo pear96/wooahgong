@@ -28,7 +28,7 @@ public class MainService {
         for (Place place : places) {
             // 킬로미터(Kilo Meter) 단위
             double distanceKiloMeter =
-                    distance(lat, lng, place.getLatitude(), place.getLongitude(), "meter");
+                    distance(lat, lng, place.getLatitude(), place.getLongitude());
             if (distanceKiloMeter < radius) {
                 // 모든 피드 평점 계산
                 double ratings = 0;
@@ -48,22 +48,21 @@ public class MainService {
         return answers;
     }
 
-    private static double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+    private static double distance(double lat1, double lon1, double lat2, double lon2) {
 
         double theta = lon1 - lon2;
         double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
 
         dist = Math.acos(dist);
         dist = rad2deg(dist);
-        dist = dist * 60 * 1.1515;
+        dist = dist * 60 * 1.1515 * 1.609344;
 
-        if (unit == "kilometer") {
-            dist = dist * 1.609344;
-        } else if (unit == "meter") {
-            dist = dist * 1609.344;
-        }
+//        if ("kilometer".equals(unit)) {
+//        } else if ("meter".equals(unit)) {
+//            dist = dist * 1609.344;
+//        }
 
-        return (dist);
+        return dist;
     }
 
 

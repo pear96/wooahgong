@@ -24,8 +24,8 @@ import com.bigdata.wooahgong.user.entity.FeedLike;
 import com.bigdata.wooahgong.user.entity.User;
 import com.bigdata.wooahgong.user.repository.CommentLikeRepository;
 import com.bigdata.wooahgong.user.repository.FeedLikeRepository;
-import com.bigdata.wooahgong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,7 +39,6 @@ public class FeedService {
     private final ImageService imageService;
     private final UserService userService;
     private final FeedRepository feedRepository;
-    private final UserRepository userRepository;
     private final PlaceRepository placeRepository;
     private final CommentLikeRepository commentLikeRepository;
     private final CommentRepository commentRepository;
@@ -47,7 +46,7 @@ public class FeedService {
     private final FeedMoodRepository feedMoodRepository;
     private final FeedLikeRepository feedLikeRepository;
     private final MoodRepository moodRepository;
-    private final Logger logger;
+    private final Logger logger = (Logger) LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     /**
      * 피드 생성하는 함수

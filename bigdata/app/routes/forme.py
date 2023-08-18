@@ -1,11 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from jose import jwt, JWTError
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from starlette.requests import Request
-from app.database.schema import User, Place
 from app.database.conn import db
 from app.common.config import Config
 from app.common.image import get_image
+from app.common.user import find_user
 from haversine import haversine
 from pydantic import BaseModel
 
@@ -23,10 +22,8 @@ class ForMeReq(BaseModel):
 
 router = APIRouter(prefix="/data/main")
 
-SECRET_KEY = Config.JWT_SECRET
-ALGORITHM = Config.JWT_ALGORITHM
-PREFIX = "Bearer "
 CONN = Config.DB_URL
+
 
 # Header로 Authorization 받음
 @router.post("")
@@ -144,7 +141,7 @@ async def forme(request: Request, for_me_request : ForMeReq, session: Session = 
     if new_user:
         user_places = sorted_places
 
-
+    print("원래 몇번 반복인지 궁금한데 : ", len(sorted_places_idx))
     for place_seq in sorted_places_idx:
         place = df_places.loc[df_places['place_seq'] == place_seq]
         # place = session.query(Place).filter(Place.place_seq == place_seq).one()
@@ -176,20 +173,3 @@ async def forme(request: Request, for_me_request : ForMeReq, session: Session = 
     return data
 
 
-# 사용자 찾기
-def find_user(request, session):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    token = request.headers.get('Authorization')
-    # Authorization으로 받은 내용을 JWT로 해석하여서 email을 추출해냄
-    try:
-        token = token.replace(PREFIX, "")
-        user_email = jwt.decode(token, SECRET_KEY, [ALGORITHM])["sub"] # {'sub': 'amlwq@naver.com', 'iss': 'ssafy.com', 'exp': 1649907298, 'iat': 1648611298} 
-    except JWTError:
-        raise credentials_exception
-    # 해당 email로 user를 찾음
-    user = session.query(User).filter(User.email == user_email).one()
-    return user

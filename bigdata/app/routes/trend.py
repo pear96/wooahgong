@@ -51,8 +51,8 @@ async def trend(request: Request, trend_request: TrendReq, session: Session = De
 
     data = {
         "trendyPlaces": find_trendy_places(user, trend_request, df_feeds, df_places),
-        "recByAgeGender": find_by_age_gender(user, trend_request, df_users, df_wishes, df_places),
-        "recByMBTI": find_by_MBTI(user, trend_request, df_users, df_wishes, df_places),
+        "recByAgeGender": find_by_age_gender(user, trend_request, df_users, df_wishes, df_places, df_feeds),
+        "recByMBTI": find_by_MBTI(user, trend_request, df_users, df_wishes, df_places, df_feeds),
         "recByMoods": find_by_moods(user, trend_request, df_feeds, df_moods, df_places, df_feed_moods, df_user_moods),
     }
 
@@ -102,7 +102,7 @@ def find_trendy_places(user, trend_request, df_feeds, df_places):
         # 거리 내에 있는 경우에만 추가
         if distance <= search_radius:
             result_places.append({
-                'placeSeq': place.place_seq,
+                'placeSeq': place_seq,
                 'placeImageUrl': get_image(df_feeds.loc[df_feeds['place_seq'] == place_seq].iloc[0]['thumbnail'])
             })
             if len(result_places) >= 20:
@@ -110,7 +110,7 @@ def find_trendy_places(user, trend_request, df_feeds, df_places):
     return result_places
 
 # 연령대, 성별
-def find_by_age_gender(user, trend_request, df_users, df_wishes, df_places):
+def find_by_age_gender(user, trend_request, df_users, df_wishes, df_places, df_feeds):
     user_seq = user.user_seq
     user_birth_year = user.birth.year
 
@@ -174,7 +174,7 @@ def find_by_age_gender(user, trend_request, df_users, df_wishes, df_places):
     }
 
 # MBTI
-def find_by_MBTI(user, trend_request, df_users, df_wishes, df_places):
+def find_by_MBTI(user, trend_request, df_users, df_wishes, df_places, df_feeds):
     user_seq = user.user_seq
     user_mbti = user.mbti
 
@@ -307,7 +307,7 @@ def find_by_moods(user, trend_request, df_feeds, df_moods, df_places, df_feed_mo
                 # 거리 내에 있는 경우에만 추가
                 if distance <= search_radius:
                     result_places[i].append({
-                        'placeSeq': place.place_seq,
+                        'placeSeq': place_seq,
                         'placeImageUrl': get_image(df_feeds.loc[df_feeds['place_seq'] == place_seq].iloc[0]['thumbnail'])
                     })
                     if len(result_places[i]) >= 20:

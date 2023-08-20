@@ -141,7 +141,6 @@ async def forme(request: Request, for_me_request : ForMeReq, session: Session = 
     if new_user:
         user_places = sorted_places
 
-    print("원래 몇번 반복인지 궁금한데 : ", len(sorted_places_idx))
     for place_seq in sorted_places_idx:
         place = df_places.loc[df_places['place_seq'] == place_seq]
         # place = session.query(Place).filter(Place.place_seq == place_seq).one()

@@ -103,11 +103,10 @@ def find_trendy_places(user, trend_request, df_feeds, df_places):
         if distance <= search_radius:
             result_places.append({
                 'placeSeq': place.place_seq,
-                'placeImageUrl': get_image(place.feeds[0].thumbnail)
+                'placeImageUrl': get_image(df_feeds.loc[df_feeds['place_seq'] == place_seq].iloc[0]['thumbnail'])
             })
             if len(result_places) >= 20:
                 break
-
     return result_places
 
 # 연령대, 성별
@@ -164,11 +163,10 @@ def find_by_age_gender(user, trend_request, df_users, df_wishes, df_places):
         if distance <= search_radius:
             result_places.append({
                 'placeSeq': place.place_seq,
-                'placeImageUrl': get_image(place.feeds[0].thumbnail)
+                'placeImageUrl': get_image(df_feeds.loc[df_feeds['place_seq'] == place_seq].iloc[0]['thumbnail'])
             })
             if len(result_places) >= 20:
                 break
-
     return {
         "ageGroup": int(age_group),
         "gender": gender,
@@ -224,11 +222,10 @@ def find_by_MBTI(user, trend_request, df_users, df_wishes, df_places):
         if distance <= search_radius:
             result_places.append({
                 'placeSeq': place.place_seq,
-                'placeImageUrl': get_image(place.feeds[0].thumbnail)
+                'placeImageUrl': get_image(df_feeds.loc[df_feeds['place_seq'] == place_seq].iloc[0]['thumbnail'])
             })
             if len(result_places) >= 20:
                 break
-
     return {
         "MBTI": user_mbti,
         "places": result_places
@@ -311,7 +308,7 @@ def find_by_moods(user, trend_request, df_feeds, df_moods, df_places, df_feed_mo
                 if distance <= search_radius:
                     result_places[i].append({
                         'placeSeq': place.place_seq,
-                        'placeImageUrl': get_image(place.feeds[0].thumbnail)
+                        'placeImageUrl': get_image(df_feeds.loc[df_feeds['place_seq'] == place_seq].iloc[0]['thumbnail'])
                     })
                     if len(result_places[i]) >= 20:
                         break

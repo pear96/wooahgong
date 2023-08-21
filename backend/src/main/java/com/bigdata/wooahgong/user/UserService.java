@@ -1,7 +1,5 @@
 package com.bigdata.wooahgong.user;
 
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.bigdata.wooahgong.common.exception.CustomException;
 import com.bigdata.wooahgong.common.exception.ErrorCode;
 import com.bigdata.wooahgong.common.util.JwtTokenUtil;
@@ -29,12 +27,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -81,6 +79,8 @@ public class UserService {
         }
 
         // 유저 엔티티화 후 DB에 저장
+        Random rnd = new Random();
+        commonSignUpReq.setImageUrl("wooahgong_profile0" + (1 + rnd.nextInt(5))+".jpg");
         user = commonSignUpReq.toEntity();
 
         userRepository.save(user);

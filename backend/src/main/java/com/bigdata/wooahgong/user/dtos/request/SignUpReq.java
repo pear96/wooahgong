@@ -20,6 +20,7 @@ public class SignUpReq {
     private boolean provider;
     private List<String> moods;
     private String mbti;
+    private String imageUrl;
 
 
     public User toEntity() {
@@ -31,7 +32,7 @@ public class SignUpReq {
                 .birth(birth)
                 .gender(gender)
                 .provider(provider)
-                .imageUrl("logo.png")
+                .imageUrl(imageUrl)
                 .mbti(mbti).build();
     }
 }

@@ -26,22 +26,16 @@ pipeline {
             parallel {
                 stage('Frontend Docker Image Build') {
                     steps {
-                        sh 'pwd'
-                        sh 'ls -al'
                         sh 'docker-compose -f docker-compose.yml build frontend'
                     }
                 }
                 stage('Backend Docker Image Build') {
                     steps {
-                        sh 'pwd'
-                        sh 'ls -al'
                         sh 'docker-compose -f docker-compose.yml build backend'
                     }
                 }
                 stage('BigData Docker Image Build') {
                     steps {
-                        sh 'pwd'
-                        sh 'ls -al'
                         sh 'docker-compose -f docker-compose.yml build bigdata'
                     }
                 }
@@ -51,22 +45,16 @@ pipeline {
             parallel {
                 stage('Frontend Docker Container') {
                     steps {
-                        sh 'pwd'
-                        sh 'ls -al'
                         sh 'docker-compose -f docker-compose.yml up -d frontend'
                     }
                 }
                 stage('Backend Docker Container') {
                     steps {
-                        sh 'pwd'
-                        sh 'ls -al'
                         sh 'docker-compose -f docker-compose.yml up -d backend'
                     }
                 }
                 stage('BigData Docker Container') {
                     steps {
-                        sh 'pwd'
-                        sh 'ls -al'
                         sh 'docker-compose -f docker-compose.yml up -d bigdata'
                     }
                 }

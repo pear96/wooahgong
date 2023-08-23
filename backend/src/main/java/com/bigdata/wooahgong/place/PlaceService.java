@@ -53,7 +53,7 @@ public class PlaceService {
 
         // 위도 경도 중복 검사
         Place place = placeRepository.findByLatitudeAndLongitude(lat,lng).orElseGet(Place::new);
-        if(place.getPlaceSeq() != null){
+        if(place.getPlaceSeq() != 0){
             throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
         }
 

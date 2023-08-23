@@ -304,7 +304,8 @@ public class UserService {
                     new CustomException(ErrorCode.MOOD_NOT_FOUND));
             userMoodRepository.save(UserMood.builder().mood(mood).user(user).build());
         }
-        userRepository.save(user);
+        // 이미 영속성 컨텍스트에서 관리되고 있기 때문에 save호출 없이도 DB에 변경이 반영됨.
+//        userRepository.save(user);
         return "프로필 업데이트 완료";
     }
 

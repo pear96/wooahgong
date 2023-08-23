@@ -2,13 +2,10 @@ package com.bigdata.wooahgong.place.entity;
 
 import com.bigdata.wooahgong.common.util.BaseTimeEntity;
 import com.bigdata.wooahgong.feed.entity.Feed;
-import com.bigdata.wooahgong.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.locationtech.jts.geom.Point;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -23,11 +20,7 @@ import java.util.List;
 public class Place extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long placeSeq;
-
-//    @ManyToOne
-//    @JoinColumn(name = "user_seq")
-//    private User user;
+    private long placeSeq;
 
     @Column(nullable = false)
     private String name;
@@ -35,22 +28,34 @@ public class Place extends BaseTimeEntity {
     @Column(nullable = false)
     private String address;
 
-    @Column(nullable = false)
-    private Double latitude;
+    private int feedCnt;
+
+    private long totalScore;
+
+    private double avgScore;
+
 
     @Column(nullable = false)
-    private Double longitude;
+    private double latitude;
+
+    @Column(nullable = false)
+    private double longitude;
+
+    @Column(columnDefinition = "POINT")
+    private Point location;
 
     @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @Builder.Default
     private List<Feed> feeds = new ArrayList<>();
+
     @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
     @JsonManagedReference
+    @Builder.Default
     private List<PlaceWish> placeWishes = new ArrayList<>();
 
     @Builder
-    public Place(String name, String address, Double latitude, Double longitude) {
-//        this.user = user;
+    public Place(String name, String address, double latitude, double longitude) {
         this.name = name;
         this.address = address;
         this.latitude = latitude;

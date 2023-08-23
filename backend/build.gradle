@@ -18,24 +18,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-tomcat'
-
-    // swagger
-    implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
-
-    // file upload
-    implementation 'commons-io:commons-io:2.6'
-    // jwt
-    implementation 'com.auth0:java-jwt:3.10.3'
-
-    // logging
-    implementation 'org.springframework.boot:spring-boot-starter-logging'
-
-    // lombok
-    compileOnly 'org.projectlombok:lombok'
-    compileOnly 'org.projectlombok:lombok'
-
     // email
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+
     //STOMP 웹소캣 서버 사이드 테스트를 위한 의존성 추가
     implementation 'org.springframework.boot:spring-boot-starter-mustache'
     //STOMP 관련 프론트 라이브러리
@@ -43,6 +28,30 @@ dependencies {
     implementation 'org.webjars:sockjs-client:1.1.2'
     implementation 'org.webjars:stomp-websocket:2.3.3-1'
     implementation 'org.webjars:webjars-locator:0.30'
+
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
+
+    // file upload
+    implementation 'commons-io:commons-io:2.6'
+
+    // jwt
+    implementation 'com.auth0:java-jwt:3.10.3'
+
+    // logging
+    implementation 'org.springframework.boot:spring-boot-starter-logging'
+
+    // redis
+    implementation 'org.springframework.data:spring-data-redis'
+    implementation 'redis.clients:jedis'
+
+    // spatial
+    implementation 'org.hibernate:hibernate-spatial:5.6.15.Final'
+
+
+    // lombok
+    compileOnly 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok'
 
     runtimeOnly 'mysql:mysql-connector-java'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

@@ -55,34 +55,37 @@ public class User extends BaseTimeEntity {
 
     @JsonManagedReference // 순환 참조 방어
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Feed> feeds = new ArrayList<>();
 
     @JsonManagedReference // 순환 참조 방어
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<UserMood> userMoods = new ArrayList<>();
 
     @JsonManagedReference // 순환 참조 방어
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
     @JsonManagedReference // 순환 참조 방어
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<CommentLike> commentLikes = new ArrayList<>();
 
     @JsonManagedReference // 순환 참조 방어
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<FeedLike> feedLikes = new ArrayList<>();
-
-//    @JsonManagedReference // 순환 참조 방어
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//    private List<Place> places = new ArrayList<>();
 
     @JsonManagedReference // 순환 참조 방어
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<PlaceWish> placeWishes = new ArrayList<>();
 
     @JsonManagedReference // 순환 참조 방어
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<SearchHistory> searchHistories = new ArrayList<>();
 
     public void resetPwd(String password){

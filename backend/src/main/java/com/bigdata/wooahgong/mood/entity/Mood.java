@@ -28,8 +28,11 @@ public class Mood extends BaseTimeEntity {
     // 중간 테이블 설정
     @OneToMany(mappedBy = "mood", cascade = CascadeType.ALL)
     @JsonManagedReference
+    @Builder.Default
     private List<UserMood> userMoods = new ArrayList<>();
+
     @OneToMany(mappedBy = "mood", cascade = CascadeType.ALL)
     @JsonManagedReference
+    @Builder.Default
     private List<FeedMood> feedMoods = new ArrayList<>();
 }

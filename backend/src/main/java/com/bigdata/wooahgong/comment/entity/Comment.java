@@ -40,5 +40,6 @@ public class Comment extends BaseTimeEntity {
     // 중간 테이블 설정
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     @JsonManagedReference
+    @Builder.Default
     private List<CommentLike> commentLikes = new ArrayList<>();
 }

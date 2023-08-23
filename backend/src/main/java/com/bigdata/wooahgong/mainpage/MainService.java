@@ -19,7 +19,7 @@ public class MainService {
 
 
     public List<SearchPlaceDto> getMap(GetMapReq getMapReq) {
-        List<Place> places = placeRepository.ifUserAndPlaceIn(getMapReq.getLng(), getMapReq.getLat(), getMapReq.getRadius()*1000);
+        List<Place> places = placeRepository.ifUserAndPlaceIn(getMapReq.getLng(), getMapReq.getLat(), getMapReq.getRadius());
         List<SearchPlaceDto> results = new ArrayList<>();
 
         for(Place place : places) {

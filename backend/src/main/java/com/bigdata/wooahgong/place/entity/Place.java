@@ -41,7 +41,7 @@ public class Place extends BaseTimeEntity {
     @Column(nullable = false)
     private double longitude;
 
-    @Column(columnDefinition = "POINT")
+    @Column(columnDefinition = "POINT SRID 4326", nullable = false)
     private Point location;
 
     @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true)

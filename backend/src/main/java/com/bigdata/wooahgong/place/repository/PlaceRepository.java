@@ -20,10 +20,12 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
     List<Place> ifUserAndPlaceIn(double userLongitude, double userLatitude, int radius);
 
     @Query(
-            value = "SELECT * FROM Place WHERE MBRContains(ST_GeomFromText('POLYGON((:minLng :minLat, :minLng :maxLat, :maxLng :maxLat, :maxLng :minLat, :minLng :minLat))'), location);",
+            value = "SELECT * FROM place WHERE MBRContains(ST_GeomFromText(CONCAT('POLYGON((', ?1, ' ', ?2, ',', ?1, ' ', ?4, ',', ?3, ' ', ?4, ',', ?3, ' ', ?2, ',', ?1, ' ', ?2, '))'), 4326), location);",
             nativeQuery = true
     )
-    List<Place> findPlaceinMBR(double minLat, double maxLat, double minLng, double maxLng);
+    List<Place> findPlaceinMBR(double minLat, double minLng, double maxLat, double maxLng);
+
+
 
     @Query("SELECT f.thumbnail FROM Feed f WHERE f.placeSeq = :placeSeq")
     List<String> findThumbnailByPlaceSeq(Long placeSeq, Pageable pageable);

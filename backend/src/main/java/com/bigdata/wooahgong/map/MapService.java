@@ -59,7 +59,8 @@ public class MapService {
         double latDiff = rad / EARTH_RADIUS;
         double lngDiff = rad / (EARTH_RADIUS * Math.cos(Math.toRadians(lat)));
 
-        List<Place> places = placeRepository.findPlaceinMBR(lat - latDiff, lat + latDiff, lng - lngDiff, lng + lngDiff);
+        List<Place> places = placeRepository.findPlaceinMBR(lat-latDiff, lng-lngDiff, lat+latDiff, lng+lngDiff);
+
         List<SearchPlaceDto> results = new ArrayList<>();
         logger.info("범위 내 장소 개수 : " + places.size());
         Pageable topOne = PageRequest.of(0, 1);

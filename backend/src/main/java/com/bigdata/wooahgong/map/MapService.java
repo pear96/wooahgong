@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ public class MapService {
 
 
     public List<SearchPlaceDto> getMap(double lng, double lat, int rad) {
+        long start = System.currentTimeMillis();
         rad *= 1000;
         logger.info("[MapService - getMap] 시작");
         if (lng == 0 || lat == 0 || rad == 0) {
@@ -32,8 +34,9 @@ public class MapService {
         }
 
         List<Place> places = placeRepository.ifUserAndPlaceIn(lng, lat, rad);
+        long sql = System.currentTimeMillis();
         List<SearchPlaceDto> results = new ArrayList<>();
-        logger.info("범위 내 장소 개수 : " + places.size());
+        logger.info("범위 내 장소 개수 : " + places.size() + "개, SQL 시간 : " + (sql - start) + "ms");
         Pageable topOne = PageRequest.of(0, 1);
 
         for(Place place : places) {
@@ -47,10 +50,13 @@ public class MapService {
                     .imageUrl(placeRepository.findThumbnailByPlaceSeq(place.getPlaceSeq(), topOne).get(0))
                     .build());
         }
+        long end = System.currentTimeMillis();
+        logger.info("걸린 시간 : " + (end-start) + "ms");
         return results;
     }
 
     public List<SearchPlaceDto> getIndexMap(double lng, double lat, int rad) {
+        long start = System.currentTimeMillis();
         logger.info("[MapService - getIndexMap] 시작");
         if (lng == 0 || lat == 0 || rad == 0) {
             throw new CustomException(ErrorCode.INVALID_DATA);
@@ -61,9 +67,9 @@ public class MapService {
         double lngDiff = rad / (EARTH_RADIUS * Math.cos(Math.toRadians(lat)));
 
         List<Place> places = placeRepository.findPlaceinMBR(lat-latDiff, lng-lngDiff, lat+latDiff, lng+lngDiff);
-
+        long sql = System.currentTimeMillis();
         List<SearchPlaceDto> results = new ArrayList<>();
-        logger.info("범위 내 장소 개수 : " + places.size());
+        logger.info("범위 내 장소 개수 : " + places.size() + "개, SQL 시간 : " + (sql - start) + "ms");
         Pageable topOne = PageRequest.of(0, 1);
 
         for(Place place : places) {
@@ -74,9 +80,11 @@ public class MapService {
                     .lng(place.getLongitude())
                     .lat(place.getLatitude())
                     .ratings(place.getAvgScore())
-                    .imageUrl(placeRepository.findThumbnailByPlaceSeq(place.getPlaceSeq(), topOne).get(0))
+                    .imageUrl(place.getImage())
                     .build());
         }
+        long end = System.currentTimeMillis();
+        logger.info("걸린 시간 : " + (end-start) + "ms");
         return results;
     }
 
@@ -90,8 +98,6 @@ public class MapService {
             double distanceKiloMeter =
                     distance(lat, lng, place.getLatitude(), place.getLongitude(), "meter");
             if (distanceKiloMeter < rad) {
-                // 피드 맨 최근꺼 사진 첫번째꺼 가져오기
-                String url = place.getFeeds().get(0).getThumbnail();
                 answers.add(SearchPlaceDto.builder()
                         .address(place.getAddress())
                         .placeSeq(place.getPlaceSeq())
@@ -99,7 +105,7 @@ public class MapService {
                         .lat(place.getLatitude())
                         .lng(place.getLongitude())
                         .name(place.getName())
-                        .imageUrl(url)
+                        .imageUrl(place.getImage())
                         .build());
             }
         }
@@ -134,5 +140,4 @@ public class MapService {
     private static double rad2deg(double rad) {
         return (rad * 180 / Math.PI);
     }
-
 }

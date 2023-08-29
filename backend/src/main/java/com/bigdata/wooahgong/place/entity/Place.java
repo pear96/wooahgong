@@ -34,6 +34,7 @@ public class Place extends BaseTimeEntity {
 
     private double avgScore;
 
+    private String image;
 
     @Column(nullable = false)
     private double latitude;

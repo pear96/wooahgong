@@ -32,7 +32,7 @@
             <!-- daily rollover -->
             <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>1</maxHistory>
-            <totalSizeCap>10MB</totalSizeCap>
+            <maxFileSize>1MB</maxFileSize>
         </rollingPolicy>
     </appender>
 

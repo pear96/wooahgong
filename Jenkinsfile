@@ -18,31 +18,8 @@ pipeline {
             }
         }
         stage('Docker-Compose Build') {
-            parallel {
-                stage('Frontend Docker Image Build') {
-                    when {
-                        changeset 'frontend/*'
-                    }
-                    steps {
-                        sh 'docker-compose -f docker-compose.yml build frontend'
-                    }
-                }
-                stage('Backend Docker Image Build') {
-                    when {
-                        changeset 'backend/*'
-                    }
-                    steps {
-                        sh 'docker-compose -f docker-compose.yml build backend'
-                    }
-                }
-                stage('BigData Docker Image Build') {
-                    when {
-                        changeset 'bigdata/*'
-                    }
-                    steps {
-                        sh 'docker-compose -f docker-compose.yml build bigdata'
-                    }
-                }
+            steps {
+                sh 'docker-compose -f docker-compose.yml build'
             }
         }
         stage('Shutdown Previous Containers') {

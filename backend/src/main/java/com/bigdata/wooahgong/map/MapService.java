@@ -27,7 +27,6 @@ public class MapService {
 
     public List<SearchPlaceDto> getMap(double lng, double lat, int rad) {
         long start = System.currentTimeMillis();
-        rad *= 1000;
         logger.info("[MapService - getMap] 시작. 요청 위치 : " + lat + " " + lng);
         if (lng == 0 || lat == 0 || rad == 0) {
             throw new CustomException(ErrorCode.INVALID_DATA);
@@ -61,7 +60,6 @@ public class MapService {
         if (lng == 0 || lat == 0 || rad == 0) {
             throw new CustomException(ErrorCode.INVALID_DATA);
         }
-        rad *= 1000;
         final double EARTH_RADIUS = 111_000;
         double latDiff = rad / EARTH_RADIUS;
         double lngDiff = rad / (EARTH_RADIUS * Math.cos(Math.toRadians(lat)));

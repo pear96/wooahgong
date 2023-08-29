@@ -20,16 +20,25 @@ pipeline {
         stage('Docker-Compose Build') {
             parallel {
                 stage('Frontend Docker Image Build') {
+                    when {
+                        changeset 'frontend/*'
+                    }
                     steps {
                         sh 'docker-compose -f docker-compose.yml build frontend'
                     }
                 }
                 stage('Backend Docker Image Build') {
+                    when {
+                        changeset 'backend/*'
+                    }
                     steps {
                         sh 'docker-compose -f docker-compose.yml build backend'
                     }
                 }
                 stage('BigData Docker Image Build') {
+                    when {
+                        changeset 'bigdata/*'
+                    }
                     steps {
                         sh 'docker-compose -f docker-compose.yml build bigdata'
                     }
@@ -42,22 +51,8 @@ pipeline {
             }
         }
         stage('Docker-Compose Run') {
-            parallel {
-                stage('Frontend Docker Container') {
-                    steps {
-                        sh 'docker-compose -f docker-compose.yml up -d frontend'
-                    }
-                }
-                stage('Backend Docker Container') {
-                    steps {
-                        sh 'docker-compose -f docker-compose.yml up -d backend'
-                    }
-                }
-                stage('BigData Docker Container') {
-                    steps {
-                        sh 'docker-compose -f docker-compose.yml up -d bigdata'
-                    }
-                }
+            steps {
+                sh 'docker-compose -f docker-compose.yml up -d'
             }
         }
         stage('clear image') {

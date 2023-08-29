@@ -22,17 +22,15 @@
 
     <!-- 파일(FILE) -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!--     log 기록할 파일 위치 설정 -->
         <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
-        <!--     log 기록 타입 인코딩 -->
         <encoder>
             <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
-            <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxHistory>1</maxHistory>
             <maxFileSize>1MB</maxFileSize>
+            <totalSizeCap>10MB</totalSizeCap>
         </rollingPolicy>
     </appender>
 

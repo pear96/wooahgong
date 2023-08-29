@@ -8,7 +8,7 @@ const getResultPlaceDistance = async (data : {radius : number, lat : number, lng
     const token = getToken();
     
     if(token){
-        const result = await axios.post(BASE_URL, data, {headers : {Authorization: token}})
+        const result = await axios.get(`${BASE_URL}?lng=${data.lng}&lat=${data.lat}&rad=${data.radius}`, {headers : {Authorization: token}})
                                 .then((response) => {
                                     const value = {
                                         status : response.status,

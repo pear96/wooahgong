@@ -1,4 +1,4 @@
-package com.bigdata.wooahgong.mainpage.dtos.request;
+package com.bigdata.wooahgong.map.dtos.request;
 
 import lombok.Builder;
 import lombok.Data;

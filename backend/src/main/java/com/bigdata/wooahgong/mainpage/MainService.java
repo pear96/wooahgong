@@ -46,11 +46,6 @@ public class MainService {
                     .lat(place.getLatitude())
                     .ratings(place.getAvgScore())
                     .imageUrl(placeRepository.findThumbnailByPlaceSeq(place.getPlaceSeq(), topOne).get(0))
-                    // 이미지 변환 속도 파악
-//                    .imageUrl(imageService.getImage(
-//                            placeRepository.findThumbnailByPlaceSeq(
-//                                    place.getPlaceSeq(), topOne)
-//                                    .get(0)))
                     .build());
         }
         return results;

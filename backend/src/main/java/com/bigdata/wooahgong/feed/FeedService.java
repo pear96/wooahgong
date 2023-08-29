@@ -130,7 +130,6 @@ public class FeedService {
         // 사진 찾기
         List<String> feedImages = feedImageRepository.findImageUrlAllByFeed(feed.getFeedSeq()).orElseThrow(() ->
                 new CustomException(ErrorCode.DATA_NOT_FOUND));
-        List<String> byteImages = imageService.getImages(feedImages);
 
         // DTO 만들기
         List<String> moods = new ArrayList<>();
@@ -139,13 +138,22 @@ public class FeedService {
         }
 
         return DetailFeedRes.builder()
-                .feedSeq(feedSeq).userSeq(owner.getUserSeq()).userImageUrl(imageService.getImage(owner.getImageUrl()))
-                .nickname(feed.getUser().getNickname()).placeSeq(place.getPlaceSeq()).placeName(place.getName())
-                .address(place.getAddress()).images(byteImages)
-                .content(feed.getContent()).amIOwner(owner.getEmail().equals(user.getEmail()))
-                .ratings(feed.getRatings()).createDate(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(feed.getCreatedDate()))
-                .moods(moods).amILike(amIPressedLike(feed, user))
-                .likesCnt(feed.getFeedLikes().size()).commentsCnt(feed.getComments().size())
+                .feedSeq(feedSeq)
+                .userSeq(owner.getUserSeq())
+                .userImageUrl(imageService.getImage(owner.getImageUrl()))
+                .nickname(feed.getUser().getNickname())
+                .placeSeq(place.getPlaceSeq())
+                .placeName(place.getName())
+                .address(place.getAddress())
+                .images(feedImages)
+                .content(feed.getContent())
+                .amIOwner(owner.getEmail().equals(user.getEmail()))
+                .ratings(feed.getRatings())
+                .createDate(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(feed.getCreatedDate()))
+                .moods(moods)
+                .amILike(amIPressedLike(feed, user))
+                .likesCnt(feed.getFeedLikes().size())
+                .commentsCnt(feed.getComments().size())
                 .build();
     }
 

@@ -13,7 +13,7 @@ public class TimeTrackHibernateInterceptor extends EmptyInterceptor {
         String result = super.onPrepareStatement(sql);
         long end = System.currentTimeMillis();
 
-        logger.info("SQL Executing Time : " + (end-start) + "ms");
+//        logger.info("SQL Executing Time : " + (end-start) + "ms");
         return result;
     }
 }

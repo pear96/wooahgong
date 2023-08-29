@@ -7,7 +7,6 @@ spring:
     import:
       - classpath:application-db.yml
       - classpath:application-email.yml
-      - classpath:application-log.yml
 
 springdoc:
   packages-to-scan: com.bigdata.wooahgong

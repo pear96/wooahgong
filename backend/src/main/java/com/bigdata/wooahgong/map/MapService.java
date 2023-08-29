@@ -25,6 +25,7 @@ public class MapService {
 
 
     public List<SearchPlaceDto> getMap(double lng, double lat, int rad) {
+        rad *= 1000;
         logger.info("[MapService - getMap] 시작");
         if (lng == 0 || lat == 0 || rad == 0) {
             throw new CustomException(ErrorCode.INVALID_DATA);

@@ -24,7 +24,7 @@ pipeline {
                         changeset "backend/**"
                     }
                     steps {
-                        sh 'docker build -t backend:latest backend/'
+                        sh 'docker-compose -f docker-compose.yml build backend'
                     }
                 }
                 stage('Build Frontend Docker Image') {
@@ -32,7 +32,7 @@ pipeline {
                         changeset "frontend/**"
                     }
                     steps {
-                        sh 'docker build -t frontend:latest frontend/'
+                        sh 'docker-compose -f docker-compose.yml build frontend'
                     }
                 }
                 stage('Build BigData Docker Image') {
@@ -40,7 +40,7 @@ pipeline {
                         changeset "bigdata/**"
                     }
                     steps {
-                        sh 'docker build -t bigdata:latest bigdata/'
+                        sh 'docker-compose -f docker-compose.yml build bigdata'
                     }
                 }
             }

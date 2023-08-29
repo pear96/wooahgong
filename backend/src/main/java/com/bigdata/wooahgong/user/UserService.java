@@ -213,13 +213,9 @@ public class UserService {
         List<GetMyFeedsRes> getMyFeedsResList = new ArrayList<>();
 
         for (Feed feed : pages) {
-            String image = null;
-            if (feed.getFeedImages().size() != 0) {
-                image = imageService.getImage(feed.getFeedImages().get(0).getImageUrl());
-            }
             getMyFeedsResList.add(GetMyFeedsRes.builder()
                     .feedSeq(feed.getFeedSeq())
-                    .imageUrl(image)
+                    .imageUrl(feed.getThumbnail())
                     .placeSeq(feed.getPlaceSeq())
                     .build());
         }
@@ -237,13 +233,9 @@ public class UserService {
         List<GetMyFeedsRes> getMyFeedsResList = new ArrayList<>();
         for (FeedLike feedLike : pages) {
             Feed feed = feedLike.getFeed();
-            String image = null;
-            if (feed.getFeedImages().size() != 0) {
-                image = imageService.getImage(feed.getFeedImages().get(0).getImageUrl());
-            }
             getMyFeedsResList.add(GetMyFeedsRes.builder()
                     .feedSeq(feed.getFeedSeq())
-                    .imageUrl(image)
+                    .imageUrl(feed.getThumbnail())
                     .placeSeq(feed.getPlaceSeq())
                     .build());
         }
@@ -261,15 +253,10 @@ public class UserService {
         List<GetMyPlacesRes> getMyPlacesResList = new ArrayList<>();
         for (PlaceWish placeWish : pages) {
             Place place = placeWish.getPlace();
-            String image = null;
-            // 피드가 존재할때만
-            if (place.getFeeds().size() != 0) {
-                Feed feed = place.getFeeds().get(0);
-                // 피드에 사진이 있을 경우에만
-                image = imageService.getImage(feed.getThumbnail());
-            }
             getMyPlacesResList.add(GetMyPlacesRes.builder()
-                    .placeSeq(place.getPlaceSeq()).thumbnail(image).build());
+                    .placeSeq(place.getPlaceSeq())
+                    .thumbnail(place.getFeeds().get(0).getThumbnail())
+                    .build());
         }
         return getMyPlacesResList;
     }

@@ -28,7 +28,7 @@ public class MapService {
     public List<SearchPlaceDto> getMap(double lng, double lat, int rad) {
         long start = System.currentTimeMillis();
         rad *= 1000;
-        logger.info("[MapService - getMap] 시작");
+        logger.info("[MapService - getMap] 시작. 요청 위치 : " + lat + " " + lng);
         if (lng == 0 || lat == 0 || rad == 0) {
             throw new CustomException(ErrorCode.INVALID_DATA);
         }
@@ -47,7 +47,7 @@ public class MapService {
                     .lng(place.getLongitude())
                     .lat(place.getLatitude())
                     .ratings(place.getAvgScore())
-                    .imageUrl(placeRepository.findThumbnailByPlaceSeq(place.getPlaceSeq(), topOne).get(0))
+                    .imageUrl(place.getImage())
                     .build());
         }
         long end = System.currentTimeMillis();
@@ -57,7 +57,7 @@ public class MapService {
 
     public List<SearchPlaceDto> getIndexMap(double lng, double lat, int rad) {
         long start = System.currentTimeMillis();
-        logger.info("[MapService - getIndexMap] 시작");
+        logger.info("[MapService - getIndexMap] 시작. 요청 위치 : " + lat + " " + lng);
         if (lng == 0 || lat == 0 || rad == 0) {
             throw new CustomException(ErrorCode.INVALID_DATA);
         }

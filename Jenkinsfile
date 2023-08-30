@@ -15,7 +15,7 @@ pipeline {
                 sh 'cp /home/gcp_haeun/wooahgong_config/.env frontend/'
                 sh 'cp /home/gcp_haeun/wooahgong_config/secret.json bigdata/'
                 sh 'cp /home/gcp_haeun/wooahgong_config/application-*.yml backend/src/main/resources/'
-                sh 'cp /home/gcp_haeun/wooahgong_config/key.pem backend/src/main/resources/'
+                sh 'cp /home/gcp_haeun/wooahgong_config/key.pem backend/'
             }
         }
         stage('Docker-Compose Build') {

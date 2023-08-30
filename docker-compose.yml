@@ -6,8 +6,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     volumes:
-      - /home/haeun/wooahgong/upload_images:/upload_images
-      - /home/haeun/wooahgong/log:/log
+      - /home/gcp_haeun/wooahgong/log:/log
     ports:
       - "8080:8080"
 
@@ -16,7 +15,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     volumes:
-      - /home/haeun/wooahgong/wooahgong.conf:/etc/nginx/conf.d/default.conf 
+      - /home/gcp_haeun/wooahgong_config/wooahgong.conf:/etc/nginx/conf.d/default.conf 
       - /etc/letsencrypt:/etc/letsencrypt
     ports:
       - "80:80"
@@ -26,8 +25,6 @@ services:
     build:
       context: ./bigdata
       dockerfile: Dockerfile
-    volumes:
-      - /home/haeun/wooahgong/upload_images:/upload_images
     ports:
       - "8000:8000"
 

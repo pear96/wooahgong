@@ -12,9 +12,9 @@ pipeline {
         }
         stage('copy settings') {
             steps {
-                sh 'cp /home/haeun/wooahgong/secrets/.env frontend/'
-                sh 'cp /home/haeun/wooahgong/secrets/secret.json bigdata/'
-                sh 'cp /home/haeun/wooahgong/secrets/application-*.yml backend/src/main/resources/'
+                sh 'cp /home/gcp_haeun/wooahgong_cofing/.env frontend/'
+                sh 'cp /home/gcp_haeun/wooahgong_cofing/secret.json bigdata/'
+                sh 'cp /home/gcp_haeun/wooahgong_cofing/application-*.yml backend/src/main/resources/'
             }
         }
         stage('Docker-Compose Build') {

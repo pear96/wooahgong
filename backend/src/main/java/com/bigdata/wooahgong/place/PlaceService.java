@@ -4,7 +4,6 @@ package com.bigdata.wooahgong.place;
 import com.bigdata.wooahgong.common.exception.CustomException;
 import com.bigdata.wooahgong.common.exception.ErrorCode;
 import com.bigdata.wooahgong.common.util.JwtTokenUtil;
-import com.bigdata.wooahgong.feed.ImageService;
 import com.bigdata.wooahgong.feed.entity.Feed;
 import com.bigdata.wooahgong.feed.entity.FeedLikesComparator;
 import com.bigdata.wooahgong.feed.repository.FeedRepository;
@@ -32,7 +31,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PlaceService {
     private final UserService userService;
-    private final ImageService imageService;
     private final PlaceRepository placeRepository;
     private final PlaceWishRepository placeWishRepository;
     private final FeedRepository feedRepository;
@@ -106,22 +104,18 @@ public class PlaceService {
         // 우선 최신순 정렬
         for (int i = foundFeeds.size() - 1; i >= 0; i--) {
             Feed feed = foundFeeds.get(i);
-            CustomFeedDto customFeed = new CustomFeedDto(feed.getFeedSeq(),
-                    imageService.getImage(feed.getThumbnail()));
+            CustomFeedDto customFeed = new CustomFeedDto(feed.getFeedSeq(), feed.getThumbnail());
             customFeeds.add(customFeed);
             sumRating += feed.getRatings();
         }
         Double avgRating = sumRating / foundFeeds.size();
-
-        // 피드 중에서 이미지를 골라온다.
-        String placeImageUrl = foundFeeds.get(0).getThumbnail();
 
         // Dto에 담는다.
         DetailPlaceRes detailPlaceRes = DetailPlaceRes.builder()
                 .name(place.getName())
                 .address(place.getAddress())
                 .avgRatings(avgRating).latitude(place.getLatitude()).longitude(place.getLongitude())
-                .placeImageUrl(imageService.getImage(placeImageUrl))
+                .placeImageUrl(place.getImage())
                 .feeds(customFeeds)
                 .isWished(isWished)
                 .build();
@@ -159,8 +153,7 @@ public class PlaceService {
         // 피드의 시퀀스 넘버, 썸네일만 가져와서 반환할 리스트를 만든다.
         for (int i = foundFeeds.size() - 1; i >= 0; i--) {
             Feed feed = foundFeeds.get(i);
-            CustomFeedDto customFeed = new CustomFeedDto(feed.getFeedSeq(),
-                    imageService.getImage(feed.getThumbnail()));
+            CustomFeedDto customFeed = new CustomFeedDto(feed.getFeedSeq(), feed.getThumbnail());
             customFeeds.add(customFeed);
         }
 

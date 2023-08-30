@@ -3,33 +3,17 @@ package com.bigdata.wooahgong.user;
 import com.bigdata.wooahgong.common.exception.CustomException;
 import com.bigdata.wooahgong.common.exception.ErrorCode;
 import com.bigdata.wooahgong.common.util.JwtTokenUtil;
-import com.bigdata.wooahgong.feed.ImageService;
-import com.bigdata.wooahgong.user.dtos.KakaoProfile;
-import com.bigdata.wooahgong.user.dtos.KakaoToken;
 import com.bigdata.wooahgong.user.dtos.response.CommonLoginRes;
 import com.bigdata.wooahgong.user.entity.User;
 import com.bigdata.wooahgong.user.repository.UserRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
 public class LoginService {
-    private final ImageService imageService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 //    @Value("${kakao.client_id}")
@@ -49,7 +33,9 @@ public class LoginService {
         return CommonLoginRes.builder()
                 .nickname(user.getNickname())
                 .token("Bearer "+JwtTokenUtil.getToken(user.getEmail()))
-                .profileImg(imageService.getImage(user.getImageUrl())).gender(user.isGender()).provider(user.isProvider())
+                .profileImg(user.getImageUrl())
+                .gender(user.isGender())
+                .provider(user.isProvider())
                 .build();
     }
 

@@ -36,7 +36,6 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class FeedService {
-    private final ImageService imageService;
     private final UserService userService;
     private final FeedRepository feedRepository;
     private final PlaceRepository placeRepository;
@@ -65,7 +64,7 @@ public class FeedService {
         logger.debug("[create feed] userId : " + user.getUserId());
 
         // 파일 업로드 후 urls 저장
-        List<String> urls = imageService.uploadImages(user.getUserId(), images);
+//        List<String> urls = imageService.uploadImages(user.getUserId(), images);
 
         // moods
         List<String> moods = createFeedReq.getMoods();
@@ -79,7 +78,7 @@ public class FeedService {
         Feed feed = Feed.builder()
                 .content(createFeedReq.getContent())
                 .ratings(createFeedReq.getRatings())
-                .thumbnail(urls.get(0))
+                .thumbnail("wooahgong")
                 .user(user)
                 .place(place).build();
         feedRepository.save(feed);
@@ -95,13 +94,13 @@ public class FeedService {
         }
 
         // 피드_사진 테이블에 저장 (피드가 생성 되어야 피드 이미지들과 연결지을 수 있음)
-        for (String url : urls) {
-            FeedImage feedImage = FeedImage.builder()
-                    .feed(feed)
-                    .imageUrl(url)
-                    .build();
-            feedImageRepository.save(feedImage);
-        }
+//        for (String url : urls) {
+//            FeedImage feedImage = FeedImage.builder()
+//                    .feed(feed)
+//                    .imageUrl(url)
+//                    .build();
+//            feedImageRepository.save(feedImage);
+//        }
 
         // 클라이언트에 피드의 PK 반환
         HashMap<String, Long> createdFeedSeq = new HashMap<>();
@@ -140,7 +139,7 @@ public class FeedService {
         return DetailFeedRes.builder()
                 .feedSeq(feedSeq)
                 .userSeq(owner.getUserSeq())
-                .userImageUrl(imageService.getImage(owner.getImageUrl()))
+                .userImageUrl(owner.getImageUrl())
                 .nickname(feed.getUser().getNickname())
                 .placeSeq(place.getPlaceSeq())
                 .placeName(place.getName())
@@ -253,7 +252,7 @@ public class FeedService {
             getCommentsResList.add(GetCommentsRes.builder()
                     .commentSeq(comment.getCommentSeq())
                     .userSeq(CommentOwner.getUserSeq())
-                    .userImage(imageService.getImage(CommentOwner.getImageUrl()))
+                    .userImage(CommentOwner.getImageUrl())
                     .nickname(CommentOwner.getNickname())
                     .content(comment.getContent())
                     .amILike(amILike).amIOwner(amIOwner)

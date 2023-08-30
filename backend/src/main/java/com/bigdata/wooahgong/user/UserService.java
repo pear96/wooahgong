@@ -4,7 +4,6 @@ import com.bigdata.wooahgong.common.exception.CustomException;
 import com.bigdata.wooahgong.common.exception.ErrorCode;
 import com.bigdata.wooahgong.common.util.JwtTokenUtil;
 import com.bigdata.wooahgong.email.EmailService;
-import com.bigdata.wooahgong.feed.ImageService;
 import com.bigdata.wooahgong.feed.entity.Feed;
 import com.bigdata.wooahgong.feed.repository.FeedRepository;
 import com.bigdata.wooahgong.mood.entity.Mood;
@@ -45,8 +44,6 @@ public class UserService {
     private final PlaceWishRepository placeWishRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
-    private final ImageService imageService;
-//    private final S3Service s3Service;
 
     /**
      * Token으로 사용자 조회하는 함수.
@@ -174,7 +171,7 @@ public class UserService {
                 .feedsCnt(feedsCnt).likedCnt(likedCnt).bookmarkedCnt(bookmark)
                 .moods(moods)
                 .mbti(Owner.getMbti())
-                .image(imageService.getImage(Owner.getImageUrl()))
+                .image(Owner.getImageUrl())
                 .build();
     }
 
@@ -196,7 +193,7 @@ public class UserService {
         return GetMyInfoRes.builder()
                 .userId(user.getUserId())
                 .nickname(user.getNickname())
-                .profileImg(imageService.getImage(user.getImageUrl()))
+                .profileImg(user.getImageUrl())
                 .mbti(user.getMbti()).moods(moods).provider(user.isProvider())
                 .build();
     }
@@ -300,8 +297,8 @@ public class UserService {
     public String updateProfileImg(String token, MultipartFile image) {
         // 토큰으로 유저 찾기
         User user = getUserByToken(token);
-        user.setImageUrl(imageService.uploadImage(user.getUserId(), image));
-        return imageService.getImage(user.getImageUrl());
+//        user.setImageUrl(imageService.uploadImage(user.getUserId(), image));
+        return "안만들거임";
     }
 
     @Transactional

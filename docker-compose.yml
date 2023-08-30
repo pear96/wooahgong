@@ -6,7 +6,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     volumes:
-      - /home/gcp_haeun/wooahgong/log:/log
+      - /home/gcp_haeun/log:/log
     ports:
       - "8080:8080"
 

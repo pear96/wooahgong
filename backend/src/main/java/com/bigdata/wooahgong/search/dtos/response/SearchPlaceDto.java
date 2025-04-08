@@ -14,12 +14,9 @@ public class SearchPlaceDto {
     private Double lng;
 
     @Builder
-    public SearchPlaceDto(Long placeSeq, String address, String name, String imageUrl, Double ratings, Double lat, Double lng) {
+    public SearchPlaceDto(Long placeSeq, String name, Double lat, Double lng) {
         this.placeSeq = placeSeq;
-        this.address = address;
         this.name = name;
-        this.imageUrl = imageUrl;
-        this.ratings = ratings;
         this.lat = lat;
         this.lng = lng;
     }

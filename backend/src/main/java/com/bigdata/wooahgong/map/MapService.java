@@ -36,13 +36,10 @@ public class MapService {
                     distance(lat, lng, place.getLatitude(), place.getLongitude(), "meter");
             if (distanceKiloMeter < rad) {
                 answers.add(SearchPlaceDto.builder()
-                        .address(place.getAddress())
                         .placeSeq(place.getPlaceSeq())
-                        .ratings(place.getAvgScore())
                         .lat(place.getLatitude())
                         .lng(place.getLongitude())
                         .name(place.getName())
-                        .imageUrl(place.getImage())
                         .build());
             }
         }
@@ -97,11 +94,8 @@ public class MapService {
             results.add(SearchPlaceDto.builder()
                 .placeSeq(place.getPlaceSeq())
                 .name(place.getName())
-                .address(place.getAddress())
                 .lng(place.getLongitude())
                 .lat(place.getLatitude())
-                .ratings(place.getAvgScore())
-                .imageUrl(place.getImage())
                 .build());
         }
         // long end = System.currentTimeMillis();
@@ -129,11 +123,8 @@ public class MapService {
             results.add(SearchPlaceDto.builder()
                 .placeSeq(place.getPlaceSeq())
                 .name(place.getName())
-                .address(place.getAddress())
                 .lng(place.getLongitude())
                 .lat(place.getLatitude())
-                .ratings(place.getAvgScore())
-                .imageUrl(place.getImage())
                 .build());
         }
         // long end = System.currentTimeMillis();

@@ -42,16 +42,19 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-logging'
 
     // redis
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+//    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 //    implementation 'org.springframework.data:spring-data-redis'
 //    implementation 'redis.clients:jedis'
 
     // spatial
     implementation 'org.hibernate:hibernate-spatial:5.6.15.Final'
 
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
+
 
     // lombok
-    compileOnly 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'
 
     runtimeOnly 'mysql:mysql-connector-java'

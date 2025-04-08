@@ -25,72 +25,11 @@ public class MapService {
     private final Logger logger = (Logger) LoggerFactory.getLogger(this.getClass().getSimpleName());
 
 
-    public List<SearchPlaceDto> getMap(double lng, double lat, int rad) {
-        long start = System.currentTimeMillis();
-        logger.info("[MapService - getMap] 시작. 요청 위치 : " + lat + " " + lng);
-        if (lng == 0 || lat == 0 || rad == 0) {
-            throw new CustomException(ErrorCode.INVALID_DATA);
-        }
-
-        List<Place> places = placeRepository.ifUserAndPlaceIn(lng, lat, rad);
-        long sql = System.currentTimeMillis();
-        List<SearchPlaceDto> results = new ArrayList<>();
-        logger.info("범위 내 장소 개수 : " + places.size() + "개, SQL 시간 : " + (sql - start) + "ms");
-        Pageable topOne = PageRequest.of(0, 1);
-
-        for(Place place : places) {
-            results.add(SearchPlaceDto.builder()
-                    .placeSeq(place.getPlaceSeq())
-                    .name(place.getName())
-                    .address(place.getAddress())
-                    .lng(place.getLongitude())
-                    .lat(place.getLatitude())
-                    .ratings(place.getAvgScore())
-                    .imageUrl(place.getImage())
-                    .build());
-        }
-        long end = System.currentTimeMillis();
-        logger.info("걸린 시간 : " + (end-start) + "ms");
-        return results;
-    }
-
-    public List<SearchPlaceDto> getIndexMap(double lng, double lat, int rad) {
-        long start = System.currentTimeMillis();
-        logger.info("[MapService - getIndexMap] 시작. 요청 위치 : " + lat + " " + lng);
-        if (lng == 0 || lat == 0 || rad == 0) {
-            throw new CustomException(ErrorCode.INVALID_DATA);
-        }
-        final double EARTH_RADIUS = 111_000;
-        double latDiff = rad / EARTH_RADIUS;
-        double lngDiff = rad / (EARTH_RADIUS * Math.cos(Math.toRadians(lat)));
-
-        List<Place> places = placeRepository.findPlaceinMBR(lat-latDiff, lng-lngDiff, lat+latDiff, lng+lngDiff);
-        long sql = System.currentTimeMillis();
-        List<SearchPlaceDto> results = new ArrayList<>();
-        logger.info("범위 내 장소 개수 : " + places.size() + "개, SQL 시간 : " + (sql - start) + "ms");
-        Pageable topOne = PageRequest.of(0, 1);
-
-        for(Place place : places) {
-            results.add(SearchPlaceDto.builder()
-                    .placeSeq(place.getPlaceSeq())
-                    .name(place.getName())
-                    .address(place.getAddress())
-                    .lng(place.getLongitude())
-                    .lat(place.getLatitude())
-                    .ratings(place.getAvgScore())
-                    .imageUrl(place.getImage())
-                    .build());
-        }
-        long end = System.currentTimeMillis();
-        logger.info("걸린 시간 : " + (end-start) + "ms");
-        return results;
-    }
-
     public List<SearchPlaceDto> getOldMap(double lng, double lat, int rad) {
-        logger.info("[MapService - getOldMap] 시작");
+        // logger.info("[MapService - getOldMap] 시작");
         List<SearchPlaceDto> answers = new ArrayList<>();
         List<Place> places = placeRepository.findAll();
-        logger.info("범위 내 장소 개수 : " + places.size());
+        // logger.info("범위 내 장소 개수 : " + places.size());
         for (Place place : places) {
             // 킬로미터(Kilo Meter) 단위
             double distanceKiloMeter =
@@ -137,5 +76,68 @@ public class MapService {
     // This function converts radians to decimal degrees
     private static double rad2deg(double rad) {
         return (rad * 180 / Math.PI);
+    }
+
+
+
+    public List<SearchPlaceDto> getMap(double lng, double lat, int rad) {
+        // long start = System.currentTimeMillis();
+        // logger.info("[MapService - getMap] 시작. 요청 위치 : " + lat + " " + lng);
+        if (lng == 0 || lat == 0 || rad == 0) {
+            throw new CustomException(ErrorCode.INVALID_DATA);
+        }
+
+        List<Place> places = placeRepository.ifUserAndPlaceIn(lng, lat, rad);
+        // long sql = System.currentTimeMillis();
+        List<SearchPlaceDto> results = new ArrayList<>();
+        // logger.info("범위 내 장소 개수 : " + places.size() + "개, SQL 시간 : " + (sql - start) + "ms");
+        Pageable topOne = PageRequest.of(0, 1);
+
+        for(Place place : places) {
+            results.add(SearchPlaceDto.builder()
+                .placeSeq(place.getPlaceSeq())
+                .name(place.getName())
+                .address(place.getAddress())
+                .lng(place.getLongitude())
+                .lat(place.getLatitude())
+                .ratings(place.getAvgScore())
+                .imageUrl(place.getImage())
+                .build());
+        }
+        // long end = System.currentTimeMillis();
+        // logger.info("걸린 시간 : " + (end-start) + "ms");
+        return results;
+    }
+
+    public List<SearchPlaceDto> getIndexMap(double lng, double lat, int rad) {
+        // long start = System.currentTimeMillis();
+        // logger.info("[MapService - getIndexMap] 시작. 요청 위치 : " + lat + " " + lng);
+        if (lng == 0 || lat == 0 || rad == 0) {
+            throw new CustomException(ErrorCode.INVALID_DATA);
+        }
+        final double EARTH_RADIUS = 111_000;
+        double latDiff = rad / EARTH_RADIUS;
+        double lngDiff = rad / (EARTH_RADIUS * Math.cos(Math.toRadians(lat)));
+
+        List<Place> places = placeRepository.findPlaceinMBR(lat-latDiff, lng-lngDiff, lat+latDiff, lng+lngDiff);
+        // long sql = System.currentTimeMillis();
+        List<SearchPlaceDto> results = new ArrayList<>();
+        // logger.info("범위 내 장소 개수 : " + places.size() + "개, SQL 시간 : " + (sql - start) + "ms");
+        Pageable topOne = PageRequest.of(0, 1);
+
+        for(Place place : places) {
+            results.add(SearchPlaceDto.builder()
+                .placeSeq(place.getPlaceSeq())
+                .name(place.getName())
+                .address(place.getAddress())
+                .lng(place.getLongitude())
+                .lat(place.getLatitude())
+                .ratings(place.getAvgScore())
+                .imageUrl(place.getImage())
+                .build());
+        }
+        // long end = System.currentTimeMillis();
+        // logger.info("걸린 시간 : " + (end-start) + "ms");
+        return results;
     }
 }
